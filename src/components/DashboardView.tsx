@@ -10,10 +10,20 @@ import GoalTracker from "./GoalTracker";
 import { addSystemLog } from "../lib/syslogs";
 import { getTestTraps } from "../lib/traps";
 import TrapsTreeMap from "./TrapsTreeMap";
+import { 
+  ResponsiveContainer, 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  Cell 
+} from "recharts";
 
 interface DashboardViewProps {
   student: Student;
-  onNavigate: (view: "report" | "schedule" | "counselor" | "progress") => void;
+  onNavigate: (view: string) => void;
 }
 
 export default function DashboardView({ student, onNavigate }: DashboardViewProps) {
@@ -215,6 +225,20 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
     { topic: "صلاحیت مراجع کیفری و شگردهای دادرسی عمومی و اختصاصی", subject: "آیین دادرسی کیفری و جزا", percentage: 41, recommendation: "مرور صلاحیت دادگاه‌های کیفری یک، کیفری دو، اطفال و تجدیدنظر؛ انجام ۲۵ تست شبیه‌ساز در انتهای هر مبحث تستی.", questionsCount: 25, severity: "warning" },
     { topic: "اصول لفظی و تعارض ادله (ظواهر کتاب و سنت)", subject: "اصول فقه و متون فقه", percentage: 38, recommendation: "فهم عمیق دلالت‌های اقتضا، تنبیه و اشاره؛ بازخوانی دسته‌بندی عام و خاص در کتاب اصول فقه دانشگاهی چتر دانش.", questionsCount: 35, severity: "warning" }
   ];
+
+  const chartData = mockWeaknesses.map(w => {
+    let name = w.subject;
+    if (w.subject.includes("مدنی")) name = "حقوق مدنی";
+    else if (w.subject.includes("تجارت")) name = "حقوق تجارت";
+    else if (w.subject.includes("کیفری") || w.subject.includes("جزا")) name = "دادرسی کیفری";
+    else if (w.subject.includes("اصول")) name = "اصول فقه";
+    return {
+      name,
+      percentage: w.percentage,
+      color: w.severity === "critical" ? "#f43f5e" : "#f59e0b",
+      fullName: w.subject
+    };
+  });
 
   const fetchWithRetry = async (url: string, options?: RequestInit, retries = 4, delay = 600): Promise<Response> => {
     try {
@@ -1182,42 +1206,130 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
               </span>
             </div>
 
-            <div className="space-y-3">
-              {mockWeaknesses.map((weak, idx) => (
-                <div key={idx} className="p-4 bg-slate-50/50 rounded-2xl border border-slate-100/95 hover:border-slate-250 hover:bg-slate-50 transition space-y-2.5 relative">
-                  <div className="flex justify-between items-start gap-4 text-right">
-                    <div className="space-y-0.5 text-right flex-1">
-                      <span className="text-[9px] font-black text-indigo-700 block">{weak.subject}</span>
-                      <strong className="text-xs font-extrabold text-slate-800 block leading-relaxed">{weak.topic}</strong>
-                    </div>
-                    <span className={`text-[10px] font-mono font-black px-2 py-0.5 rounded-lg border shrink-0 ${
-                      weak.severity === "critical" 
-                        ? "bg-rose-50 text-rose-600 border-rose-100" 
-                        : "bg-amber-50 text-amber-600 border-amber-100"
-                    }`}>
-                      بازدهی: {weak.percentage}٪
-                    </span>
-                  </div>
-                  
-                  {/* Mastery Progress Bar */}
-                  <div className="space-y-1">
-                    <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
-                      <div 
-                        className={`h-full rounded-full ${weak.severity === "critical" ? "bg-red-500" : "bg-amber-500"}`}
-                        style={{ width: `${weak.percentage}%` }}
-                      />
-                    </div>
-                    <div className="flex justify-between text-[9px] text-slate-405 font-mono">
-                      <span>ضریب انطباق صحت علمی: {weak.percentage}٪</span>
-                      <span>تخمین بار منفی اشتباهات: ~{100 - weak.percentage}%</span>
-                    </div>
-                  </div>
+            {/* Custom Smart Quiz Banner CTA */}
+            <div className="bg-rose-50/40 p-4 rounded-2xl border border-rose-100 space-y-2">
+              <div className="flex items-center gap-1.5 text-rose-800">
+                <Brain size={16} className="animate-bounce" />
+                <strong className="text-xs font-black">شبیه‌ساز هوشمند نقاط ضعف (Trap Quiz)</strong>
+              </div>
+              <p className="text-[10px] text-slate-500 font-bold leading-relaxed">
+                بر اساس تحلیل ممتد مربی، شما بیشترین تله‌های تستی را در مباحث حقوق مدنی، حقوق تجارت و جزا داشته‌اید. می‌توانید فوراً یک شبیه‌ساز فرضی فوق‌سخت با پاسخ‌های تفصیلی را آغاز کنید:
+              </p>
+              <button
+                onClick={() => onNavigate("quiz")}
+                className="w-full bg-rose-600 hover:bg-slate-900 text-white rounded-xl py-2 font-sans font-black text-[10px] transition flex items-center justify-center gap-1 cursor-pointer shadow-sm"
+              >
+                <span>تولید و شروع آزمون تستی سفارشی</span>
+                <ChevronLeft size={12} />
+              </button>
+            </div>
 
-                  <p className="text-xs text-slate-600 leading-relaxed bg-white/70 p-2.5 rounded-xl border border-slate-100 text-right">
-                    <span className="font-extrabold text-indigo-800">توصیه مربی چتر دانش: </span>{weak.recommendation}
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 pt-2">
+              {/* Core Visual Bar Chart of the percentages */}
+              <div className="xl:col-span-5 bg-slate-50/60 p-4 rounded-2xl border border-slate-200/60 flex flex-col justify-between space-y-4">
+                <div className="text-right">
+                  <h3 className="text-xs font-black text-slate-800">تحلیل بصری و مقایسه‌ای ضعف دروس</h3>
+                  <p className="text-[9px] text-slate-400 font-bold leading-relaxed">
+                    ستون‌های کوتاه‌تر نشان‌دهنده درصد پایین‌تر در آزمون‌های شبیه‌ساز (نیاز شدید به مطالعه فوری) است.
                   </p>
                 </div>
-              ))}
+
+                <div className="h-48 w-full" style={{ minHeight: "192px" }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={chartData}
+                      margin={{ top: 10, right: 5, left: -25, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                      <XAxis 
+                        dataKey="name" 
+                        tick={{ fill: '#475569', fontSize: 9, fontWeight: 900 }} 
+                        axisLine={false}
+                        tickLine={false}
+                      />
+                      <YAxis 
+                        domain={[0, 100]} 
+                        tickFormatter={(v) => toPersianNum(v) + "٪"}
+                        tick={{ fill: '#475569', fontSize: 9, fontWeight: 900 }} 
+                        axisLine={false}
+                        tickLine={false}
+                      />
+                      <Tooltip 
+                        content={({ active, payload }) => {
+                          if (active && payload && payload.length) {
+                            const data = payload[0].payload;
+                            return (
+                              <div className="bg-slate-950 text-white p-3 rounded-xl text-[10px] space-y-1.5 shadow-lg border border-slate-800 text-right font-sans">
+                                <strong className="block text-slate-100">{data.fullName}</strong>
+                                <span className="block text-amber-300 font-black">درصد بازدهی تستی: {toPersianNum(data.percentage)}٪</span>
+                                <span className={`block text-[9px] font-bold ${data.percentage < 35 ? "text-rose-400 animate-pulse" : "text-amber-400"}`}>
+                                  {data.percentage < 35 ? "⚠️ نیازمند مطالعه ضربتی درسنامه" : "⚠️ اولویت دوم مرور و تست‌زنی"}
+                                </span>
+                              </div>
+                            );
+                          }
+                          return null;
+                        }}
+                      />
+                      <Bar dataKey="percentage" radius={[6, 6, 0, 0]} barSize={26}>
+                        {chartData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+
+                <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-[9px] font-black text-slate-500 pt-3 border-t border-slate-200/60">
+                  <div className="flex items-center gap-1">
+                    <span className="w-2.5 h-2.5 bg-rose-500 rounded-sm inline-block shrink-0" />
+                    <span>وضعیت بحرانی (&lt; ۳۵٪)</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span className="w-2.5 h-2.5 bg-amber-500 rounded-sm inline-block shrink-0" />
+                    <span>هشدار مطالعاتی (&lt; ۵۰٪)</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* List of weaknesses */}
+              <div className="xl:col-span-7 space-y-3">
+                {mockWeaknesses.map((weak, idx) => (
+                  <div key={idx} className="p-4 bg-slate-50/50 rounded-2xl border border-slate-100/95 hover:border-slate-250 hover:bg-slate-50 transition space-y-2.5 relative">
+                    <div className="flex justify-between items-start gap-4 text-right">
+                      <div className="space-y-0.5 text-right flex-1">
+                        <span className="text-[9px] font-black text-indigo-700 block">{weak.subject}</span>
+                        <strong className="text-xs font-extrabold text-slate-800 block leading-relaxed">{weak.topic}</strong>
+                      </div>
+                      <span className={`text-[10px] font-mono font-black px-2 py-0.5 rounded-lg border shrink-0 ${
+                        weak.severity === "critical" 
+                          ? "bg-rose-50 text-rose-600 border-rose-100" 
+                          : "bg-amber-50 text-amber-600 border-amber-100"
+                      }`}>
+                        بازدهی: {toPersianNum(weak.percentage)}٪
+                      </span>
+                    </div>
+                    
+                    {/* Mastery Progress Bar */}
+                    <div className="space-y-1">
+                      <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full rounded-full transition-all duration-350 ${weak.severity === "critical" ? "bg-red-500" : "bg-amber-500"}`}
+                          style={{ width: `${weak.percentage}%` }}
+                        />
+                      </div>
+                      <div className="flex justify-between text-[9px] text-slate-450 font-mono">
+                        <span>ضریب انطباق صحت علمی: {toPersianNum(weak.percentage)}٪</span>
+                        <span>تخمین بار منفی اشتباهات: ~{toPersianNum(100 - weak.percentage)}٪</span>
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-slate-600 leading-relaxed bg-white/70 p-2.5 rounded-xl border border-slate-100 text-right">
+                      <span className="font-extrabold text-indigo-800">توصیه مربی چتر دانش: </span>{weak.recommendation}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 

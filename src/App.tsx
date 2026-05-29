@@ -15,6 +15,8 @@ import ProgressView from "./components/ProgressView";
 import ParentsView from "./components/ParentsView";
 import AdminView from "./components/AdminView";
 import TestTrapsView from "./components/TestTrapsView";
+import CustomQuizGenerator from "./components/CustomQuizGenerator";
+import { Brain } from "lucide-react";
 
 export default function App() {
   const [student, setStudent] = useState<Student | null>(null);
@@ -230,6 +232,15 @@ export default function App() {
                     <Target size={14} className="text-rose-600" />
                     <span>🎯 بانک تله‌های تستی</span>
                   </button>
+                  <button
+                    onClick={() => setView("quiz")}
+                    className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl transition cursor-pointer ${
+                      view === "quiz" ? "bg-slate-100 text-blue-900" : "text-slate-500 hover:text-slate-700 hover:bg-slate-50/50"
+                    }`}
+                  >
+                    <Brain size={14} className="text-rose-600 animate-pulse" />
+                    <span>🎯 آزمون تستی سفارشی</span>
+                  </button>
                 </>
               )}
 
@@ -414,6 +425,14 @@ export default function App() {
                 >
                   بانک تله‌های تستی
                 </button>
+                <button
+                  onClick={() => setView("quiz")}
+                  className={`px-3.5 py-2 text-[11px] font-bold rounded-lg transition whitespace-nowrap cursor-pointer ${
+                    view === "quiz" ? "bg-blue-900 text-white" : "text-slate-500 bg-slate-50"
+                  }`}
+                >
+                  آزمون سفارشی تله‌ها
+                </button>
               </>
             )}
 
@@ -474,6 +493,7 @@ export default function App() {
             {view === "counselor" && <CounselorView student={student} onNavigate={(target) => setView(target)} />}
             {view === "progress" && <ProgressView />}
             {view === "traps" && <TestTrapsView student={student} />}
+            {view === "quiz" && <CustomQuizGenerator student={student} />}
           </>
         )}
 
