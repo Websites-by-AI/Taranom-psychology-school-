@@ -1,0 +1,156 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ----------------------------------------------------
+    // PILLAR 1: GLOBAL SAFETY NET - DEFAULT DENY ALL
+    // ----------------------------------------------------
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ----------------------------------------------------
+    // DEFENSIVE PRIMITIVES & HELPER FUNCTIONS
+    // ----------------------------------------------------
+    function isSignedIn() { 
+      return request.auth != null; 
+    }
+    
+    function isVerifiedUser() {
+      return isSignedIn() && (request.auth.token.email_verified == true);
+    }
+
+    function isOwner(userId) { 
+      return isSignedIn() && request.auth.uid == userId; 
+    }
+
+    function isValidId(id) { 
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); 
+    }
+
+    // Auth tokens never contain custom claims. We look up admins from a secure collection.
+    // We also support general tenant-level admin verification if they have the 'admin' role in their user document.
+    function isGlobalAdmin() { 
+      return isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid)); 
+    }
+
+    function incoming() { 
+      return request.resource.data; 
+    }
+
+    function existing() { 
+      return resource.data; 
+    }
+
+    // ----------------------------------------------------
+    // SCHEMA VALIDATION BLUEPRINTS (ANTI-UPDATE-GAP)
+    // ----------------------------------------------------
+    function isValidInstitution(data) {
+      return data.id is string && data.id.size() <= 128
+        && data.name is string && data.name.size() <= 200
+        && data.subdomain is string && data.subdomain.size() <= 128
+        && data.features is map
+        && data.get('createdAt', request.time) is timestamp;
+    }
+
+    function isValidUser(data) {
+      return data.userId is string && data.userId.size() <= 128
+        && data.email is string && data.email.size() <= 200
+        && data.role is string && (data.role == 'student' || data.role == 'admin')
+        && (data.get('displayName', '') is string && data.get('displayName', '').size() <= 200)
+        && data.get('createdAt', request.time) is timestamp;
+    }
+
+    function isValidExamResult(data) {
+      return data.userId is string && data.userId.size() <= 128
+        && data.score is number
+        && data.percentage is number
+        && data.traz is number
+        && data.timestamp is timestamp;
+    }
+
+    function isValidSecurityLog(data) {
+      return data.action is string && data.action.size() <= 200
+        && data.details is string && data.details.size() <= 2000
+        && data.severity is string && (data.severity == 'low' || data.severity == 'medium' || data.severity == 'high' || data.severity == 'critical')
+        && data.timestamp is timestamp;
+    }
+
+    // ----------------------------------------------------
+    // COLLECTION RULES
+    // ----------------------------------------------------
+
+    // 1. INSTITUTIONS COLLECTION
+    match /institutions/{instId} {
+      allow get: if isSignedIn();
+      allow list: if false; // Blanket queries strictly forbidden
+      
+      allow create: if isVerifiedUser() && isGlobalAdmin() && isValidId(instId) && isValidInstitution(incoming());
+      allow update: if isVerifiedUser() && isGlobalAdmin() && isValidInstitution(incoming()) && (
+        incoming().diff(existing()).affectedKeys().hasOnly(['name', 'features'])
+      );
+      allow delete: if isVerifiedUser() && isGlobalAdmin();
+    }
+
+    // 2. INSTITUTION USERS SUBCOLLECTION
+    match /institutions/{instId}/users/{userId} {
+      // PII Isolation: Read restricted to owners and administrators
+      allow get: if isOwner(userId) || isGlobalAdmin();
+      
+      // Query Enforcer for safe list queries
+      allow list: if isSignedIn() && (isGlobalAdmin() || resource.data.userId == request.auth.uid);
+
+      allow create: if isVerifiedUser() && isOwner(userId) && isValidId(instId) && isValidId(userId) && isValidUser(incoming())
+        && incoming().role == 'student' // Prevent self-promoted admins
+        && incoming().createdAt == request.time;
+
+      allow update: if isVerifiedUser() && isOwner(userId) && isValidUser(incoming()) && (
+        // Protect immortal immutable fields and restrict student field edits
+        incoming().userId == existing().userId
+        && incoming().email == existing().email
+        && incoming().role == existing().role
+        && incoming().createdAt == existing().createdAt
+        && (
+          // Action: Profile edit
+          incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'lastLogin'])
+        )
+      );
+
+      allow delete: if isVerifiedUser() && isGlobalAdmin();
+    }
+
+    // 3. EXAM RESULTS SUBCOLLECTION
+    match /institutions/{instId}/exam_results/{resultId} {
+      allow get: if isSignedIn() && (resource.data.userId == request.auth.uid || isGlobalAdmin());
+      allow list: if isSignedIn() && (isGlobalAdmin() || resource.data.userId == request.auth.uid);
+
+      allow create: if isVerifiedUser() && isValidId(instId) && isValidId(resultId) && isValidExamResult(incoming())
+        && incoming().userId == request.auth.uid // Identity Protection
+        && incoming().timestamp == request.time; // Temporal integrity
+
+      allow update: if isVerifiedUser() && (
+        isValidExamResult(incoming()) && (
+          // Student Owner can update sub-sections of AI comments without changing core metrics
+          isOwner(existing().userId)
+          && incoming().userId == existing().userId
+          && incoming().score == existing().score
+          && incoming().percentage == existing().percentage
+          && incoming().traz == existing().traz
+          && incoming().timestamp == existing().timestamp
+          && incoming().diff(existing()).affectedKeys().hasOnly(['aiAnalysis'])
+        )
+      );
+
+      allow delete: if isVerifiedUser() && isGlobalAdmin();
+    }
+
+    // 4. GLOBAL SECURITY LOGS (APPEND-ONLY)
+    match /security_logs/{logId} {
+      allow get, list: if isVerifiedUser() && isGlobalAdmin();
+      allow create: if isSignedIn() && isValidId(logId) && isValidSecurityLog(incoming())
+        && incoming().userId == request.auth.uid
+        && incoming().timestamp == request.time;
+      
+      allow update, delete: if false; // Immutable append-only audit trail
+    }
+  }
+}

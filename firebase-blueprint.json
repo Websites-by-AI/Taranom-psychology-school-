@@ -1,0 +1,84 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "Stores basic user information and preferences.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Unique identifier for the user (UID)." },
+        "displayName": { "type": "string", "description": "Name displayed in the app." },
+        "email": { "type": "string", "description": "User's email address." },
+        "role": { "type": "string", "enum": ["student", "admin"], "description": "Access level." },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "email", "role"]
+    },
+    "ExamResult": {
+      "title": "Exam Result",
+      "description": "Records of completed exams including AI analysis.",
+      "type": "object",
+      "properties": {
+        "resultId": { "type": "string" },
+        "userId": { "type": "string" },
+        "score": { "type": "number" },
+        "percentage": { "type": "number" },
+        "traz": { "type": "number" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "aiAnalysis": { "type": "object", "description": "Detailed JSON from AI analysis." }
+      },
+      "required": ["userId", "score", "timestamp"]
+    },
+    "SecurityLog": {
+      "title": "Security Log",
+      "description": "Audit trail for critical actions.",
+      "type": "object",
+      "properties": {
+        "logId": { "type": "string" },
+        "userId": { "type": "string" },
+        "action": { "type": "string" },
+        "details": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] }
+      }
+    },
+    "Institution": {
+      "title": "Institution Profile",
+      "description": "SaaS multi-tenant configuration for legal institutions.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "subdomain": { "type": "string" },
+        "features": {
+          "type": "object",
+          "properties": {
+            "aiAnalysis": { "type": "boolean" },
+            "customSimulator": { "type": "boolean" },
+            "securityCheck": { "type": "boolean" },
+            "whiteLabel": { "type": "boolean" }
+          }
+        },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "features"]
+    }
+  },
+  "firestore": {
+    "/institutions/{instId}": {
+      "schema": "Institution",
+      "description": "Global institution registry for multi-tenant isolation."
+    },
+    "/institutions/{instId}/users/{userId}": {
+      "schema": "User",
+      "description": "Institution-specific user profiles."
+    },
+    "/institutions/{instId}/exam_results/{resultId}": {
+      "schema": "ExamResult",
+      "description": "Isolated exam results for each institution."
+    },
+    "/security_logs/{logId}": {
+      "schema": "SecurityLog",
+      "description": "Global application security audit logs."
+    }
+  }
+}
