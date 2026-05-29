@@ -9,6 +9,7 @@ import { Student, Weakness, DailyPlan, TestTrap } from "../types";
 import GoalTracker from "./GoalTracker";
 import { addSystemLog } from "../lib/syslogs";
 import { getTestTraps } from "../lib/traps";
+import TrapsTreeMap from "./TrapsTreeMap";
 
 interface DashboardViewProps {
   student: Student;
@@ -20,6 +21,7 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
   const [loadingQuote, setLoadingQuote] = useState(true);
   
   const [isTroubleshootingOpen, setIsTroubleshootingOpen] = useState<boolean>(false);
+  const [trapsRefreshTrigger, setTrapsRefreshTrigger] = useState<number>(0);
   
   const criticalTrapsCount = getTestTraps().filter(t => t.importance === "high").length;
   
@@ -1229,6 +1231,15 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
         </div>
 
       </div>
+
+      {/* Visual active traps tree diagram based on legal subjects (Civil, Commercial, Criminal) */}
+      <TrapsTreeMap 
+        studentId={student.id} 
+        studentName={student.name} 
+        onRefreshStats={() => {
+          setTrapsRefreshTrigger(prev => prev + 1);
+        }} 
+      />
 
       {/* Advanced AI Resources & Tips Panel */}
       <div className="bg-gradient-to-l from-indigo-50/50 to-blue-50/50 rounded-3xl p-6 border border-indigo-100/40 grid grid-cols-1 md:grid-cols-3 gap-5 text-right font-sans">
