@@ -27,7 +27,7 @@ interface DashboardViewProps {
 }
 
 export default function DashboardView({ student, onNavigate }: DashboardViewProps) {
-  const [quote, setQuote] = useState("موفقیت علمی اتفاقی نیست؛ تعهد چتر دانش در ارائه نوین‌ترین شبیه‌سازها و مربیگری علمی، ضامن رتبه‌های برتر آزمون وکالت، قضاوت و سردفتری است.");
+  const [quote, setQuote] = useState("موفقیت در کنکور اتفاقی نیست؛ تعهد ما در ارائه نوین‌ترین شبیه‌سازها و مربیگری علمی، ضامن رتبه‌های برتر در رشته‌های تجربی، ریاضی و انسانی است.");
   const [loadingQuote, setLoadingQuote] = useState(true);
   
   const [isTroubleshootingOpen, setIsTroubleshootingOpen] = useState<boolean>(false);
@@ -98,10 +98,10 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
     setShowCelebration(false);
 
     const logs = [
-      "بخش فنی: تحلیل تله‌های تستی تکراری و بهینه‌سازی بودجه‌بندی دروس حقوقی...",
-      "بخش علمی: بررسی و تنظیم تعادل مطالعاتی حقوق مدنی و آیین دادرسی مدنی...",
+      "بخش فنی: تحلیل تله‌های تستی تکراری و بهینه‌سازی بودجه‌بندی دروس کنکوری...",
+      "بخش علمی: بررسی و تنظیم تعادل مطالعاتی زیست‌شناسی و ریاضیات تخصصی...",
       "بخش پایش: مانیتورینگ آنلاین ساعت حضور فیزیکی کاندید و ثبات تمرکز ذهنی...",
-      "بخش مربیگری: استقرار توصیه‌های کایزن علمی استاد کاتوزیان در پرونده داوطلب...",
+      "بخش مربیگری: استقرار توصیه‌های کایزن علمی در پرونده داوطلب تجربی/ریاضی...",
       "کارنامه نهایی: بارگذاری تمام پارامترها و همگام‌سازی شاخص تراز نهایی آزمونها..."
     ];
 
@@ -214,24 +214,24 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
   const [hardwareAdvice, setHardwareAdvice] = useState<string>("");
 
   const [todayTasks, setTodayTasks] = useState<DailyPlan[]>([
-    { day: "امروز", morningPlan: "تحلیل نص صریح قانون مدنی (عقود معین و تعهدات کانون وکالت)", afternoonPlan: "حل تشریحی ۵۰ تست زمان‌دار ویژه صلاحیت محاکم دادرسی مدنی", totalQuestions: 50, completed: false },
-    { day: "امروز", morningPlan: "مرور صوتی لغات اصول فقه مظفر مبحث مفاهیم و اوامر", afternoonPlan: "بررسی لایه‌های جزایی نهادهای ارفاقی جرم‌شناسی و کانون", totalQuestions: 25, completed: true },
-    { day: "امروز", morningPlan: "قوانین خاص ثبتی و آیین‌نامه دفاتر اسناد رسمی چتر دانش", afternoonPlan: "تحلیل آزمون شبیه‌ساز سردفتری سال ۱۴۰۴ و پایش تراز", totalQuestions: 40, completed: false }
+    { day: "امروز", morningPlan: "مطالعه دقیق مبحث ژنتیک زیست‌شناسی (مفاهیم پایه و مسائل مندلی)", afternoonPlan: "حل تشریحی ۵۰ تست زمان‌دار ویژه استوکیومتری شیمی دوازدهم", totalQuestions: 50, completed: false },
+    { day: "امروز", morningPlan: "مرور فرمول‌های حرکت‌شناسی فیزیک و تحلیل چند نمودار سرعت-زمان", afternoonPlan: "بررسی تست‌های قرابت معنایی و آرایه‌های ادبی ادبیات فارسی اختصاصی", totalQuestions: 25, completed: true },
+    { day: "امروز", morningPlan: "مطالعه مبحث کاربرد مشتق در ریاضیات تجربی و حل مثال‌های تشریحی", afternoonPlan: "تحلیل آزمون شبیه‌ساز کنکور سراسری مرحله ۴ و پایش تراز", totalQuestions: 40, completed: false }
   ]);
 
   const mockWeaknesses: Weakness[] = [
-    { topic: "سقوط تعهدات و عقود معین (ماده ۲۶۴ قانون مدنی)", subject: "حقوق مدنی کانون وکالت", percentage: 25, recommendation: "بهینه‌سازی ساعات مطالعه مباحث سقوط تعهدات؛ حتما مطالعه کتاب شرح جامع قانون مدنی کاتوزیان انجام شده و ۳۰ تست موازی کانون حل گردد.", questionsCount: 45, severity: "critical" },
-    { topic: "ورشکستگی شرکت همبسته و اسناد تجارتی چک و سفته", subject: "حقوق تجارت و شرکت‌ها", percentage: 32, recommendation: "مرور مجدد مواد ۳۱۰ تا ۳۱۷ قانون تجارت؛ تحلیل قواعد مسئولیت تضامنی در ظهرنویسی سفته و چک با رفرنس چتر دانش.", questionsCount: 30, severity: "critical" },
-    { topic: "صلاحیت مراجع کیفری و شگردهای دادرسی عمومی و اختصاصی", subject: "آیین دادرسی کیفری و جزا", percentage: 41, recommendation: "مرور صلاحیت دادگاه‌های کیفری یک، کیفری دو، اطفال و تجدیدنظر؛ انجام ۲۵ تست شبیه‌ساز در انتهای هر مبحث تستی.", questionsCount: 25, severity: "warning" },
-    { topic: "اصول لفظی و تعارض ادله (ظواهر کتاب و سنت)", subject: "اصول فقه و متون فقه", percentage: 38, recommendation: "فهم عمیق دلالت‌های اقتضا، تنبیه و اشاره؛ بازخوانی دسته‌بندی عام و خاص در کتاب اصول فقه دانشگاهی چتر دانش.", questionsCount: 35, severity: "warning" }
+    { topic: "ژنیتک و وراثت (ژن‌شناسی کلاسیک و مسائل مندل)", subject: "زیست‌شناسی پایه و دوازدهم (تجربی)", percentage: 28, recommendation: "بهینه‌سازی ساعات مطالعه ژنتیک همزمان با حل مسائل تستی متنوع؛ مطالعه دقیق درسنامه و حل ۵۰ تست از کنکورهای ۵ سال اخیر الزامی است.", questionsCount: 45, severity: "critical" },
+    { topic: "سینتیک شیمیایی و عوامل موثر بر سرعت واکنش", subject: "شیمی یازدهم و دوازدهم کنکور", percentage: 35, recommendation: "مرور مجدد مفاهیم غلظت و سرعت اولیه؛ تحلیل قواعد کاتالیزورها و انرژی فعال‌سازی با تست‌های استاندارد کانون قلم‌چی.", questionsCount: 30, severity: "critical" },
+    { topic: "نوسان، موج و فیزیک اتمی (فرمول‌های پایه)", subject: "فیزیک پایه و دوازدهم ریاضی/تجربی", percentage: 42, recommendation: "مرور فرمول‌های نوسان و بسامد؛ انجام ۲۵ تست شبیه‌ساز در انتهای هر مبحث تستی جهت تثبیت مفاهیم پایه فیزیک.", questionsCount: 25, severity: "warning" },
+    { topic: "حد و پیوستگی و مشتق تابع (ریاضیات پایه)", subject: "ریاضیات تجربی و حسابان ریاضی", percentage: 48, recommendation: "فهم عمیق قضایای حد و مشتق‌پذیری؛ بازخوانی دسته‌بندی توابع نمایی و لگاریتمی در کتاب‌های کمک‌آموزشی استاندارد.", questionsCount: 35, severity: "warning" }
   ];
 
   const chartData = mockWeaknesses.map(w => {
     let name = w.subject;
-    if (w.subject.includes("مدنی")) name = "حقوق مدنی";
-    else if (w.subject.includes("تجارت")) name = "حقوق تجارت";
-    else if (w.subject.includes("کیفری") || w.subject.includes("جزا")) name = "دادرسی کیفری";
-    else if (w.subject.includes("اصول")) name = "اصول فقه";
+    if (w.subject.includes("زیست")) name = "زیست‌شناسی";
+    else if (w.subject.includes("شیمی")) name = "شیمی";
+    else if (w.subject.includes("فیزیک")) name = "فیزیک";
+    else if (w.subject.includes("ریاضی")) name = "ریاضیات";
     return {
       name,
       percentage: w.percentage,
@@ -287,16 +287,16 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
     setMachineState(state);
     switch (state) {
       case "normal":
-        setHardwareAdvice("🔥 سطح تمرکز داوطلب در بالاترین و پایدارترین حد ممکن قرار دارد. پیشنهاد می‌شود از این فاز طلایی برای حل تست‌های دوره‌ای سخت (مثل تست‌های جامع سردفتری) استفاده نمایید.");
+        setHardwareAdvice("🔥 سطح تمرکز داوطلب در بالاترین و پایدارترین حد ممکن قرار دارد. پیشنهاد می‌شود از این فاز طلایی برای حل تست‌های دوره‌ای سخت (مثل تست‌های جامع کنکور) استفاده نمایید.");
         break;
       case "warm":
         setHardwareAdvice("🥱 ذهن داوطلب روبه خستگی خفیف است. لطفاً ساعات مطالعه را پومودورو کنید؛ یعنی ۵۰ دقیقه مطالعه عمیق و ۱۰ دقیقه استراحت متمرکز جهت ریکاوری پالس‌های فکری.");
         break;
       case "error_risk":
-        setHardwareAdvice("😰 ناپایداری در یادآوری قوانین خاص حقوق ثبت گزارش شده است! لطفاً تندخوانی قوانین ثبتی را فعال کنید و ۵ دور تست تحلیلی تعاملی برای تسلط مجدد بزنید.");
+        setHardwareAdvice("😰 ناپایداری در یادآوری مفاهیم پایه شیمی گزارش شده است! لطفاً تندخوانی نکات حفظی را فعال کنید و ۵ دور تست تحلیلی تعاملی برای تسلط مجدد بزنید.");
         break;
       case "optimal":
-        setHardwareAdvice("🎯 شاخص تمرکز، انگیزه و آرامش ذهنی داوطلب روی نمره کمال تحصیلی است. بسیار عالی! ثبت خلاصه تراز در دیتابیس پشتیبانی مربیگری چتر دانش با موفقیت انجام شد.");
+        setHardwareAdvice("🎯 شاخص تمرکز، انگیزه و آرامش ذهنی داوطلب روی نمره کمال تحصیلی است. بسیار عالی! ثبت خلاصه تراز در دیتابیس پشتیبانی مربیگری آکادمی با موفقیت انجام شد.");
         break;
       default:
         setHardwareAdvice("");
@@ -326,7 +326,7 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
             خوش آمدید، {student.name} گرامی 👋
           </h1>
           <p className="text-xs text-slate-400 font-medium">
-            مدیریت تراز تحصیلی، مانیتورینگ زنده پرونده و حل علمی تله‌های تستی چتر دانش
+            مدیریت تراز تحصیلی، مانیتورینگ زنده پرونده و حل علمی تله‌های تستی کنکور سراسری
           </p>
         </div>
         
@@ -352,7 +352,7 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
             </div>
             <div className="space-y-1 text-right">
               <div className="flex items-center gap-2">
-                <h3 className="text-sm font-black text-white">زیرساخت ابری هوشمند چتر دانش</h3>
+                <h3 className="text-sm font-black text-white">زیرساخت ابری هوشمند مشاوره کنکور</h3>
                 <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 text-[8px] font-black rounded-full border border-emerald-500/20 flex items-center gap-1 uppercase">
                    <div className="w-1 h-1 rounded-full bg-emerald-400" />
                    <span>عملیاتی</span>
@@ -405,14 +405,14 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
                 <div className="space-y-1">
                   <strong className={`text-sm font-black block ${isSevere ? "text-red-700" : "text-amber-700"}`}>
                     {isSevere 
-                      ? "🚨 هشدار بحرانی: تراز شبیه‌ساز کانون وکالت (QEI) به شدت کاهش یافته است!" 
+                      ? "🚨 هشدار بحرانی: تراز شبیه‌ساز کنکور سراسری (QEI) به شدت کاهش یافته است!" 
                       : "⚠️ هشدار تراز: تراز آزمایشی (QEI) در وضعیت هشدار ممیزی است!"
                     }
                   </strong>
                   <p className={`text-xs leading-relaxed font-semibold ${isSevere ? "text-red-900" : "text-amber-900"}`}>
                     {isSevere ? (
                       <>
-                        شاخص تراز پرونده در حال حاضر روی عدد <span className="font-black font-mono bg-red-100 px-1.5 py-0.5 rounded text-red-800">{toPersianNum(qeiValue)} QEI</span> است که از حد نصاب قبولی عملیاتی (۵۰۰۰) پائین‌تر می‌باشد. برای اصلاح تله‌های تستی و رفع اشتباهات، ترجیحاً فرآیند خودکار بهبود تراز (کایزن تحصیلی) را آغاز نمایید.
+                        شاخص تراز پرونده در حال حاضر روی عدد <span className="font-black font-mono bg-red-100 px-1.5 py-0.5 rounded text-red-800">{toPersianNum(qeiValue)} QEI</span> است که از حد نصاب قبولی در رشته‌های تاپ (۵۰۰۰) پائین‌تر می‌باشد. برای اصلاح تله‌های تستی و رفع اشتباهات، ترجیحاً فرآیند خودکار بهبود تراز (کایزن تحصیلی) را آغاز نمایید.
                       </>
                     ) : (
                       <>
@@ -507,18 +507,18 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
                 }`}>
                   <strong className="text-xs font-black block mb-2">
                     {qeiValue < 5000 
-                      ? "🚨 وضعیت داوطلب: بحرانی (بازه خطای مهلک در حقوق مدنی و تجارت)" 
-                      : "⚠️ وضعیت داوطلب: هشدار افت تندخوانی قوانین"
+                      ? "🚨 وضعیت داوطلب: بحرانی (بازه خطای مهلک در زیست‌شناسی و شیمی)" 
+                      : "⚠️ وضعیت داوطلب: هشدار افت تندخوانی مفاهیم"
                     }
                   </strong>
                   <p className="text-xs leading-relaxed">
                     {qeiValue < 5000 ? (
                       <>
-                        شاخص تراز شما در حال حاضر روی عدد <span className="font-black font-mono bg-red-100 px-1.5 py-0.5 rounded text-red-800">{toPersianNum(qeiValue)} QEI</span> است که پایین‌تر از سطح رقابت امن قبولی کانون (۵۰۰۰) است. برای فایق آمدن بر گزینه‌های انحرافی حقوق مدنی، ترجیحاً فرآیند خودکار بهبود تراز را فعال نمایید.
+                        شاخص تراز شما در حال حاضر روی عدد <span className="font-black font-mono bg-red-100 px-1.5 py-0.5 rounded text-red-800">{toPersianNum(qeiValue)} QEI</span> است که پایین‌تر از سطح رقابت امن قبولی در پزشکی/مهندسی (۵۰۰۰) است. برای فایق آمدن بر گزینه‌های انحرافی درس زیست، ترجیحاً فرآیند خودکار بهبود تراز را فعال نمایید.
                       </>
                     ) : (
                       <>
-                        شاخص تراز شما در حال حاضر روی عدد <span className="font-black font-mono bg-amber-100 px-1.5 py-0.5 rounded text-amber-850">{toPersianNum(qeiValue)} QEI</span> است که در حوزه خستگی مطالعاتی یا ضعف در قوانین خاص است.
+                        شاخص تراز شما در حال حاضر روی عدد <span className="font-black font-mono bg-amber-100 px-1.5 py-0.5 rounded text-amber-850">{toPersianNum(qeiValue)} QEI</span> است که در حوزه خستگی مطالعاتی یا ضعف در دروس عمومی/پایه است.
                       </>
                     )}
                   </p>
@@ -552,9 +552,9 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
                           ۱
                         </span>
                         <div className="space-y-1">
-                          <strong className="text-xs font-bold text-slate-800 block">ریست فکری و مرور نص صریح</strong>
+                          <strong className="text-xs font-bold text-slate-800 block">ریست فکری و مرور متن کتاب درسی</strong>
                           <p className="text-[11px] text-slate-600 leading-relaxed">
-                            تست‌زنی تفننی بدون پایه مطالعاتی را فوراً متوقف کرده، کتب قانون صریح را باز کرده و مواعد قانونی آیین دادرسی مدنی را دوباره بنویسید.
+                            تست‌زنی تفننی بدون پایه مطالعاتی را فوراً متوقف کرده، کتاب‌های درسی را باز کرده و قیدهای زیست‌شناسی را دوباره بنویسید.
                           </p>
                         </div>
                       </div>
@@ -566,7 +566,7 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
                         <div className="space-y-1">
                           <strong className="text-xs font-bold text-slate-800 block">بررسی زمان تلف‌شده روی پاسخ‌های اشتباه</strong>
                           <p className="text-[11px] text-slate-600 leading-relaxed">
-                            از اصرار بر پاسخگویی به سوالات طولانی یا مباحث مبهم حقوق تجارت خودداری کنید. گزینه‌های شک‌دار را علامت قرمزی بگذارید و رد شوید.
+                            از اصرار بر پاسخگویی به سوالات طولانی یا مباحث مبهم شیمی آلی خودداری کنید. گزینه‌های شک‌دار را علامت قرمزی بگذارید و رد شوید.
                           </p>
                         </div>
                       </div>
@@ -576,9 +576,9 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
                           ۳
                         </span>
                         <div className="space-y-1">
-                          <strong className="text-xs font-bold text-slate-800 block">اصلاح ساعت تعادل اصول فقه</strong>
+                          <strong className="text-xs font-bold text-slate-800 block">اصلاح ساعت تعادل دروس عمومی و اختصاصی</strong>
                           <p className="text-[11px] text-slate-600 leading-relaxed">
-                            ضریب تعادل اصول فقه را با توجه به کتاب‌های آموزشی چتر دانش روی ۳۰ درصد بودجه‌بندی ثابت نگه دارید تا مابقی دروس از موازنه خارج نشوند.
+                            ضریب تعادل دروس را با توجه به بودجه‌بندی کنکور ثابت نگه دارید تا مابقی دروس از موازنه خارج نشوند.
                           </p>
                         </div>
                       </div>
@@ -758,10 +758,10 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
           <div className="space-y-1">
             <h3 className="font-sans font-black text-slate-900 text-base flex items-center gap-2 justify-start">
               <span className="p-1 px-2.5 bg-indigo-50 text-indigo-700 text-[10px] rounded-lg font-black border border-indigo-150">کایزن فعال</span>
-              <span>⚙️ پرتال تخصصی برنامه‌ریزی و بهبود علمی تراز داوطلبان</span>
+              <span>⚙️ پرتال تخصصی برنامه‌ریزی و بهبود علمی تراز داوطلبان کنکور</span>
             </h3>
             <p className="text-slate-500 text-xs">
-              بر پایه متدهای نوین بهینه‌سازی کایزن درسی چتر دانش، مهار نمره‌های منفی مباحث سخت حقوق مصلحت کانون.
+              بر پایه متدهای نوین بهینه‌سازی کایزن درسی، برای مهار نمره‌های منفی مباحث سخت کنکور سراسری.
             </p>
           </div>
           
@@ -897,7 +897,7 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
                 </h4>
               </div>
               <p className="text-xs leading-relaxed text-emerald-800 font-semibold">
-                با پایش پیوسته ساعات مطالعه و بودجه‌بندی دروس تستی و با کاهش پاسخ‌های غلط آزمون‌ها به صفر، تراز کارنامه به شکل ایده‌آلی موازنه گردید. تراز آزمایشی طلایی ۶,۸۵۰ در پرونده داوطلبی چتر دانش ثبت گردید و پیش‌بینی قبولی کانون وکلا به سطح سبز ممتاز رسید.
+                با پایش پیوسته ساعات مطالعه و بودجه‌بندی دروس تستی و با کاهش پاسخ‌های غلط آزمون‌ها به صفر، تراز کارنامه به شکل ایده‌آلی موازنه گردید. تراز آزمایشی طلایی ۶,۸۵۰ در پرونده داوطلبی آکادمی ثبت گردید و پیش‌بینی قبولی در رشته‌های تاپ به سطح سبز ممتاز رسید.
               </p>
             </div>
 
@@ -918,21 +918,21 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
         {!isOptimizing && !showCelebration && (
           <div className="bg-slate-50 p-4 rounded-2xl border border-slate-150 grid grid-cols-1 md:grid-cols-3 gap-4 text-right">
             <div className="space-y-1">
-              <span className="text-slate-700 text-xs font-extrabold block">۱. کورتکس و حل تله‌های تستی کانون</span>
+              <span className="text-slate-700 text-xs font-extrabold block">۱. کورتکس و حل تله‌های تستی زیست‌شناسی</span>
               <p className="text-[11px] text-slate-500 leading-relaxed font-semibold">
-                به دلیل عدم تثبیت واژگان اصول فقه، بیشترین نمره منفی در آزمون کانون ثبت شده که مطالعه تطبیقی این مبحث با منابع چتر دانش آن را برطرف می‌کند.
+                به دلیل عدم تثبیت قیدهای زیست‌شناسی، بیشترین نمره منفی در آزمون ثبت شده که مطالعه تطبیقی این مبحث با منابع آکادمی آن را برطرف می‌کند.
               </p>
             </div>
             <div className="space-y-1">
-              <span className="text-slate-700 text-xs font-extrabold block">۲. مبانی تعهدات و عقود معین کاتوزیان</span>
+              <span className="text-slate-700 text-xs font-extrabold block">۲. مبانی استوکیومتری و مسائل شیمی</span>
               <p className="text-[11px] text-slate-500 leading-relaxed font-semibold">
-                برای درک بهتر مواد عقد مضاربه، حتماً مواد آن را با مثال‌های تشریحی و آراف ثبت وکالت بازخوانی نمایید.
+                برای درک بهتر مسائل شیمی، حتماً واکنش‌های پایه را با حل تست‌های محاسباتی بازخوانی نمایید.
               </p>
             </div>
             <div className="space-y-1">
-              <span className="text-slate-700 text-xs font-extrabold block">۳. قوانین خاص حقوق ثبت اسناد</span>
+              <span className="text-slate-700 text-xs font-extrabold block">۳. فیزیک دوازدهم و مباحث نوسان</span>
               <p className="text-[11px] text-slate-500 leading-relaxed font-semibold">
-                تسلط تندخوانی بر مواد ۲۲، ۴۶، ۴۷ و ۴۸ ثبت جهت موفقیت قطعی در آزمون طاقت‌فرسای سردفتری.
+                تسلط بر فرمول‌های نوسان و موج جهت موفقیت قطعی در آزمون‌های شبیه‌ساز کنکور.
               </p>
             </div>
           </div>
@@ -962,7 +962,7 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
                     ? "text-amber-700" 
                     : "text-slate-400"
               }`}>
-                تراز و موقعیت رقبای کانون
+                تراز و موقعیت رقبای کنکور
               </span>
               <p className="text-xs font-black">تراز تجمعی آزمون کل (QEI)</p>
             </div>
@@ -1057,7 +1057,7 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
           <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-50">
             <div className="flex items-baseline gap-1">
               <span className="text-2xl font-black text-red-600 font-mono">{toPersianNum(bottleneckCount)}</span>
-              <span className="text-[10px] text-slate-500 font-bold">مبحث قانونی ضعیف</span>
+              <span className="text-[10px] text-slate-500 font-bold">مبحث درسی ضعیف</span>
             </div>
             <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-bold border ${
               bottleneckCount > 0 ? "bg-red-50 text-red-600 border-red-100" : "bg-emerald-50 text-emerald-600 border-emerald-100"
@@ -1213,7 +1213,7 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
                 <strong className="text-xs font-black">شبیه‌ساز هوشمند نقاط ضعف (Trap Quiz)</strong>
               </div>
               <p className="text-[10px] text-slate-500 font-bold leading-relaxed">
-                بر اساس تحلیل ممتد مربی، شما بیشترین تله‌های تستی را در مباحث حقوق مدنی، حقوق تجارت و جزا داشته‌اید. می‌توانید فوراً یک شبیه‌ساز فرضی فوق‌سخت با پاسخ‌های تفصیلی را آغاز کنید:
+                بر اساس تحلیل ممتد مربی، شما بیشترین تله‌های تستی را در مباحث زیست‌شناسی، فیزیک و شیمی داشته‌اید. می‌توانید فوراً یک شبیه‌ساز فرضی فوق‌سخت با پاسخ‌های تفصیلی را آغاز کنید:
               </p>
               <button
                 onClick={() => onNavigate("quiz")}
@@ -1325,7 +1325,7 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
                     </div>
 
                     <p className="text-xs text-slate-600 leading-relaxed bg-white/70 p-2.5 rounded-xl border border-slate-100 text-right">
-                      <span className="font-extrabold text-indigo-800">توصیه مربی چتر دانش: </span>{weak.recommendation}
+                      <span className="font-extrabold text-indigo-800">توصیه مربی کنکور: </span>{weak.recommendation}
                     </p>
                   </div>
                 ))}
@@ -1359,7 +1359,7 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
           <div className="space-y-1 text-right flex-1">
             <h4 className="text-xs font-black text-slate-800">پشتیبانی و مربیگری ۲۴ ساعته (AI)</h4>
             <p className="text-[10px] text-slate-500 leading-relaxed">
-              هر زمان حین خواندن عقود معین کاتوزیان یا اصول فقه دچار ابهام علمی شدید، سوال خود را از چت مشاور هوشمند بپرسید.
+              هر زمان حین خواندن مباحث ژنتیک یا مفاهیم فیزیک دچار ابهام علمی شدید، سوال خود را از چت مشاور هوشمند بپرسید.
             </p>
           </div>
           <div className="p-3 bg-white text-indigo-850 rounded-2xl shadow-sm border border-slate-100 flex-shrink-0">
@@ -1369,9 +1369,9 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
 
         <div className="flex gap-3.5 items-start justify-end">
           <div className="space-y-1 text-right flex-1">
-            <h4 className="text-xs font-black text-slate-800">کتابچه قوانین خاص حقوقی کانون</h4>
+            <h4 className="text-xs font-black text-slate-800">دفترچه تست‌های کنکور سراسری</h4>
             <p className="text-[10px] text-slate-500 leading-relaxed">
-              تطابق مطلق کارهای کلاسی با قوانین روابط موجر و مستأجر سال ۵۶ و ۷۶ جهت تثبیت حداکثر تراز تستی.
+              تطابق مطلق کارهای کلاسی با مفاهیم استوکیومتری و سینتیک جهت تثبیت حداکثر تراز تستی.
             </p>
           </div>
           <div className="p-3 bg-white text-amber-600 rounded-2xl shadow-sm border border-slate-100 flex-shrink-0">
@@ -1383,7 +1383,7 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
           <div className="space-y-1 text-right flex-1">
             <h4 className="text-xs font-black text-slate-800">تکنیک تندخوانی و زمان‌بندی تستی</h4>
             <p className="text-[10px] text-slate-500 leading-relaxed">
-              برای پیشگیری از کمبود زمان در جلسه آزمون حقوق تجارت کانون، تکرار دوره مکرر تست‌های سنوات را در اولویت عصر بگذارید.
+              برای پیشگیری از کمبود زمان در جلسه آزمون شبیه‌ساز کنکور، تکرار دوره مکرر تست‌های سنوات را در اولویت عصر بگذارید.
             </p>
           </div>
           <div className="p-3 bg-white text-emerald-600 rounded-2xl shadow-sm border border-slate-100 flex-shrink-0">
