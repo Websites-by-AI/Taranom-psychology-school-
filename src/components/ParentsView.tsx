@@ -8,9 +8,9 @@ interface ParentsViewProps {
 
 export default function ParentsView({ student }: ParentsViewProps) {
   const [alerts, setAlerts] = useState<ParentingAlert[]>([
-    { id: "1", type: "success", message: `فرزند شما در مبحث عقود معین و مسئولیت مدنی رشد عالی ۳۲٪ داشته است. تلاش او ستودنی است!`, date: "۲۹ اردیبهشت" },
-    { id: "2", type: "warning", message: `افت تراز جزئی در درس آیین دادرسی مدنی (افت ۵٪) شناسایی شد. برنامه بهسازی اصلاحی چتر دانش صادر گردید.`, date: "۱۵ اردیبهشت" },
-    { id: "3", type: "info", message: `ساعت مطالعه دیروز فرزند شما: ۶.۵ ساعت تخصصی (۱۲ تست بیشتر از میانگین هفته)`, date: "۱۴ اردیبهشت" }
+    { id: "1", type: "success", message: `داوطلب گرامی در مبحث ارث حقوق مدنی با بهبود چشمگیر ۳۲٪ تراز علمی مواجه شده و رتبه اول آزمون دوره‌ای را از آن خود کرد.`, date: "۲۹ اردیبهشت" },
+    { id: "2", type: "warning", message: `کاهش ریتم مطالعه در شیفت عصر روز گذشته (افت تمرکز در تست‌زنی متون فقه) گزارش شد. برنامه کایزن ترمیمی به طور خودکار صادر گردید.`, date: "۱۵ اردیبهشت" },
+    { id: "3", type: "info", message: `ساعت مطالعه خالص ثبت شده دیروز: ۷ ساعت کامل شامل تسلط بر مواد قوانین خاص آیین دادرسی مدنی.`, date: "۱۴ اردیبهشت" }
   ]);
 
   const [notifSms, setNotifSms] = useState(true);
@@ -28,57 +28,57 @@ export default function ParentsView({ student }: ParentsViewProps) {
   return (
     <div className="space-y-6" id="parents-view-container">
       {/* Visual Welcome Board */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-3xl border border-slate-100 shadow-sm bg-gradient-to-tr from-indigo-50/10 to-transparent">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-3xl border border-slate-100 shadow-sm bg-gradient-to-tr from-indigo-50/10 to-transparent text-right">
         <div>
-          <span className="text-[10px] font-black uppercase text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-100/60 inline-block mb-1.5">گزارش اختصاصی اولیاء</span>
-          <h2 className="text-xl font-black text-slate-900">پنل نظارت و همیاری همکاران و اولیای چتر دانش</h2>
-          <p className="text-slate-500 text-xs mt-1">
-             والدین گرامی؛ شما می‌توانید در این صفحه وضعیت درسی، روند مطالعه روزانه و اعلان‌های هوشمند فرزندتان <strong>{student.name}</strong> را پیگیری و پیکربندی نمایید.
+          <span className="text-[10px] font-black uppercase text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-100 inline-block mb-1.5">سامانه پایش والدین چتر دانش</span>
+          <h2 className="text-xl font-black text-slate-900">پورتال پایش و نظارت برخط والدین و حامیان علمی</h2>
+          <p className="text-slate-500 text-xs mt-1 leading-relaxed">
+            اولیاء محترم؛ در این صفحه می‌توانید تراز علمی آزمون‌های شبیه‌ساز، میزان پیشرفت درصدی دروس، هشدارهای مشاور تخصصی و استریک‌های روزانه داوطلب گرامی **{student.name}** را مانیتور کنید.
           </p>
         </div>
         <div className="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex items-center gap-3">
-          <Bell className="text-slate-400" size={24} />
-          <div>
-            <span className="text-[10px] text-slate-400 font-bold block">شماره اولیای ثبت شده</span>
+          <Bell className="text-slate-500" size={24} />
+          <div className="text-right">
+            <span className="text-[10px] text-slate-400 font-bold block">شماره تماس پیامک اضطراری حامی</span>
             <span className="text-xs font-mono font-bold text-slate-800">0912****628</span>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Child Statistics and alerts summary */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-right">
+        {/* Statistics and alerts summary */}
         <div className="lg:col-span-2 space-y-4">
           <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4" id="parent-messages-timeline">
-            <span className="font-bold text-slate-800 text-sm block flex items-center gap-1.5 border-b border-slate-50 pb-2">
+            <span className="font-bold text-slate-805 text-sm block flex items-center gap-1.5 border-b border-slate-50 pb-2 text-right justify-start">
               <MessageSquare className="text-blue-900" size={18} />
-              <span>اعلان‌ها و پیام‌های سیستم هوشمند تحصیلی</span>
+              <span>اعلانات خودکار و بازخورد مربیان ناظر موسسه چتر دانش</span>
             </span>
 
             <div className="space-y-3">
               {alerts.map((alert) => (
                 <div 
                   key={alert.id} 
-                  className={`p-4 rounded-2xl border flex gap-4 items-start ${
+                  className={`p-4 rounded-2xl border flex gap-4 items-start text-right ${
                     alert.type === "success" 
-                      ? "bg-emerald-50/40 border-emerald-100/80 text-emerald-950" 
+                      ? "bg-emerald-50/40 border-emerald-100 text-emerald-950" 
                       : alert.type === "warning" 
-                        ? "bg-red-50/40 border-red-100/80 text-red-950" 
-                        : "bg-blue-50/40 border-blue-100/80 text-blue-950"
+                        ? "bg-red-50/40 border-red-100 text-red-950" 
+                        : "bg-blue-50/40 border-blue-100 text-blue-950"
                   }`}
                 >
                   <div className={`p-1.5 rounded-lg flex-shrink-0 mt-0.5 ${
                     alert.type === "success" 
                       ? "bg-emerald-600 text-white" 
                       : alert.type === "warning" 
-                        ? "bg-red-600 text-white" 
+                        ? "bg-rose-600 text-white" 
                         : "bg-blue-900 text-white"
                   }`}>
                     {alert.type === "success" && <TrendingUp size={14} />}
                     {alert.type === "warning" && <AlertTriangle size={14} />}
                     {alert.type === "info" && <Bell size={14} />}
                   </div>
-                  <div className="flex-1 space-y-1">
-                    <p className="text-xs/relaxed font-semibold">{alert.message}</p>
+                  <div className="flex-1 space-y-1 text-right">
+                    <p className="text-xs/relaxed font-semibold leading-relaxed">{alert.message}</p>
                     <span className="text-[10px] text-slate-400 block font-mono font-medium">{alert.date}</span>
                   </div>
                 </div>
@@ -89,55 +89,55 @@ export default function ParentsView({ student }: ParentsViewProps) {
 
         {/* Alert Configurations Box */}
         <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-5" id="parent-notification-switches">
-          <span className="font-bold text-slate-800 text-sm block flex items-center gap-1.5 border-b border-slate-50 pb-2">
+          <span className="font-bold text-slate-800 text-sm block flex items-center gap-1.5 border-b border-slate-50 pb-2 text-right justify-start">
             <Sliders className="text-blue-900" size={18} />
-            <span>تنظیمات هوشمند ارسال پیامک و هشدارها</span>
+            <span>تنظیمات پیام‌های برخط حامیان علمی</span>
           </span>
 
-          <p className="text-xs text-slate-400 leading-relaxed">
-            کانال‌های ارسال نوتیفیکیشن و پیامک‌های اضطراری را به میل خودتان شخصی‌سازی یا مدیریت کنید:
+          <p className="text-xs text-slate-400 leading-relaxed text-right">
+            آستانه و نحوه اطلاع‌رسانی از روند یادگیری فرزندتان و دریافت گزارش‌های کایزن در پیوند با ترازهای آزمون وکالت را شخصی‌سازی کنید:
           </p>
 
           <div className="space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-50">
-              <div>
-                <strong className="text-xs font-black text-slate-800 block">ارسال پیامک هفتگی ارزیابی</strong>
-                <span className="text-[10px] text-slate-400 block mt-0.5">دریافت خلاصه تراز و وضعیت فرزند جمعه شب‌ها</span>
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="text-right">
+                <strong className="text-xs font-black text-slate-800 block">ارسال خلاصه تراز کیفی هفتگی</strong>
+                <span className="text-[9px] text-slate-400 block mt-0.5">دریافت گزارش هفتگی تراز آزمون و رتبه کشوری داوطلب در پایان هفته</span>
               </div>
               <button 
                 onClick={() => handleToggleSmsAlert("notifSms")}
                 className={`w-11 h-6 rounded-full p-1 transition flex items-center leading-none border cursor-pointer ${
-                  notifSms ? "bg-blue-950 border-blue-950 flex-row-reverse" : "bg-slate-100 border-slate-200"
+                  notifSms ? "bg-blue-900 border-blue-900 flex-row-reverse" : "bg-slate-100 border-slate-200"
                 }`}
               >
                 <span className="w-4 h-4 bg-white rounded-full shadow-sm block"></span>
               </button>
             </div>
 
-            <div className="flex items-center justify-between pb-3 border-b border-slate-50">
-              <div>
-                <strong className="text-xs font-black text-slate-800 block">هشدار افت شدید تحصیلی</strong>
-                <span className="text-[10px] text-slate-400 block mt-0.5">پیام فوری در صورت افت تراز آزمون چتر دانش بیش از ۵٪</span>
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="text-right">
+                <strong className="text-xs font-black text-slate-800 block">پیام خطر کاهش اضطراری تراز</strong>
+                <span className="text-[9px] text-slate-400 block mt-0.5">ارسال پیامک هشدار در صورت افت تراز علمی به زیر مرز ۵,۰۰۰</span>
               </div>
               <button 
                 onClick={() => handleToggleSmsAlert("notifDrop")}
                 className={`w-11 h-6 rounded-full p-1 transition flex items-center leading-none border cursor-pointer ${
-                  notifDrop ? "bg-blue-950 border-blue-950 flex-row-reverse" : "bg-slate-100 border-slate-200"
+                  notifDrop ? "bg-blue-900 border-blue-900 flex-row-reverse" : "bg-slate-100 border-slate-200"
                 }`}
               >
                 <span className="w-4 h-4 bg-white rounded-full shadow-sm block"></span>
               </button>
             </div>
 
-            <div className="flex items-center justify-between pb-3 border-b border-slate-50">
-              <div>
-                <strong className="text-xs font-black text-slate-800 block">اعلان افتخارات و استریک‌های درسی</strong>
-                <span className="text-[10px] text-slate-400 block mt-0.5">اعلان تشویقی در صورت تکمیل کارهای امروز و حفظ استریک</span>
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="text-right">
+                <strong className="text-xs font-black text-slate-800 block">ثبت رکوردهای استثنایی و مداومت</strong>
+                <span className="text-[9px] text-slate-400 block mt-0.5">اعلام تراز بالای ۶,۲۰۰ و رکوردهای برتر استریک‌های مطالعاتی</span>
               </div>
               <button 
                 onClick={() => handleToggleSmsAlert("notifProgress")}
                 className={`w-11 h-6 rounded-full p-1 transition flex items-center leading-none border cursor-pointer ${
-                  notifProgress ? "bg-blue-950 border-blue-950 flex-row-reverse" : "bg-slate-100 border-slate-200"
+                  notifProgress ? "bg-blue-900 border-blue-900 flex-row-reverse" : "bg-slate-100 border-slate-200"
                 }`}
               >
                 <span className="w-4 h-4 bg-white rounded-full shadow-sm block"></span>
@@ -145,14 +145,14 @@ export default function ParentsView({ student }: ParentsViewProps) {
             </div>
 
             <div className="flex items-center justify-between">
-              <div>
-                <strong className="text-xs font-black text-slate-800 block">ارسال رونوشت پیام‌های مشاور AI</strong>
-                <span className="text-[10px] text-slate-400 block mt-0.5">دریافت خلاصه گزارش توصیه‌های تحصیلی دکتر کریمی</span>
+              <div className="text-right">
+                <strong className="text-xs font-black text-slate-800 block">ارسال نسخه گزارش‌های تحلیلی AI</strong>
+                <span className="text-[9px] text-slate-400 block mt-0.5">دریافت توصیه‌های عارضه‌یابی و مربی‌گری مشاور هوش مصنوعی</span>
               </div>
               <button 
                 onClick={() => handleToggleSmsAlert("notifCounselor")}
                 className={`w-11 h-6 rounded-full p-1 transition flex items-center leading-none border cursor-pointer ${
-                  notifCounselor ? "bg-blue-950 border-blue-950 flex-row-reverse" : "bg-slate-100 border-slate-200"
+                  notifCounselor ? "bg-blue-900 border-blue-900 flex-row-reverse" : "bg-slate-100 border-slate-200"
                 }`}
               >
                 <span className="w-4 h-4 bg-white rounded-full shadow-sm block"></span>
@@ -160,10 +160,10 @@ export default function ParentsView({ student }: ParentsViewProps) {
             </div>
           </div>
 
-          <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 flex items-start gap-2.5">
+          <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 flex items-start gap-2.5 text-right">
             <ShieldAlert className="text-amber-600 flex-shrink-0 mt-0.5" size={16} />
-            <div className="text-[10px] text-amber-900 leading-relaxed">
-               تغییرات شما فوراً ذخیره و در سرورهای مرکزی چتر دانش اعمال گردید. با تشکر از تعهد شما اولیای گرامی.
+            <div className="text-[10px] text-amber-900 leading-relaxed text-right">
+              پیکربندی هوشمند شما با موفقیت ذخیره شد. کادر ناظرین چتر دانش اهتمام مستمر خود را در همیاری داوطلبان به کار خواهد بست.
             </div>
           </div>
         </div>

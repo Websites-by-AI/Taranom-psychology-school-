@@ -1,6 +1,8 @@
 {
-  "name": "چتر دانش هوشمند | سامانه آموزش حقوقی",
-  "description": "پلتفرم تخصصی آموزش و تحلیل هوشمند آزمون‌های حقوقی (وکالت، قضاوت، سردفتری) موسسه چتر دانش مجهز به دستیار هوشمند تحلیلی و برنامه‌ریزی زنده.",
+  "name": "Taranom Mehr AI Konkur Hub",
+  "description": "An AI-powered educational platform featuring smart report card analysis, interactive exam sessions, personalized study planning, and psychological performance tracking for Iranian high school students preparing for the National Entrance Exam (Konkur).",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

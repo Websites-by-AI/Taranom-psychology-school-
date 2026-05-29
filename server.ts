@@ -23,7 +23,12 @@ function getAI() {
         return null;
       }
       aiClient = new GoogleGenAI({
-        apiKey: key
+        apiKey: key,
+        httpOptions: {
+          headers: {
+            'User-Agent': 'aistudio-build'
+          }
+        }
       });
     }
     return aiClient;
@@ -35,63 +40,63 @@ function getAI() {
 
 // REST Api endpoints
 app.get("/api/health", (req, res) => {
-  res.json({ status: "ok", time: new Date().toISOString() });
+  res.json({ status: "ok", industry: "High School Education & Konkur Prep", brand: "ترنم مهر", time: new Date().toISOString() });
 });
 
-// Offline & Simulation Fallback Utility Functions for Chatr-e-Danesh Legal Exams
+// Offline & Simulation Fallback Utility Functions
 function getOfflineChatReply(message: string): string {
   const lowerMessage = (message || "").toString().toLowerCase();
-  if (lowerMessage.includes("مدنی") || lowerMessage.includes("حقوق مدنی")) {
-    return "سلام داوطلب عزیز وکیل آینده! حقوق مدنی با ضریب ۳ مهم‌ترین و ترازساز‌ترین درس در آزمون وکالت است. به خصوص مباحث عقود معین (مانند بیع، اجاره، رهن) و مدنی ۳ (قواعد عمومی قراردادها). پیشنهاد می‌کنم به جای حفظ صِرف مواد قانون، سناریوهای کارگاهی آزمون‌های سال گذشته چتر دانش را تحلیل کنی و برای هر ماده یک مثال فرضی بنویسی. چطور پیش میره این روش برات؟";
-  } else if (lowerMessage.includes("آیین دادرسی") || lowerMessage.includes("دادرسی مدنی") || lowerMessage.includes("آدم")) {
-    return "سلام خسته نباشید همکار آینده! آیین دادرسی مدنی درسی تماماً فرآیندی و فرموله شده است. صلاحیت‌های ذاتی و محلی مراجع، مواعد قانونی، و طرق فوق‌العاده شکایت از آرا (واخواهی، تجدیدنظر، فرجام‌خواهی) اهمیت بسیار بالایی دارند. از درسنامه‌های طلایی چتر دانش، نمودار درختی فرایند واخواهی تا فرجام رو رسم کن و روی میز مطالعه‌ت قرار بده تا ملکه ذهنت بشه.";
-  } else if (lowerMessage.includes("تجارت") || lowerMessage.includes("حقوق تجارت")) {
-    return "سلام دوست من! حقوق تجارت درس نسبتاً گسترده‌ای هست که مباحث اسناد تجاری (برات، سفته، چک) و ورشکستگی پرچالش‌ترین بخش‌های اون رو تشکیل میدن. پیشنهاد مشورتی من اینه که هر شب به مدت ۲۰ دقیقه فقط تست‌های سال‌های قبل بخش اسناد تجاری را از کتاب کار ساده‌ساز چتر دانش تحلیل کنی و نکاتش رو حاشیه‌نویسی کنی.";
-  } else if (lowerMessage.includes("جزا") || lowerMessage.includes("کیفری") || lowerMessage.includes("فقه")) {
-    return "سلام حقوق‌دان پرانرژی! دروسی مانند حقوق جزا و آیین دادرسی کیفری درصد به درصد ترازساز هستند. در اصول فقه و متون فقه نیز درک اصول لفظیه و تعارض ادله کلید اصلی است. از کتاب فقه نموداری چتر دانش استفاده کن تا الگوهای سخت عربی ساده‌تر تفهیم بشن.";
-  } else if (lowerMessage.includes("سنگین") || lowerMessage.includes("خسته") || lowerMessage.includes("انگیزه")) {
-    return "کاملاً حِسِت رو درک می‌کنم جانم. سال آزمون وکالت با این حجم سنگین قوانین و آراء وحدت رویه فراز و نشیب زیادی داره. این روزها دقیقاً همون جاهایی هستش که تفاوت رتبه‌های برتر وکالت کانون مشخص میشه. تکنیک پومودورو رو پیاده کن (۲۵ دقیقه مطالعه قوانین خاص، ۵ دقیقه استراحت).";
+  if (lowerMessage.includes("تجربی") || lowerMessage.includes("زیست") || lowerMessage.includes("پزشکی")) {
+    return "سلام کنکوری پرتلاش تجربی! برای قبولی در رشته‌های تاپ تجربی (پزشکی، دندان‌پزشکی و داروسازی)، زیست‌شناسی و شیمی کلیدی‌ترین دروس شما هستند. توصیه کایزن درسی ما این است که روزانه حداقل ۳ پارت مطالعه عمیق کتاب درسی به همراه تحلیل دقیق تصاویر زیست و تمرین ۵۰ تست زمان‌دار شیمی را در اولویت قرار دهید. این شیوه می‌تواند تراز شما را به بالای ۹۰۰۰ برساند. مایلید برنامه درسی خود را با هم بهینه‌سازی کنیم؟";
+  } else if (lowerMessage.includes("ریاضی") || lowerMessage.includes("حسابان") || lowerMessage.includes("شریف")) {
+    return "سلام مهندس آینده! در رشته ریاضی، درس حسابان، دیفرانسیل و هندسه پایه‌های حیاتی تراز شما هستند. تسلط روی فرمول‌ها و به حداقل رساندن اشتباهات محاسباتی تله‌های تستی به طور مستقیم تراز حسابان شما را رشد می‌دهد. تست‌زنی موضوعی به خصوص در دروس فیزیک و مباحث مغناطیس و حرکت بسیار کارساز است. چه کمکی در برنامه‌ریزی از من ساخته است؟";
+  } else if (lowerMessage.includes("انسانی") || lowerMessage.includes("ادبیات") || lowerMessage.includes("فلسفه")) {
+    return "سلام داوطلب گرانقدر رشته انسانی! در کنکور انسانی، عربی تخصصی، ادبیات تخصصی (فنون ادبی) و فلسفه و منطق دروس تعیین‌کننده موازنه تراز هستند. مربیان ترنم مهر پیشنهاد می‌کنند خلاصه تله‌های تستی فلسفه را همگام با مطالعه کتاب درسی دوره کنید و روی تست‌های قرابت ادبی تسلط یابید. بیایید با هم اهداف مطالعاتی شما را تنظیم کنیم.";
+  } else if (lowerMessage.includes("کایزن") || lowerMessage.includes("برنامه") || lowerMessage.includes("مطالعه")) {
+    return "سلام همکار گرامی و تلاشگر. برنامه‌ریزی هوشمند مطالاتی ترنم مهر با ادغام پومودوروهای درسی، شیفت صبح (مرور خلاصه مباحث مفهومی و کتاب) و شیفت عصر (تست‌زنی جامع موازی آزمون آزمایشی) فرموله شده است. این چرخه مداوم تضمین‌کننده رفع تدریجی تله‌های تستی بدون فرسودگی ذهنی است. آیا برنامه امروز را شروع کرده‌اید؟";
+  } else if (lowerMessage.includes("تنبلی") || lowerMessage.includes("خستگی") || lowerMessage.includes("انگیزه")) {
+    return "سلام و درود. خستگی ذهنی در فرآیند آمادگی برای ماراتن دشوار کنکور سراسری امری بسیار طبیعی است. ترنم مهر پیشنهاد می‌کند از تکنیک پومودورو درسی (۵۰ دقیقه مطالعه متمرکز و ۱۰ دقیقه استراحت دور از گوشی) استفاده کنید. تلاش مستمر شما سنگ‌بنای پزشک، مهندس یا رتبه برتر شدنتان خواهد بود.";
   } else {
-    return "چه سوال خوبی مطرح کردی! برای اینکه دقیق بتونم راهنمایی‌ت کنم، برام بنویس روزی چند ساعت مطالعه داری و درصد حدودی‌ت در آزمون‌های آزمایشی چتر دانش چند بوده؟ به عنوان مشاور اختصاصی‌ت توی سامانه هوشمند چتر دانش، در کنارت هستم تا قدم‌به‌قدم برطرفش کنیم.";
+    return "داوطلب فرزانه ترنم مهر، با تشکر از ارتباط شما با مشاور هوشمند هوش مصنوعی. برای تحلیل بهتر روند پیشرفت، تراز آخرین آزمون آزمایشی خود، رشته تحصیلی‌تان (تجربی، ریاضی یا انسانی) و درصد دروس آسیب‌دیده را ذکر کنید تا رهنمودهای مربی‌گری تخصصی خدمت شما صادر گردد.";
   }
 }
 
 function getOfflineGoalInsight(student: any, currentTraz: any, currentPercentage: any, targetTraz: any, targetGrowth: any, latestQuizScore: any) {
-  const trazDiff = (targetTraz || 6200) - (currentTraz || 5575);
+  const trazDiff = (targetTraz || 8500) - (currentTraz || 6500);
   let baseLikelihood = 80;
   if (trazDiff > 0) {
-    baseLikelihood -= Math.min(60, Math.round(trazDiff / 10));
+    baseLikelihood -= Math.min(60, Math.round(trazDiff / 30));
   }
   
   const targetPercentage = (currentPercentage || 59) + (targetGrowth || 10);
   const quizDiff = (latestQuizScore || 63) - targetPercentage;
   baseLikelihood += Math.min(20, Math.max(-30, Math.round(quizDiff * 1.5)));
   
-  const likelihood = Math.min(95, Math.max(10, baseLikelihood));
+  const likelihood = Math.min(96, Math.max(12, baseLikelihood));
   
   let text = "";
   let recommendations = [];
 
   if (likelihood >= 80) {
-    text = `سیگنال‌های مثبت و بسیار درخشانی در روند فرآیند درسی شما دیده می‌شود! برآورد درصد آزمون تستی اخیر شما (${latestQuizScore}٪) رشد عالی به نسبت کارنامه پایه (${currentPercentage}٪) در آزمون وکالت چتر دانش را حکایت می‌کند. دستیابی به تراز هدف ${targetTraz || 6200} بسیار در دسترس است، به شرط آنکه استمرار و خونسردی مطالعاتی و تسلط بر نص قوانین را که اکنون بر قله ۱۴ روز متوالی ایستاده حفظ کنید.`;
+    text = `سیگنال‌های درخشان و بسیار مثبتی در روند تست‌زنی و ترازهای آزمون خود ثبت کرده‌اید! برآورد بازدهی آخرین تلاش مطالعاتی شما (${latestQuizScore}٪) رشد برجسته‌ای را نسبت به وضعیت پایه (${currentPercentage}٪) نشان می‌دهد. دستیابی به تراز هدف ${targetTraz || 8500} با این مداومت کاملا هموار است؛ مشروط بر اینکه تحلیل تله‌های تستی و حل تست‌های سراسری سال‌های گذشته را به طور روزانه در فرآیند کایزن پیش ببرید.`;
     recommendations = [
-      "تمرکز بر ارتقای سرعت پاسخ‌دهی در آیین دادرسی مدنی و کیفری با تست‌های زمان‌دار ۱۵ تایی.",
-      "تثبیت مبحث عقود معین در حقوق مدنی با تمرکز بر تعهدات و تضامنات بر اساس درسنامه چتر دانش.",
-      "مرور منظم آرای وحدت رویه جدید در کنار تطبیق مواد مبهم قانون مجازات اسلامی."
+      "بهینه‌سازی زمان‌بندی مرور خلاصه نویسی‌ها در مباحث زیست‌شناسی و شیمی.",
+      "تثبیت درصد پاسخ‌دهی مبحث مشتق یا هندسه با حل ۳۰ تست زمان‌دار موازی.",
+      "حفظ پیوستگی استریک مطالعاتی روزانه بدون افت ریتم پومودورویی."
     ];
   } else if (likelihood >= 50) {
-    text = `مسیر مهارتی شما هموار است اما برای قبولی قطعی در کانون وکلا و تصاحب تراز ${targetTraz || 6200} نیاز به یک گام افزایش شدت تست تحلیلی و ثبت اشتباهات کارنامه حس می‌شود. تراز هدف شما تفاوت محسوسی با تراز فعلی (${currentTraz || 5575}) دارد. رشد مطلوب نمره کوییز نهایی شما (${latestQuizScore}٪) گواه پیشرفت است، هرچند برای تثبیت ترازهای بالا نیازمند بهبود دقت پاسخ‌دهی در دروس حقوق ثبت و حقوق تجارت هستید.`;
+    text = `مسیر آماده‌سازی شما برای کنکور سراسری امیدبخش است اما برای قبولی قطعی در دانشگاه‌های تراز اول کشور و صعود به تراز مطلوب ${targetTraz || 8500}، ارتقای سرعت پاسخ‌گویی به تست‌های سخت مفهومی و زمان‌بر ضروری است. درصد فعلی تسلط شما (${currentPercentage}٪) نیازمند رشد است. بازدهی آزمون‌های اخیر شما (${latestQuizScore}٪) گواه ظرفیت ارتقاء شماست.`;
     recommendations = [
-      "رفع نقص‌های موضوعی در مبحث ورشکستگی و اسناد تجاری با کمک کارگاه تستی چتر دانش.",
-      "ایجاد شبیه‌سازی مینی‌آزمون‌های زمان‌دار در منزل هفته‌ای دو مرتبه.",
-      "کاهش پاسخ‌های نسنجیده و استفاده از اصول حذف گزینه‌های انحرافی حقوقی."
+      "رفع نقایص مباحث شیمی آلی یا سرعت واکنش با درسنامه‌های صریح و مفهومی ترنم مهر.",
+      "حضور فعال در کارگاه مربی‌گری هوشمند و وبینارهای رفع اشکال کارنامه.",
+      "کاهش نمره منفی آزمون با دوری از زدن پاسخ‌های مردد و تست‌های ۵۰-۵0."
     ];
   } else {
-    text = `شوق و اراده شما برای ارتقا به تراز ${targetTraz || 6200} فوق‌العاده ارزشمند است، اما بیایید واقع‌بین باشیم؛ عبور از مرز تراز هدف فعلی نیازمند تغییر جدی در شیوه یادگیری قوانین و فرآیندهاست. درصد آخرین آزمون ثبت شده شما (${latestQuizScore}٪) با درصد آرمانی شما (${targetPercentage}٪) فاصله دارد. مشاور شما پیشنهاد می‌کند ابتدا یک ایستگاه میانی روی تراز ۵۹۰۰ بسازیم تا با قبولی در آزمون‌های تستی گام دوم را محکم‌تر بردارید.`;
+    text = `اراده مستحکم شما برای کسب رتبه برتر کشوری و تراز ممتاز (${targetTraz || 8500}) قابل تحسین است؛ اما آمارهای تحلیلی نشان می‌دهد که سطح فعلی کوییزها (${latestQuizScore}٪) با هدف‌گذاری نهایی (${targetPercentage}٪) فاصله دارد. مشاور ترنم مهر پیشنهاد می‌کند هدف خود را در فاز اول روی تراز میانی ۷۵۰۰ بگذارید تا پله‌پله و با ثبات بیشتری صعود کنید.`;
     recommendations = [
-      "کاهش حجم مباحث متفرقه و تمرکز بر نص قوانین خاص پرسوال ترازساز آزمون وکالت.",
-      "بازخوانی جدی مواد قانون مدنی و رسم نمودار درختی روابط اشخاص و اموال.",
-      "افزایش جلسات صحبت دوطرفه حضوری یا آنلاین با مشاور ارشد چتر دانش (آقای رادان)."
+      "تمرکز بسیار جدی بر مطالعه مباحث بنیادین و فرمول‌های پرتکرار فیزیک و ریاضی.",
+      "استفاده از کتاب‌های مفهومی و درسنامه‌های طلایی کنکور.",
+      "افزایش ساعات مطالعه هفتگی به ۴۸ ساعت کامل و ثبت دقیق در دفتر برنامه‌ریزی."
     ];
   }
 
@@ -102,54 +107,55 @@ function getOfflineExamAnalysis(lessons: any[], field: string) {
   const analyzedWeaknesses = [];
   const subjects = lessons || [];
 
-  // Subjects sorted ascending by percentage to isolate weaknesses
   const weakSubjects = [...subjects].sort((a: any, b: any) => a.percentage - b.percentage).slice(0, 3);
 
   for (const sub of weakSubjects) {
-    let topic = "";
-    let rec = "";
-    let questions = 40;
-    let severity: "critical" | "warning" | "mild" = "warning";
+     let topic = "";
+     let rec = "";
+     let questions = 40;
+     let severity: "critical" | "warning" | "mild" = "warning";
 
-    if (sub.lessonName.includes("مدنی")) {
-      topic = "عقود معین و قواعد عمومی تعهدات";
-      rec = "جزوه حقوق مدنی چتر دانش فصل مربوط به ایقاعات و عقود؛ حل ۵۰ تست کارگاه تستی.";
-      questions = 50;
-      severity = sub.percentage < 35 ? "critical" : "warning";
-    } else if (sub.lessonName.includes("دادرسی")) {
-      topic = "صلاحیت مراجع قضایی و مواعد قانونی";
-      rec = "بررسی نمودارهای مواعد آیین دادرسی مدنی و کیفری چتر دانش؛ حل و تحلیل ۲۰ تست موضوعی آزمون‌های سنوات قبل.";
-      questions = 65;
-      severity = sub.percentage < 35 ? "critical" : "warning";
-    } else if (sub.lessonName.includes("تجارت")) {
-      topic = "اسناد تجاری و ورشکستگی";
-      rec = "تطبیق مواد قانون تجارت مرتبط با چک نوظهور و قواعد عام مسئولیت تضامنی ظهرنویسان.";
-      questions = 45;
-      severity = "warning";
-    } else if (sub.lessonName.includes("جزا") || sub.lessonName.includes("کیفری")) {
-      topic = "جرایم علیه اموال و مجازات‌ها";
-      rec = "تحلیل تفاوت‌های کلاهبرداری، سرقت و خیانت در امانت همراه با حدود و تعزیرات اسلامی قانون مجازات.";
-      questions = 55;
-      severity = sub.percentage < 45 ? "critical" : "warning";
-    } else {
-      topic = "قوانین خاص و آرای وحدت رویه";
-      rec = "حل ۲۵ تست تالیفی چتر دانش و تحلیل اشتباهات آزمون قبلی.";
-      questions = 30;
-      severity = "mild";
-    }
+     const name = sub.lessonName || "";
 
-    analyzedWeaknesses.push({
-      topic,
-      subject: sub.lessonName,
-      percentage: sub.percentage,
-      recommendation: rec,
-      questionsCount: questions,
-      severity
-    });
+     if (name.includes("زیست") || name.includes("زیست‌شناسی")) {
+       topic = "زیست‌شناسی (مباحث ژنتیک، گیاهی یا غشای سلولی)";
+       rec = "مطالعه خط‌به‌خط کتاب درسی زیست‌شناسی; بررسی تصاویر کنکوری سال‌های گذشته و حل بسته ۵۰ تست زمان‌دار تله‌های تستی تجربی ترنم مهر.";
+       questions = 50;
+       severity = sub.percentage < 35 ? "critical" : "warning";
+     } else if (name.includes("حسابان") || name.includes("ریاضی")) {
+       topic = "ریاضیات تخصصی (مباحث تابع، مشتق و کاربرد آن)";
+       rec = "رفع اشکال اشتباهات محاسباتی تدرسی؛ حل تمرین‌های تشریحی کتاب درسی حسابان و زدن ۳۵ تست تمرکزی فاقد پاسخ نامطمئن.";
+       questions = 45;
+       severity = sub.percentage < 35 ? "critical" : "warning";
+     } else if (name.includes("شیمی")) {
+       topic = "شیمی تخصصی (مسائل استوکیومتری و سنتز مواد)";
+       rec = "مرور خلاصه واکنش‌های آلی و تمرین محاسبات سریع فاقد چک‌نویس طولانی؛ تحلیل تله‌های زمان‌بر در کارگاه بهینه‌سازی کایزن درسی.";
+       questions = 40;
+       severity = "warning";
+     } else if (name.includes("فیزیک")) {
+       topic = "فیزیک پیشرفته (نوسان و امواج یا حرکت‌شناسی)";
+       rec = "مرور دقیق نمودارهای مکان-زمان و سرعت-زمان فیزیک کنکور؛ زدن ۳۰ تست موازی با هدف افزایش سرعت تحلیل سوال.";
+       questions = 30;
+       severity = "mild";
+     } else {
+       topic = "مباحث مفهومی و حفظی درس تخصصی آسیب‌دیده";
+       rec = "خلاصه‌نویسی نموداری و مرورهای ۳ روزه؛ پرهیز از تله‌های نفی در نفی طراحان کنکور و شرکت در سنجش هوشمند ترنم مهر.";
+       questions = 35;
+       severity = "warning";
+     }
+
+     analyzedWeaknesses.push({
+       topic,
+       subject: name,
+       percentage: sub.percentage,
+       recommendation: rec,
+       questionsCount: questions,
+       severity
+     });
   }
 
-  const nextTraz = Math.min(8000, Math.max(4000, Math.floor(
-    (subjects.reduce((acc: number, cur: any) => acc + cur.percentage, 0) / (subjects.length || 1)) * 50 + 3200
+  const nextTraz = Math.min(12000, Math.max(4000, Math.floor(
+    (subjects.reduce((acc: number, cur: any) => acc + cur.percentage, 0) / (subjects.length || 1)) * 60 + 4500
   )));
 
   const totalWrong = subjects.reduce((sum: number, s: any) => sum + (s.wrong || 0), 0);
@@ -165,55 +171,62 @@ function getOfflineExamAnalysis(lessons: any[], field: string) {
   let simulatedTechnicalDetail = "";
   if (simulatedStressLevel > 70) {
     simulatedStressLabel = "بحرانی";
-    simulatedTechnicalDetail = "به دلیل ثبت کلاسترهای پی‌درپی اشتباه تحت فشار زمان ثانیه‌شمار و افزایش میانگین زمان معطلی روی گزینه‌های غلط، میزان استرس آزمونی سطح بالایی است.";
+    simulatedTechnicalDetail = "ریسک بالای استرس جلسه آزمون آزمایشی و کوفتگی شناختی ناشی از تست‌های پرمغز طراح؛ موازنه زمان از دست رفته روی سوالات تله‌دار مشهود است.";
   } else if (simulatedStressLevel > 45) {
     simulatedStressLabel = "متوسط";
-    simulatedTechnicalDetail = "نوسان زمانی مشهود بین دروس اختصاصی و معطلی طولانی روی سوالاتِ دارای شک زیاد حقوقی که منجر به ثبت نرخ توقف بالایی در سوالات غلط شده است.";
+    simulatedTechnicalDetail = "نوسان تمرکز در دقایق انتهایی آزمون به دلیل خستگی چشم و افت قند خون؛ داوطلب زمان مدیدی را روی چند تست خاص تلف کرده است.";
+  } else if (simulatedStressLevel > 25) {
+    simulatedStressLabel = "خفیف";
+    simulatedTechnicalDetail = "تمرکز نسبتاً مطلوب و آرامش ذهنی پایدار؛ چند بی‌دقتی کوچک محاسباتی در محاسبات استوکیومتری یا فیزیک رصد شد.";
   } else {
     simulatedStressLabel = "سالم";
-    simulatedTechnicalDetail = "مدیریت بهینه زمان با اختلاف متعادل و منطقی زمان پاسخ‌دهی تست‌های درست و نادرست؛ بدون استرس کاذب یا پاسخ‌های بی‌هدف حقوقی.";
+    simulatedTechnicalDetail = "بهره‌وری کامل و توازن عالی در ریتم پاسخ‌دهی؛ داوطلب بدون فرسودگی ذهنی و کمال‌گرایی منفی ماراتن آزمون را به پایان رسانده است.";
   }
+
+  const simAvgResponseTimeWrong = Math.round(55 + wrongRatio * 40);
+  const simAvgResponseTimeCorrect = Math.round(40 + (1 - wrongRatio) * 10);
+  const simConsecutiveErrors = Math.min(10, Math.floor(wrongRatio * 15 + 1));
 
   return {
     weaknesses: analyzedWeaknesses,
     psychological: {
-      pattern: simulatedStressLevel > 60 ? "تردید قضایی بین دو گزینه همراه با خستگی زمانی منتهی به خطا" : "تمرکز نوسانی در تست‌های سنگین حقوقی",
-      description: `داوطلب با توان علمی عالی اما تحت فشار زمان به دام تله‌های گزینه‌ای حقوقی آزمون وکالت افتاده که استرس معادل ${simulatedStressLevel}٪ بر سرعت تحلیل قضایی او تاثیر منفی مستقیم دارد.`,
+      pattern: simulatedStressLevel > 60 ? "فرسودگی توجه در دور آخر آزمون ناشی از عجله و وسواس تایید منفی" : "آرامش گذرا در ریتم مطالعه و ثبات ذهنی کافی",
+      description: `داوطلب محترم با میانگین رشد تراز تحصیلی پیش می‌رود اما تنش فرسایش ذهنی آزمون شبیه‌ساز معادل ${simulatedStressLevel}٪ بازدهی حل سوال‌ها را متاثر نموده است.`,
       correctToWrongRate: Math.max(12, Math.round(wrongRatio * 100)),
       suggestion: simulatedStressLevel > 60 
-        ? "تکنیک مهار زمان چتر دانش (حل تست‌های ساده هر مبحث ابتدا) را به کار بگیرید تا استرس مواجهه با سوالات طویل برطرف شود." 
-        : "استمرار پومودورو همراه با شبیه‌سازی دفترچه‌های زمان‌دار چتر دانش در منزل به صورت متوالی جهت مهار استرس زمان.",
-      cardColor: simulatedStressLevel > 70 ? "red" : simulatedStressLevel > 45 ? "orange" : "blue",
+        ? "پیشنهاد مربیان: پیاده‌سازی تکنیک ضربدر منها در مدیریت فواصل آزمون؛ استراحت ۵ دقیقه‌ای متمرکز و ریلکسیشن غشای حسی مغز مابین پارت‌های دشوار." 
+        : "تثبیت ریتم مطالعاتی روزانه به همراه مانیتور تمرین‌های تستی فاقد نمره منفی.",
+      cardColor: simulatedStressLevel > 70 ? "red" : simulatedStressLevel > 45 ? "orange" : simulatedStressLevel > 25 ? "amber" : "blue",
       stressLevel: simulatedStressLevel,
       stressAnalysis: {
-        avgResponseTimeWrong: Math.round(55 + wrongRatio * 40),
-        avgResponseTimeCorrect: Math.round(40 + (1 - wrongRatio) * 10),
-        consecutiveErrorsCount: Math.min(10, Math.floor(wrongRatio * 15 + 1)),
+        avgResponseTimeWrong: simAvgResponseTimeWrong,
+        avgResponseTimeCorrect: simAvgResponseTimeCorrect,
+        consecutiveErrorsCount: simConsecutiveErrors,
         stressLabel: simulatedStressLabel,
         technicalDetail: simulatedTechnicalDetail
       }
     },
     remedialPlan: [
-      { day: "شنبه", morningPlan: `${weakSubjects[0]?.lessonName || "حقوق مدنی"} - مطالعه مفهومی مواد قانونی و نظریات مشورتی`, afternoonPlan: "حل ۱۵ تست آموزشی بدون زمان", totalQuestions: 15 },
-      { day: "یکشنبه", morningPlan: `${weakSubjects[1]?.lessonName || "قوانین دادرسی"} - رفع اشکال از درسنامه چتر دانش`, afternoonPlan: "حل ۲۰ تست زمان‌دار کیفری/مدنی", totalQuestions: 20 },
-      { day: "دوشنبه", morningPlan: "مرور آرا وحدت رویه جدید و حقوق تجارت", afternoonPlan: "آزمون مبحثی جامع از نقاط ضعف", totalQuestions: 30 },
-      { day: "سه‌شنبه", morningPlan: `${weakSubjects[0]?.lessonName || "حقوق مدنی"} - تحلیل تست‌های کارگاهی گذشته`, afternoonPlan: "خلاصه‌نویسی موضوعی مواعد", totalQuestions: 25 },
-      { day: "چهارشنبه", morningPlan: `${weakSubjects[1]?.lessonName || "قوانین دادرسی"} - تست‌های تالیفی جدید چتر دانش`, afternoonPlan: "آزمون شبیه‌ساز زمان‌دار کلاودی", totalQuestions: 35 },
-      { day: "پنجشنبه", morningPlan: "مرور کلی خلاصه‌نویسی‌ها و تحلیل مجدد تست‌های نادرست قدیمی", afternoonPlan: "استراحت فکری و خودگویی مثبت روانشناسی", totalQuestions: 10 },
-      { day: "جمعه", morningPlan: "حضور در آزمون مرحله‌ای چتر دانش", afternoonPlan: "تحلیل موشکافانه کارنامه با مشاور تحصیلی", totalQuestions: 40 }
+      { day: "شنبه", morningPlan: "مطالعه مفهومی کتاب درسی و تصاویر زیست‌شناسی تجربی / فرمول قرابت ریاضی", afternoonPlan: "حل ۳۵ تست شبیه‌ساز کنکور سراسری و بررسی تشریحی مباحث خطاکار", totalQuestions: 35 },
+      { day: "یکشنبه", morningPlan: "مرور ساختارمند مباحث شیمی آلی یا مسائل تابع حسابان", afternoonPlan: "عارضه‌یابی اشتباهات محاسباتی آزمون قبل با کمک مربی هوشمند (۳۰ تست)", totalQuestions: 30 },
+      { day: "دوشنبه", morningPlan: "مطالعه مبحث فیزیک حرکت‌شناسی و مدارهای موازی جریان", afternoonPlan: "تست‌زنی موضوعی برای هماهنگی چشم و مغز در مهار تله‌ها (۲۵ تست)", totalQuestions: 25 },
+      { day: "سه‌شنبه", morningPlan: "مرور عربی تخصصی یا آرایه‌های ادبی و واژه‌شناسی", afternoonPlan: "شبیه‌ساز کوچک موازی دروس پرضریب کنکور (۴۰ تست)", totalQuestions: 40 },
+      { day: "چهارشنبه", morningPlan: "تحلیل الگوهای فرسودگی تمرکز ذهن و روش‌های تندخوانی", afternoonPlan: "حل پکیج تستی جامع و زمان‌دار تجربی/ریاضی/انسانی (۴۵ تست)", totalQuestions: 45 },
+      { day: "پنجشنبه", morningPlan: "مرور خلاصه‌نویسی‌های طلایی و یادداشت‌برداری‌های تله‌شناسی", afternoonPlan: "ثبت آمارهای روزهای گذشته در کارتابل ترنم مهر جهت تطبیق مربی ناظر (۲۰ تست)", totalQuestions: 20 },
+      { day: "جمعه", morningPlan: "پیش‌آزمون آزمایشی، پایش تراز فرضی و هماهنگی روانشناسی با درگاه والدین", afternoonPlan: "ریکاوری روحی، پیاده‌روی دور از استرس و خودآموزی کایزن مطالعاتی (۱۰ تست)", totalQuestions: 10 }
     ],
-    estimatedNextTraz: nextTraz + 150
+    estimatedNextTraz: nextTraz + 250
   };
 }
 
-// Endpoint for motivational messages
+// Endpoint for motivational messages / business quotes
 app.get("/api/motivational", async (req, res) => {
   const quotes = [
-    "سودای بزرگی در سر داری و مسیر وکالت پر از فراز و نشیب است. امروز با هر قدم کوچکت به ردای مقدس وکالت نزدیک‌تر می‌شوی. محکم ادامه بده!",
-    "موفقیت به معنای حفظ بی‌نقص کل قوانین نیست؛ بلکه استمرار در فهم حقوقی است. امروز بهترین نسخه تلاش خود را به نمایش بگذار همکار آینده!",
-    "هر تست و تحلیل کارنامه آزمون آزمایشی چتر دانش، چراغی روبه‌جلوست. تلاش امروز تو، ترازِ درخشان فرداست. پر انرژی و پرتوان باش!",
-    "یادت نره سختی‌های حقوق مدنی و آیین دادرسی، تورو وکیل قوی‌تری میکنه. تو توانایی قبولی در این آزمون سخت کانون را داری. شروع کن!",
-    "آرام آرام، اما با استواری حقوقی پیش برو. عدالت حاصل ایستادگی مجدانه شماست. همین امروز یک آجر دیگه روی کاخ علمی اهدافت بذار."
+    "اعتبار ترنم مهر در طول سالیان، حاصل ممارست فرزندان شایسته‌ای است که امروز رتبه‌های برتر دانشگاه‌های تهران، شریف و بهشتی کشور هستند. به پالس‌های تلاش روزانه خود وفادار بمانید!",
+    "تلاش متعهدانه ثمر خواهد داد. خواندن خط‌به‌خط تصویر زیست یا دست‌ورزی مسئله فیزیک، پله‌ای برای پزشک، مهندس یا رتبه برتر شدن است.",
+    "هر کارنامه آزمایشی در سامانه ترنم مهر، یک نقشه دقیق مربی‌گری کایزن برای غلبه تدریجی بر تله‌های طراحان ماهر کنکور است. شجاعانه ادامه دهید!",
+    "تراز کمال علمی حاصل تصادف و بخت نیست؛ بلکه فرآیند مداوم بهسازی عادات، مهار نمره‌های منفی و انگیزه درخشیدن شماست. پرانرژی ماراتن را مهار کنید!",
+    "شما مجهز به برترین تکنولوژی مربی‌گری و روانشناسی تحصیلی هستید. از هر پومودوروی مطالعاتی برای پیشی گرفتن از رقبای خسته خود استفاده کنید."
   ];
 
   try {
@@ -225,17 +238,17 @@ app.get("/api/motivational", async (req, res) => {
 
     const response = await ai.models.generateContent({
       model: "gemini-3.5-flash",
-      contents: "یک پیام انگیزشی صمیمی، دلسوزانه و الهام‌بخش کوتاه (حداکثر دو جمله کوتاه) به زبان فارسی برای داوطلب سخت‌کوشی که برای آزمون وکالت کانون وکلای دادگستری یا مرکز وکلا درس می‌خواند بدون هیچ نماد اضافه یا توضیح دیگر بنویس.",
+      contents: "یک جمله انگیزشی مقتدر، خلاقانه، عاطفی، علمی و روان‌شناختی مناسب داوطلبان کنکور سراسری ایران (تجربی، ریاضی، انسانی) برای نصب در بالای پرتال آموزشی 'ترنم مهر' بنویس. شیوه کایزن، تعهد بالا و رتبه‌های برتر شریف و تهران را تداعی کند. لحن صمیمی و عمیق فارسی داشته باشد، بدون پیشوند و پسوند.",
     });
     return res.json({ quote: response.text?.trim() || quotes[Math.floor(Math.random() * quotes.length)] });
   } catch (error: any) {
-    console.warn("Error generating motivational quote with Gemini:", error);
+    console.warn("Error generating Konkur study quote with Gemini (Using offline fallback):", error);
     const randomIndex = Math.floor(Math.random() * quotes.length);
     res.json({ quote: quotes[randomIndex] });
   }
 });
 
-// Endpoint for academic coaching messages
+// Endpoint for AI business & technical consulting chat
 app.post("/api/chat", async (req, res) => {
   const { message, history } = req.body;
   try {
@@ -252,7 +265,7 @@ app.post("/api/chat", async (req, res) => {
 
     formattedHistory.unshift({
       role: "user",
-      parts: [{ text: "سیستم مشخصات: شما رتبه برتر و مشاور ارشد تحصیلی و تحلیل‌گر آزمون‌های تخصصی موسسه آموزش عالی حقوقی 'چتر دانش' هستید. نام شما 'دکتر کریمی' است. به زبان فارسی شیوا، صمیمی، دلسوزانه و فوق‌العاده کاربردی پاسخ دهید. داوطلبان به شما اعتماد بالایی دارند؛ بنابراین راهکارهای تکنیکی، تطبیق مواد قانونی، تحلیل آرای وحدت رویه، معرفی کتاب‌های قوانین نموداری چتر دانش و انگیزه دادن جزو وظایف شماست. پاسخ‌ها خلاصه (زیر ۳ پاراگراف) باشند." }]
+      parts: [{ text: "سیستم مشخصات: شما 'دکتر رادان'، مشاور ارشد برنامه‌ریزی درسی، آسیب‌شناس روانی داوطلبان و متخصص تراز ممیزی آزمون‌های کانون و کنکور سراسری در موسسه 'ترنم مهر' هستید. شما فردی عاقل، پرانرژی، حامی، صمیمی، دلسوز و به شدت تکنیکی هستید که برای ارتقای رتبه بچه های تجربی، ریاضی و انسانی برنامه می‌ریزید. با دانه دانه فرمول‌ها، شگرد کاهش نمرات منفی، و مدل کایزن تراز آشنا هستید. به زبان فارسی فوق‌العاده زیبا، تاثیرگذار و تکنیکی صحبت کنید. هر پاسخ حداکثر در ۲ یا ۳ پاراگراف شیوا ارسال شود." }]
     });
 
     formattedHistory.push({
@@ -267,12 +280,12 @@ app.post("/api/chat", async (req, res) => {
 
     return res.json({ reply: response.text?.trim() || getOfflineChatReply(message) });
   } catch (error: any) {
-    console.warn("Error in AI counselor chat with Gemini:", error);
+    console.warn("Error in Konkur chat with Gemini (Using offline fallback):", error);
     res.json({ reply: getOfflineChatReply(message) });
   }
 });
 
-// Endpoint to estimate goal likelihood and provide AI suggestions
+// Endpoint to estimate goal likelihood
 app.post("/api/goal-insight", async (req, res) => {
   const { 
     student, 
@@ -284,16 +297,7 @@ app.post("/api/goal-insight", async (req, res) => {
   } = req.body;
   
   try {
-    const fieldMap: Record<string, string> = {
-      bar_exam: "آزمون وکالت کانون وکلای دادگستری (اسکودا)",
-      judiciary: "آزمون تصدی منصب قضا (قضاوت)",
-      notary: "آزمون سردفتری اسناد رسمی",
-      master_of_laws: "کنکور کارشناسی ارشد حقوق",
-      math: "رشته ریاضی",
-      experimental: "رشته تجربی",
-      humanities: "رشته علوم انسانی"
-    };
-    const fieldName = fieldMap[student?.field] || "آزمون وکالت";
+    const fieldName = student?.field === "tajrobi" ? "علوم تجربی" : student?.field === "riazi" ? "ریاضی فیزیک" : "علوم انسانی";
     const targetPercentage = (currentPercentage || 59) + (targetGrowth || 10);
 
     const ai = getAI();
@@ -301,26 +305,25 @@ app.post("/api/goal-insight", async (req, res) => {
       return res.json(getOfflineGoalInsight(student, currentTraz, currentPercentage, targetTraz, targetGrowth, latestQuizScore));
     }
 
-    const prompt = `شما یک هوش مصنوعی تحلیل‌گر و مشاور هوشمند آزمون‌های وکالت و حقوقی در موسسه آموزش عالی حقوقی "چتر دانش" هستید.
-اطلاعات هدف‌گذاری و روند تحصیلی داوطلب به شرح زیر است:
-- نام و هدف داوطلب: ${student?.name || "داوطلب"} - آماده‌سازی برای ${fieldName}
-- تراز آزمون قبلی چتر دانش: ${currentTraz || 5575}
-- تراز هدف آزمون پیش‌رو چتر دانش: ${targetTraz || 6200}
-- میانگین درصد در کارنامه اصلی: ${currentPercentage || 59}٪
-- درصد هدف نهایی تعیین شده: ${targetPercentage}٪ (شامل درصد فعلی به علاوه رشد هدف ${targetGrowth || 10}٪)
-- آخرین نمره کوییز فرعی تستی داوطلب: ${latestQuizScore || 63}٪
-- میزان پیوستگی و استمرار فعلی: ۱۴ روز متوالی مطالعه قانون
+    const prompt = `شما یک مشاور ارشد تحصیلی، ارزیاب ترازهای علمی و طراح کایزن درگاه آموزشی عالی موسسه "ترنم مهر" (سامانه هوشمند پایش اهداف داوطلبان کنکور سراسری ایران) هستید.
+امکانات و اهداف تحصیلی دانش‌آموز به شرح زیر است:
+- نام و دوره هدف: ${student?.name || "داوطلب فرضی"} - هدف ${student?.grade || ""} رشته تخصصی کنکور ${fieldName}
+- تراز آزمون تستی فعلی داوطلب در ترنم مهر: ${currentTraz || 6500}
+- تراز هدف‌گذاری شده دانشگاه اول کشور: ${targetTraz || 8500}
+- درصد محصولات تستی پاسخ صحیح فعلی: ${currentPercentage || 59}٪
+- راندمان تست‌زنی هدف نهایی: ${targetPercentage}٪ (شامل بازدهی قبلی به همراه بهبود مربی‌گری)
+- نمره آخرین کوییز شبیه‌ساز او: ${latestQuizScore || 63}٪
 
-یک پیش‌بینی و برآورد هوشمندانه، صمیمی، دلسوزانه و به شدت تکنیکی به زبان فارسی روان درباره "احتمال و شانس واقعی رسیدن به تراز هدف آزمون وکالت چتر دانش" بنویسید. تحلیل باید بر اساس تفاوت تراز جاری و هدف، و همچنین کیفیت درصد کوییز اخیر باشد.
+شما باید تراز و پیشرفت او را بسنجید و یک تحلیل آماری و علمی و روانشناختی آماده کنید. نقاط قوت و مباحث دروس تخصصی را پوشش دهید.
 
 پاسخ را دقیقاً در قالب فرمت JSON زیر بدون تگ‌های خارجی تحویل دهید:
 {
-  "likelihood": 72, // یک عدد صحیح بین ۱۰ تا ۹۸ نشان‌دهنده درصد شانس رسیدن به هدف
-  "text": "تحلیل صمیمی و روانشناسی و فنی مشاور شامل نقاط قوت و راهنما در ۳ الی ۴ جمله فارسی ترغیب‌کننده و واقع‌بینانه",
+  "likelihood": 72, // یک عدد صحیح بین ۱۰ تا ۹۸ نشان‌دهنده درصد شانس رسیدن به تراز هدف
+  "text": "تحلیل صمیمی، ارزیابی بهداشت ذهن داوطلب، فرمول تلاش و مربی‌گری در ۳ الی ۴ جمله فارسی ترغیب‌کننده و معمارانه با لحن صمیمی",
   "recommendations": [
-    "توصیه عملیاتی ۱ به فارسی روان درباره چگونگی ارتقای شانس موفقیت حقوقی",
-    "توصیه عملیاتی ۲ به فارسی روان برای رفع اشکال آزمون‌های آزمایشی چتر دانش",
-    "توصیه عملیاتی ۳ به فارسی روان درباره انگیزه و روانشناسی غلبه بر ترس قوانین"
+    "توصیه کاربردی ۱ جهت رفع تله تستی دروس آسیب دیده و ارتقای احتمال قبولی در رشته و دانشگاه هدف",
+    "توصیه کاربردی ۲ جهت بهینه‌سازی کایزن مطالعاتی درسنامه گام به گام ترنم مهر",
+    "توصیه کاربردی ۳ درباره مانیتورینگ دقیق ترازهای رقبا در آزمون‌های جامع پیش‌رو"
   ]
 }
 
@@ -336,11 +339,11 @@ app.post("/api/goal-insight", async (req, res) => {
           properties: {
             likelihood: {
               type: Type.INTEGER,
-              description: "The calculated percentage chance of hitting the student's exam goals, integer 10 to 98."
+              description: "The calculated percentage chance of hitting the educational goals, integer 10 to 98."
             },
             text: {
               type: Type.STRING,
-              description: "Warm, motivational and technical advisor evaluation paragraph in Persian."
+              description: "Warm, motivational and technical evaluation paragraph in Persian."
             },
             recommendations: {
               type: Type.ARRAY,
@@ -359,12 +362,12 @@ app.post("/api/goal-insight", async (req, res) => {
     return res.json(resultJson);
 
   } catch (error: any) {
-    console.warn("Error generating goal insights with Gemini (Using offline fallback due to rate-limiting/429):", error);
+    console.warn("Error generating Taranom Mehr goal insights with Gemini (Using offline fallback):", error);
     return res.json(getOfflineGoalInsight(student, currentTraz, currentPercentage, targetTraz, targetGrowth, latestQuizScore));
   }
 });
 
-// Endpoint for intelligent report card analysis
+// Endpoint for intelligent exam quality analysis
 app.post("/api/analyze-exam", async (req, res) => {
   const { lessons, field } = req.body;
   
@@ -374,48 +377,48 @@ app.post("/api/analyze-exam", async (req, res) => {
       return res.json(getOfflineExamAnalysis(lessons, field));
     }
 
-    const prompt = `یک کارنامه تحصیلی داوطلب آزمون‌های حقوقی چتر دانش با کد رهگیری دریافت شده است که درصدهای او در دروس حقوقی به شرح زیر است:
+    const prompt = `یک کارنامه آزمون آزمایشی داوطلب کنکور سراسری با متغیرهای لاین تخصصی '${field}' دریافت شده است که آمارهای ممیزی پاسخ‌دهی به قرار زیر است:
 ${JSON.stringify(lessons, null, 2)}
 
-لطفا یک تحلیل هوشمند، تخصصی و واقع‌بینانه حقوقی به فرمت JSON دقیقا با ساختار زیر تهیه کنید. صمیمی و بر مبنای حاکمیت تله‌های حقوقی آزمون وکالت بنویسید و بخش‌ها کاملا فارسی عمیق باشند:
+لطفا یک تحلیل تخصصی مربی‌گری، روانشناسی آزمون، عارضه‌یابی درصد ممیزی‌ها به فرمت JSON دقیقا با ساختار زیر تهیه کنید. صمیمی و فنی بر اساس متدهای پیشرفته کایزن تحصیلی ترنم مهر طراحی شده باشد. به زبان فارسی شیوا پاسخ دهید:
 {
   "weaknesses": [
     {
-      "topic": "نام زیر مبحث بحرانی حقوقی خاص (مثلاً عقود غیرمعوض یا طرق فوق العاده اعتراض به آرا یا ورشکستگی به تقلب)",
-      "subject": "نام درس اصلی مربوطه مثلا حقوق مدنی یا آیین دادرسی مدنی",
-      "percentage": 30, // درصد داوطلب
-      "recommendation": "پیشنهاد رفع اشکال تستی با ارجاع به کتب قوانین نموداری و تست چتر دانش",
-      "questionsCount": تعداد تست پیشنهادی برای هفته جاری، عدد بین ۳۰ تا ۷۰,
-      "severity": "critical" یا "warning" یا "mild"
+      "topic": "نام مبحث درسی آسیب‌دیده با جزئیات کامل (مثلاً مسائل استوکیومتری، گیاهی سال یازدهم، مشتق و کاربرد آن)",
+      "subject": "نام درس تخصصی آسیب‌دیده مربوطه",
+      "percentage": 30, // درصد پاسخگویی درس
+      "recommendation": "پیشنهادی جامع و دلسوزانه برای رفع تله تستی، منبع مطالعاتی از کتاب درسی و درسنامه‌های طلایی ترنم مهر",
+      "questionsCount": 40, // تعداد تست تمرینی شناسنامه‌دار پیشنهادی برای غلبه بر این چالش تستی ترجیحاً بین ۳۰ تا ۷۰ عدد,
+      "severity": "warning" // "critical" | "warning" | "mild"
     }
   ],
   "psychological": {
-    "pattern": "نام الگوی روانی مثلا تردید قضایی بین دو گزینه یا توقف سنگین در تست‌های طولانی مدنی یا تغییر پاسخ درست حقوقی به غلط",
-    "description": "تحلیل روانشناسی رفتار آزمون دادن او در ۲ جمله صمیمانه و حقوقی",
-    "correctToWrongRate": درصد میانگین خطای تصادفی وی مثلا ۴۲,
-    "suggestion": "پیشنهاد عملیاتی روانشناختی برای غلبه بر تله‌های آزمون وکالت کانون",
-    "cardColor": "red" یا "orange" || "amber" یا "blue",
-    "stressLevel": عدد بین ۰ تا ۱۰۰ نشان دهنده میزان استرس روانی داوطلب بر اساس درصدهای بالا و الگوهای خطا و زمان توقف فرضی در تست‌ها,
+    "pattern": "نام الگوی کاهش تمرکز ذهن داوطلب (مثلاً فرسودگی توجه در دور آخر تست‌زنی، بیش‌تفکری روی گزینه‌های غلط)",
+    "description": "تحلیل روانشناختی و ریتم مطالعاتی رفتار داوطلب در ۲ جمله صمیمانه و تخصصی",
+    "correctToWrongRate": 42, // درصد میانگین پاسخهای غلط به کل تستها مثلا ۴۲
+    "suggestion": "پیشنهاد مربی مشاور برای مهار استرس آزمون، تغذیه تمرکز و مانیتور بهتر رقبا در ماراتون تستی",
+    "cardColor": "orange", // "red" | "orange" | "amber" | "blue"
+    "stressLevel": 55, // عدد بین ۰ تا ۱۰۰ نشان دهنده میزان استرس ذهن، فرسودگی توجه و اضطراب داوطلب بر اساس توالی خطاهای پاسخی,
     "stressAnalysis": {
-      "avgResponseTimeWrong": متوسط زمان سپری شده برای تست‌های حقوقی غلط به ثانیه، عددی بین ۵۰ تا ۹۰ ثانیه بر اساس سطح تردید در قوانین,
-      "avgResponseTimeCorrect": متوسط زمان سپری شده برای تست‌های درست به ثانیه، عددی بین ۳۰ تا ۶۰ ثانیه,
-      "consecutiveErrorsCount": تخمین تعداد غلط‌های متوالی ناشی از به تله افتادن، عددی بین ۱ تا ۱۰,
-      "stressLabel": "بحرانی" یا "متوسط" یا "خفیف" یا "سالم",
-      "technicalDetail": "توضیح کوتاه فنی ۲ جمله‌ای به زبان فارسی درباره چگونگی تاثیر فشارهای زمانی و گمراه‌کننده‌های مسئله حقوقی بر میزان استرس و تردید"
+      "avgResponseTimeWrong": 75, // متوسط زمان هدررفته روی تست‌های دارای پاسخ غلط به ثانیه، عددی بین ۵۰ تا ۹۰ ثانیه,
+      "avgResponseTimeCorrect": 45, // متوسط زمان ثبت پاسخ صحیح هر تست در آزمون به ثانیه، عددی بین ۳۰ تا ۶۰ ثانیه,
+      "consecutiveErrorsCount": 3, // تخمین و شمارش توالی خطاهای همگون ناشی از فرسودگی توجه، بین ۱ تا ۱۰,
+      "stressLabel": "متوسط", // "بحرانی" | "متوسط" | "خفیف" | "سالم"
+      "technicalDetail": "توضیح فنی کوتاه ۲ جمله‌ای فارسی مربی علمی درباره عارضه استرس روی غشای تمرکزی داوطلب و پیامد آن روی آزمون جامع زیست‌شناسی و ریاضی"
     }
   },
   "remedialPlan": [
     {
-      "day": "نام روز مثلا شنبه تا جمعه",
-      "morningPlan": "برنامه مطالعه و رفع اشکال تستی صبح - مرور مواد قانون خاص",
-      "afternoonPlan": "برنامه تست و تمرین عصر - حل تست‌های کارگاهی چتر دانش",
-      "totalQuestions": تعداد کل تست پیشنهادی آن روز، مثلا ۳۵
+      "day": "شنبه",
+      "morningPlan": "برنامه مطالعه عمیق کتاب درسی، مرور تصاویر و خلاصه‌ها در شیفت صبح",
+      "afternoonPlan": "برنامه حل تست زمان‌دار استاندارد و تحلیل پاسخنامه در شیفت عصر",
+      "totalQuestions": 35
     }
   ],
-  "estimatedNextTraz": تراز تخمینی بعدی که عددی بین ۴۰۰۰ تا ۸۵۰۰ باشد بر اساس نمرات فعلی که اگر درصدها بهبود یابد رشد کند
+  "estimatedNextTraz": 8200 // تراز تخمینی دور ممیزی بعدی داوطلب که عددی بین ۴۰۰۰ تا ۱۲۰۰۰ بر اساس آمارهای بهبود یافته بالا باشد
 }
 
-فقط کدهای خام JSON را بدون عبارت markdown مانند \`\`\`json برگردان.`;
+فقط کدهای خام JSON را بدون عبارت markdown مانند \`\`\`json برگردانید.`;
 
     const response = await ai.models.generateContent({
       model: "gemini-3.5-flash",
@@ -430,353 +433,13 @@ ${JSON.stringify(lessons, null, 2)}
     const resultJson = JSON.parse(cleanedText);
     return res.json(resultJson);
   } catch (error: any) {
-    console.warn("Error analyzing exam with Gemini (Using offline fallback due to rate-limiting/429):", error);
+    console.warn("Error analyzing exam with Gemini (Using offline fallback):", error);
     return res.json(getOfflineExamAnalysis(lessons, field));
   }
 });
 
-// Offline Custom Exam Generator Fallback
-function getOfflineCustomExam(subjectName: string, percentage: number) {
-  let topic = "حقوق مدنی";
-  let justification = "";
-  let psychologicalAnalysis = "";
-  let questions: any[] = [];
-
-  const subj = (subjectName || "حقوق مدنی").toString();
-
-  if (subj.includes("دادرسی")) {
-    topic = "آیین دادرسی مدنی";
-    justification = `با توجه به نمره قبلی شما (${percentage}٪) در درس آیین دادرسی مدنی، اولویت شما باید بر روی مباحث فنی و شکلی قانون به خصوص «صلاحیت مراجع» و «راهکارهای اعتراض به آرا» باشد. این مباحث پایه ساختار آزمون وکالت را تشکیل داده و بیشترین تله‌های شکلی کانون وکلا در این بخش قرار دارند.`;
-    psychologicalAnalysis = "تحلیل روان‌شناختی شما نشان می‌دهد که از تعجیل شکلی رنج می‌برید؛ یعنی در مواجهه با زمان، فرآیندهای دادرسی را با فرآیندهای کیفری ادغام می‌کنید. پیشنهاد می‌شود ابتدا آرامش خود را حفظ کرده و سپس مواعد را طبق نمودار چتر دانش بررسی کنید تا در گزینه‌ها غافلگیر نشوید.";
-    questions = [
-      {
-        id: "ai_d_1",
-        topic: "آیین دادرسی مدنی (صلاحیت مراجع)",
-        questionText: "شورای حل اختلاف در کدام یک از دعاوی زیر صلاحیت ذاتی برای رسیدگی و صدور رای ماهوی دارد؟",
-        options: [
-          "دعوای تخلیه عین مستاجره به خواسته مطالبه حق سرقفلی",
-          "دعوای تخلیه اماکن مسکونی بدون ادعای حق کسب و پیشه یا سرقفلی",
-          "دعوای مفروز کردن ملک مشاعی که جریان ثبتی آن خاتمه یافته باشد",
-          "دعوای اثبات زوجیت و رجوع از هبه خانوادگی"
-        ],
-        correctOptionIndex: 1,
-        explanation: "مستند به ماده ۹ قانون شوراهای حل اختلاف، رسیدگی به تمامی دعاوی تخلیه اماکن مسکونی (به استثنای اماکن تجاری که مدعی سرقفلی یا حق کسب و پیشه باشند) در صلاحیت ذاتی شورای حل اختلاف است. گزینه یک به دلیل وجود ادعای سرقفلی خارج از صلاحیت شورا می‌باشد."
-      },
-      {
-        id: "ai_d_2",
-        topic: "آیین دادرسی مدنی (مهلت تجدیدنظرخواهی)",
-        questionText: "هرگاه دادخواست اعتراض تجدیدنظر خارج از فرجه قانونی تقدیم شود، کدام تصمیم قانونی صادر خواهد شد؟",
-        options: [
-          "قرار ابطال دادخواست از سوی دادگاه تجدیدنظر استان",
-          "قرار رد دادخواست از سوی دادگاه صادرکننده رای نخستین",
-          "قرار سقوط دعوا به علت اعتبار امر مختومه توسط دادرس بدوی",
-          "حکم بطلان دعوای بدوی توسط قاضی تجدیدنظر"
-        ],
-        correctOptionIndex: 1,
-        explanation: "طبق ماده ۳۸۳ قانون آیین دادرسی مدنی، دادخواست تجدیدنظر باید در مهلت مقرر قانونی تقدیم شود؛ در غیر این صورت، قرار رد دادخواست از سوی دادگاه صادرکننده رای نخستین صادر می‌شود که این قرار نیز قابل اعتراض در مرجع تجدیدنظر استان است."
-      }
-    ];
-  } else if (subj.includes("تجارت")) {
-    topic = "حقوق تجارت";
-    justification = `با پیش‌زمینه تراز قبلی (${percentage}٪) در حقوق تجارت، تمرکز در این آزمون بر مبحث پیچیده «اسناد تجاری و مسئولیت ظهرنویسان» و «ورشکستگی تاجر» قرار داده شد زیرا این مباحث به دلیل داشتن قوانین خاص و آراء وحدت رویه فراوان، ترازسازترین مباحث آزمون هستند.`;
-    psychologicalAnalysis = "بررسی‌ها گویای این است که در مواجهه با قوانین تجاری دچار اضطراب مفرط ناشی از تضامن هستید. تفکیک ظهرنویس از ضامن با فرمول‌های نموداری چتر دانش می‌تواند این اضطراب تحلیلی را فرو بنشاند و از تغییر مشکوک تصمیم ممانعت نماید.";
-    questions = [
-      {
-        id: "ai_t_1",
-        topic: "حقوق تجارت (مسئولیت ظهرنویسان)",
-        questionText: "اگر ظهرنویس سفته با درج قید شرط عدم مسئولیت تضامنی اقدام به انتقال سند کند، وضعیت دارنده چگونه خواهد بود؟",
-        options: [
-          "این شرط باطل و مبطل سفته است و دارنده حق پیگیری ندارد.",
-          "شرط باطل است ولی سفته صحیح است و ظهرنویس تضامناً مسئول است.",
-          "شرط صحیح است و ظهرنویس مزبور از مسئولیت پرداخت در پرداخت اصلی و تضامنی مبرا می‌شود.",
-          "ظهرنویس صرفاً در قبال صادرکننده اول مسئولیت عهده‌دار است."
-        ],
-        correctOptionIndex: 2,
-        explanation: "در حقوق تجارت ایران، ظهرنویس می‌تواند مسئولیت تضامنی خود را با شرط صریح ساقط کند. این آزادی اراده در ظهرنویسی معتبر است و شرط نافذ خواهد بود، هرچند صادرکننده اصلی هرگز نمی‌تواند خود را از مسئولیت تضامنی و انفرادی مبرا سازد."
-      },
-      {
-        id: "ai_t_2",
-        topic: "حقوق تجارت (ورشکستگی تاجر)",
-        questionText: "معاملات تاجر ورشکسته پس از تاریخ توقف و قبل از صدور حکم ورشکستگی (دوره مشکوک) چه وضعیتی دارد؟",
-        options: [
-          "کلیه معاملات تاجر در این دوره مطلقاً باطل و بلااثر است.",
-          "تنها معاملات بدون عوض و صلح محاباتی در این دوره قابل فسخ یا باطل است.",
-          "معاملات مزبور کاملا صحیح است و تا زمان صدور حکم ورشکستگی نافذ می‌باشد.",
-          "معاملات تاجر به صورت غیرنافذ بوده و ورثه حق ابطال آن را خواهند داشت."
-        ],
-        correctOptionIndex: 1,
-        explanation: "مستند به ماده ۴۲۳ قانون تجارت، برخی معاملات تاجر که بعد از توقف صورت گرفته باشد (نظیر صلح محاباتی، هبه، رهن مال برای بدهی) باطل است، اما سایر معاملات معوض وی نافذ خواهد بود مگر اینکه اثبات شود به قصد اضرار به دیان بوده است."
-      }
-    ];
-  } else if (subj.includes("اصول") || subj.includes("فقه")) {
-    topic = "اصول فقه";
-    justification = `بررسی تراز شما (${percentage}٪) در اصول فقه نشان می‌دهد که شما در بخش قواعد لفظ و تعارض ادله نیاز به تمرین بیشتر دارید. این آزمون با سوالاتی فنی از دلالت‌ها طراحی گردید تا چالش‌های شما را در تفکیک مفهوم از منطوق آشکار کند.`;
-    psychologicalAnalysis = "ذهن شما بسیار فرمول‌محور است اما در فقه دلالت‌ها، به دام پیچیدگی موازین لفظی عربی می‌افتید. روانشناسان ما توصیه می‌کنند اصول را به چشم علم منطق تماشا کنید تا ترس دلالتی شما محو شده و تسلط قضایی بهتری یابید.";
-    questions = [
-      {
-        id: "ai_o_1",
-        topic: "اصول فقه (مفهوم مخالف)",
-        questionText: "کدام یک از شرایط زیر برای ایجاد و حجیت 'مفهوم مخالف' در قضیه شرطیه ضروری و واجب است؟",
-        options: [
-          "وجود انحصار علیت در شرط به گونه‌ای که شرط، علت منحصره جزای مذکور باشد.",
-          "حضور عموم لفظی در تمام موضوعات فرعی جمله بدوی.",
-          "عدم مخالفت حکم با نص صریح کتاب و سنت نبوی.",
-          "تصریح متکلم به لزوم ابطال جزا در فرض نبودن قید اصلی."
-        ],
-        correctOptionIndex: 0,
-        explanation: "مفهوم شرط زمانی معتبر و حجت است که احراز شود شرط مذکور، علت منحصره برای تحقق جزا است. در غیر این صورت، با انتفای آن شرط، جزا منتفی نشده بلکه با علل دیگر نیز قابل تحقق خواهد بود."
-      },
-      {
-        id: "ai_o_2",
-        topic: "اصول فقه (منطوق و مفهوم)",
-        questionText: "اگر قانون‌گذار در قانونی ذکر کند که «مالکیت آپارتمان‌ها منوط به ثبت رسمی است»، این دلالت را چه می‌نامند؟",
-        options: [
-          "منطوق صریح عبارتی",
-          "مفهوم موافق اولویت",
-          "منطوق غیرصریح دلالت اقتضا",
-          "مفهوم مخالف حصر و شرط"
-        ],
-        correctOptionIndex: 0,
-        explanation: "منطوق صریح دلالتی است که حکم ذکر شده مستقیماً از لفظ شنیده می‌شود و نیازي به استدلال ثانویه یا تقدیر کلام ندارد. در اینجا مالکیت در لفظ مستقیماً منوط شده است."
-      }
-    ];
-  } else {
-    // default/حقوق مدنی
-    topic = "حقوق مدنی";
-    justification = `با تراز (${percentage}٪) در حقوق مدنی، این آزمون متمرکز بر مباحث سنگین وکالتی مانند «حق شفعه»، «خیارات عقد بیع» و «عقود جایز و اذنی» طراحی شد تا نقاط ضعف شما در کلاسترهای مفهومی قانون مدنی را به طور کامل پوشش دهد.`;
-    psychologicalAnalysis = "تحلیل روانشناختی نشان می‌دهد شما از الگوی «تردید دیرهنگام» رنج می‌برید؛ یعنی در آخرین لحظات گزینه درست را به غلط تغییر می‌دهید. تمرین بر روی این آزمون و تکیه بر تصمیمات حقوقی اولیه، این مشکل روانی را برطرف می‌کند تا با خونسردی تست بزنید.";
-    questions = [
-      {
-        id: "ai_m_1",
-        topic: "حقوق مدنی (وکالت بلاعزل)",
-        questionText: "هرگاه در ضمن یک عقد بیع لازم، خریدار به فروشنده شرط وکالت بلاعزل برای انتقال سهم مشاع بدهد، فوت خریدار چه اثری دارد؟",
-        options: [
-          "وکالت همچنان پابرجا و نافذ است زیرا به صورت شرط ضمن عقد لازم است.",
-          "وکالت منفسخ می‌شود زیرا ماهیت عقد جایز وکالت با شرط ضمن عقد دگرگون نمی‌شود.",
-          "فقط ورثه حق عزل وکیل را خواهند داشت و وکیل حق دخل و تصرف انفرادی ندارد.",
-          "عقد بیع کلاً منفسخ و ارزش ثمن به تراضی جدید محول می‌گردد."
-        ],
-        correctOptionIndex: 1,
-        explanation: "طبق ماده ۶۷۸ قانون مدنی، وکالت به هر صورتی که منعقد شده باشد (ولو بلاعزل ضمن عقد لازم) با فوت یا جنون هر یک از طرفین منفسخ می‌گردد. شرط بلاعزل صرفاً مانع اعمال فسخ ارادی در زمان حیات موکل است، نه سدی در برابر انقضای قهری عقد بیع."
-      },
-      {
-        id: "ai_m_2",
-        topic: "حقوق مدنی (بیع شرط)",
-        questionText: "در عقد بیع شرط، مالکیت خریدار نسبت به مبیع از چه زمانی مستقر و برقرار می‌گردد؟",
-        options: [
-          "از زمان انقضای مدت خیار و عدم رد ثمن از سوی فروشنده اصلی",
-          "از زمان انعقاد عقد به صورت مطلق و بدون هرگونه شرط معلق",
-          "منوط به تصفیه کامل دیون خریدار در اداره تسویه و ورشکستگی",
-          "از زمان قبض مبیع توسط شخص ثالث مامور ثبتی"
-        ],
-        correctOptionIndex: 1,
-        explanation: "در بیع شرط مالکیت از حین عقد حاصل می‌شود، منتها این مالکیت متزلزل بوده و با رد ثمن توسط فروشنده در مهلت مقرر، منفسخ می‌گردد. بنابراین مالکیت از ابتدا حاصل می‌شود نه از زمان انقضای خیار."
-      }
-    ];
-  }
-
-  return {
-    subjectName: topic,
-    justification,
-    psychologicalAnalysis,
-    questions
-  };
-}
-
-// REST endpoint for AI customized exam generation based on previous results
-app.post("/api/generate-ai-exam", async (req, res) => {
-  const { subjectName, percentage } = req.body;
-  const currentPercentage = percentage !== undefined ? Number(percentage) : 55;
-
-  try {
-    const ai = getAI();
-    if (!ai || !ai.models || typeof ai.models.generateContent !== "function") {
-      return res.json(getOfflineCustomExam(subjectName, currentPercentage));
-    }
-
-    const prompt = `شما یک دستیار هوش مصنوعی طراح آزمون‌های برتر بر اساس تکنیک رقابتی و آموزشی موسسه آموزش عالی حقوقی "چتر دانش" هستید.
-متقاضی محترم آزمون وکالت در درس «${subjectName}» دارای درصد پیشین ${currentPercentage}٪ بوده است.
-
-یک آزمون سفارشی جدید شخصی‌سازی شده در قالب فرمت JSON طراحی کنید که شامل بخش‌های زیر باشد:
-۱. justification: چرایی فنی و آموزشی طراحی این سری از سوالات به فارسی روان، با ارجاع به کارنامه قبلی و بیان ارتباط آن با تله‌های حقوقی کانون وکلا.
-۲. psychologicalAnalysis: یک تحلیل روانشناختی، عمیق و انگیزه بخش به زبان فارسی از روحیه و تمرکز داوطلب بر اساس درصد وی در آزمون قبلی با دادن راهکارهای ذهنی غلبه بر ترس زمان.
-۳. questions: دقیقاً ۳ عدد تست تالیفی بسیار قوی، واقع‌گرایانه و منطبق بر آراء وحدت رویه و متون قوانین خاص تزارساز، هر سوال دارای ۴ گزینه، مشخص کردن اندیس گزینه درست (0 الی 3) و تشریح مستدلِ کامل تفصیلی (explanation) با اشاره به مواد قانونی ایران.
-
-پاسخ را دقیقاً در قالب فرمت JSON زیر بدون تگ‌های خارجی تحویل دهید:
-{
-  "subjectName": "${subjectName}",
-  "justification": "چرایی آموزشی فنی...",
-  "psychologicalAnalysis": "تحلیل روان‌شناختی وضعیت متقاضی...",
-  "questions": [
-    {
-      "id": "ai_gen_q_1",
-      "topic": "عنوان مبحث فنی مثل آیین دادرسی مدنی (صلاحیت ذاتی)",
-      "questionText": "متن کامل سوال حقوقی تستی...",
-      "options": ["گزینه اول", "گزینه دوم", "گزینه سوم", "گزینه چهارم"],
-      "correctOptionIndex": 1, 
-      "explanation": "تشریح مسبوط، مستند به ماده قانونی..."
-    }
-  ]
-}
-
-فقط پاسخ خام JSON را بدون عبارت markdown مانند \`\`\`json برگردانید.`;
-
-    const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            subjectName: { type: Type.STRING },
-            justification: { type: Type.STRING },
-            psychologicalAnalysis: { type: Type.STRING },
-            questions: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  id: { type: Type.STRING },
-                  topic: { type: Type.STRING },
-                  questionText: { type: Type.STRING },
-                  options: {
-                    type: Type.ARRAY,
-                    items: { type: Type.STRING }
-                  },
-                  correctOptionIndex: { type: Type.INTEGER },
-                  explanation: { type: Type.STRING }
-                },
-                required: ["id", "topic", "questionText", "options", "correctOptionIndex", "explanation"]
-              }
-            }
-          },
-          required: ["subjectName", "justification", "psychologicalAnalysis", "questions"]
-        }
-      }
-    });
-
-    const textOutput = response.text?.trim() || "{}";
-    const cleanedText = textOutput.replace(/```json/gi, "").replace(/```/g, "").trim();
-    const resultJson = JSON.parse(cleanedText);
-    return res.json(resultJson);
-
-  } catch (error: any) {
-    console.warn("Error generating custom exam with Gemini:", error);
-    return res.json(getOfflineCustomExam(subjectName, currentPercentage));
-  }
-});
-
-// Endpoint to generate smart sales scripts and follow-up plans using Gemini
-app.post("/api/crm/ai-script", async (req, res) => {
-  const { name, phone, field, temp, notes } = req.body;
-  try {
-    const ai = getAI();
-    if (!ai || !ai.models || typeof ai.models.generateContent !== "function") {
-      return res.json({
-        sms: `سلام ${name} عزیز، همکار آینده حقوقی ما! 🌸\nمشاورین ارشد چتر دانش منتظر شما هستند تا نقشه راه اختصاصی قبولی در آزمون ${field} را تقدیمتان کنند. برای یک گام محکم در راه وکالت آماده‌اید؟ تلفنتان را پاسخگو باشید.\nتلفن دفتر: ۰۲۱-۶۶۱۲۳۴۵۶`,
-        callScript: `دیالوگ پیشنهادی تماس تلفنی با ${name}:\nمشاور: سلام وقت بخیر ${name} عزیز، از موسسه چتر دانش همکارتان تماس می‌گیرم.\nمتقاضی: سلام وقت شما هم بخیر.\nمشاور: تبریک می‌گویم پرونده شما به بخش مشاوره ارشد رسیده. بفرمایید برای قبولی در ${field} رنکینگ شما در دروس پایه چطور است؟ آیا در حوزه حقوق تجارت یا متون فقه ابهامی دارید تا با کتاب‌های ساده‌ساز چتر دانش شروع کنیم؟`,
-        followUpTip: `پیشنهاد مشاوره پیگیری:\nسطح اشتیاق داوطلب [${temp}] ارزیابی شده است. برای تسهیل ورود فرد جدید، هدیه‌ای از ویدیوهای وبینار جمع‌بندی چتر نجات برایشان پیامک کنید.`
-      });
-    }
-
-    const prompt = `شما مشاور ارشد فروش تحصیلی و راهنمای ثبت‌نام در موسسه آموزش عالی حقوقی "چتر دانش" هستید.
-نام داوطلب: ${name}
-گرایش آزمونی: ${field}
-سطح اشتیاق و حرارت لید: ${temp}
-یادداشت‌های پرونده: ${notes || "ثبت‌نام اولیه در فرم دیجیتال"}
-
-لطفاً یک بسته پیگیری مشورتی و متقاعدسازی ثبت‌نام بسیار اثربخش به زبان فارسی روان شامل موارد زیر بنویسید و به صورت فرمت JSON برای ما بفرستید:
-۱. sms: یک متن پیامک صمیمانه، فصیح، جذاب و الهام‌بخش کوتاه (حداکثر ۱۰۰ کلمه) جهت ارسال به داوطلب برای هماهنگی تماس مشاور ارشد. شامل اموجی‌های حقوقی متناسب.
-۲. callScript: یک سناریوی مکالمه تلفنی مشاوره تحصیلی و متقاعدسازی کامل (به صورت دیالوگ رفت و برگشتی) برای صحبت مشاور با متقاضی، متناسب با آزمون ${field}. لحن بسیار دلسوزانه و الهام‌بخش باشد.
-۳. followUpTip: یک توصیه علمی-روانشناختی درباره چگونگی به سرانجام رساندن این لید با توجه به میزان اشتیاق او (${temp}).
-
-قالب پاسخ دقیقاً با کلیدهای زیر در فرمت JSON باشد:
-{
-  "sms": "متن پیامک ارسالی",
-  "callScript": "سناریوی گپ تلفنی مشاور با داوطلب",
-  "followUpTip": "توصیه روانشناسی برای متقاعدسازی ثبت‌نام"
-}
-پاسخ را بدون تگ‌های کدی مارک‌داون (مانند \`\`\`json) به صورت JSON معتبر خام بفرستید.`;
-
-    const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json",
-      }
-    });
-
-    const textOutput = response.text?.trim() || "{}";
-    const cleanedText = textOutput.replace(/```json/gi, "").replace(/```/g, "").trim();
-    const resultJson = JSON.parse(cleanedText);
-    return res.json(resultJson);
-
-  } catch (error: any) {
-    console.warn("Error in CRM AI generator:", error);
-    return res.json({
-      sms: `سلام ${name} عزیز، همکار آینده حقوقی ما! 🌸\nمشاورین ارشد چتر دانش منتظر شما هستند تا نقشه راه اختصاصی قبولی در آزمون ${field} را تقدیمتان کنند. برای یک گام محکم در راه وکالت آماده‌اید؟ تلفنتان را پاسخگو باشید.\nتلفن دفتر: ۰۲۱-۶۶۱۲۳۴۵۶`,
-      callScript: `دیالوگ پیشنهادی تماس تلفنی با ${name}:\nمشاور: سلام وقت بخیر ${name} عزیز، از موسسه چتر دانش همکارتان تماس می‌گیرم.\nمتقاضی: سلام وقت شما هم بخیر.\nمشاور: تبریک می‌گویم پرونده شما به بخش مشاوره ارشد رسیده. بفرمایید برای قبولی در ${field} رنکینگ شما در دروس پایه چطور است؟ آیا در حوزه حقوق تجارت یا متون فقه ابهامی دارید تا با کتاب‌های ساده‌ساز چتر دانش شروع کنیم؟`,
-      followUpTip: `پیشنهاد مشاوره پیگیری:\nسطح اشتیاق داوطلب [${temp}] ارزیابی شده است. برای تسهیل ورود فرد جدید، هدیه‌ای از ویدیوهای وبینار جمع‌بندی چتر نجات برایشان پیامک کنید.`
-    });
-  }
-});
-
-// Endpoint for Legal News and Exam Updates / اخبار و اطلاعیه‌های آزمون تخصصی حقوقی
-app.get("/api/legal-news", (req, res) => {
-  const articles = [
-    {
-      id: "1",
-      title: "زمان دقیق اعلام نتایج نهایی آزمون سردفتری اسناد رسمی سال گذشته مشخص شد",
-      source: "روابط عمومی کانون سردفتران و دفتریاران",
-      date: "امروز",
-      summary: "بر اساس اطلاعیه سازمان سنجش و کانون سردفتران، نتایج پذیرفته‌شدگان چندبرابر ظرفیت مصاحبه علمی آزمون سردفتری اسناد رسمی تا روز دوشنبه هفته آینده اعلام خواهد شد. داوطلبان چتر دانش جهت دریافت کارنامه می‌توانند به پنل خود مراجعه نمایند.",
-      category: "سردفتری",
-      readTime: "۳ دقیقه"
-    },
-    {
-      id: "2",
-      title: "شرایط تازه ثبت‌نام و تاریخ برگزاری آزمون کارشناسی ارشد حقوق سراسری اعلام شد",
-      source: "سازمان ملی سنجش و ارزشیابی",
-      date: "دیروز",
-      summary: "دفترچه راهنمای ثبت‌نام کارشناسی ارشد حقوق منتشر گردید. ضرایب حقوق مدنی، آیین دادرسی مدنی و حقوق تجارت در گرایش‌های حقوق خصوصی بدون تغییر مانده است. المپیادهای دانشجویی نیز همزمان در اردیبهشت‌ماه سال جاری برگزار خواهند شد.",
-      category: "ارشد حقوق",
-      readTime: "۴ دقیقه"
-    },
-    {
-      id: "3",
-      title: "آغاز ثبت‌نام دوره چتر نجات (آمادگی فوق‌سریع) آزمون وکالت در شعب چتر دانش سراسر کشور",
-      source: "آموزش چتر دانش",
-      date: "۲ روز پیش",
-      summary: "دوره فشرده چتر نجات چتر دانش شامل کپسول تست حقوق کارگاهی، تحلیل بیش از ۲۵۰۰ تست طلایی و جزوات قوانین نموداری از تاریخ ۱۰ خردادماه به صورت همزمان حضوری و آنلاین آغاز گشته و تا روز آزمون کانون ادامه خواهد داشت.",
-      category: "چتر دانش",
-      readTime: "۵ دقیقه"
-    },
-    {
-      id: "4",
-      title: "آخرین وضعیت اصلاحیه قانون تسهیل صدور مجوزها و حد نصاب قبولی آزمون وکالت کانون",
-      source: "پایگاه خبری حقوقی اختبار",
-      date: "۳ روز پیش",
-      summary: "عضو کمیسیون قضایی مجلس از تایید نهایی نحوه محاسبه نمره قبولی بر اساس فرمول تراز آزمون خبر داد. این قانون همچنان رقابت داוطلبان را بر اساس تراز نهایی آزمون چتر دانش پایه‌گذاری می‌کند که نیاز منسجمی به رفع اشکال دارد.",
-      category: "قوانین و اخبار",
-      readTime: "۶ دقیقه"
-    },
-    {
-      id: "5",
-      title: "دفترچه پاسخ تشریحی آزمون آزمایشی مرحله پنجم چتر دانش منتشر شد",
-      source: "دپارتمان آزمون چتر دانش",
-      date: "۴ روز پیش",
-      summary: "پاسخنامه مستدل و تشریحی آزمون آزمایشی وکالت (مرحله پنجم) شامل ارجاعات دقیق به مواد قانون مدنی، جزا و آرای وحدت رویه دیوان عالی کشور بر روی سامانه بارگذاری گردید. هم‌اکنون می‌توانید پکیج را دانلود کنید.",
-      category: "آزمون‌ها",
-      readTime: "۲ دقیقه"
-    }
-  ];
-  return res.json({ status: "success", articles });
-});
-
 // Start express server configuration
 async function startServer() {
-  // Setup Vite middleware for development if not in production
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
       server: { middlewareMode: true },
@@ -792,7 +455,7 @@ async function startServer() {
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Chatr-e-Danesh smart full-stack law server running on port ${PORT}`);
+    console.log(`Taranom Mehr SaaS engine running at port ${PORT}`);
   });
 }
 

@@ -2,14 +2,14 @@ import React, { useState, useRef, useEffect } from "react";
 import { 
   Send, User, Sparkles, AlertCircle, HelpCircle, CheckSquare, 
   BookOpen, HeartPulse, Brain, Plus, Trash2, Calendar, 
-  Clock, Check, Smile, ClipboardList, PlusCircle, Sparkle
+  Clock, Check, Smile, ClipboardList, PlusCircle, Target
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { ChatMessage, Student } from "../types";
 
 interface CounselingSession {
   id: string;
-  type: "educational" | "psychological";
+  type: "academic" | "motivational";
   title: string;
   date: string;
   counselorName: string;
@@ -20,9 +20,10 @@ interface CounselingSession {
 
 interface CounselorViewProps {
   student: Student;
+  onNavigate?: (view: any) => void;
 }
 
-export default function CounselorView({ student }: CounselorViewProps) {
+export default function CounselorView({ student, onNavigate }: CounselorViewProps) {
   const [activeTab, setActiveTab] = useState<"chat" | "sessions">("chat");
 
   // --- LIVE CHAT STATE ---
@@ -30,7 +31,7 @@ export default function CounselorView({ student }: CounselorViewProps) {
     {
       id: "1",
       role: "model",
-      content: `سلام ${student.name} عزیز! من دکتر کریمی، مشاور هوشمند و رتبه برتر حقوقی کانون وکلا در مجموعه چتر دانش هستم. کل سوابق، ترازهای آزمون آزمایشی سردفتری/وکالت و نمرات درس‌های حقوق مدنی و تجارتت رو کامل مطالعه کردم. امروز چطور می‌تونم به تصاحب پروانه وکالتت کمک کنم؟ هر چالشی درباره عقود معین، مهار اضطراب مواعد یا روش برنامه‌ریزی داری بپرس.`,
+      content: `سلام ${student.name} گرامی! من دکتر رادان، مشاور علمی و برنامه‌ریز ارشد وکالت در موسسه چتر دانش هستم. کارنامه شبیه‌ساز، نقاط قوت و ضعف و پیش‌نویس مطالعه شما را بررسی کردم. امروز چطور می‌توانم در رفع تله‌های حقوق مدنی، روش خلاصه نویسی آیین دادرسی یا مهار اضطراب و خستگی دوران کنکور به شما کمک کنم؟`,
       timestamp: new Date().toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" })
     }
   ]);
@@ -39,15 +40,15 @@ export default function CounselorView({ student }: CounselorViewProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const quickQuestions = [
-    "تست‌های ضمان قهری و عقود معین حقوق مدنی رو چطور بهبود بدم؟",
-    "درس زیاد می‌خونم اما تراز آزمون چتر دانش من بالا نمیره.",
-    "در نیم‌ساعت آخر آزمون تمرکزم روی گزینه‌های انحرافی فقه به تست غلط تبدیل میشه؛ چکار کنم؟",
-    "تکنیک کنترل استرس آزمون وکالت برای مبحث صلاحیت مراجع قضایی چیه؟"
+    "در تله‌های تستی حقوق مدنی و مبحث عقود مشکل دارم، راهکار چیست؟",
+    "آهنگ پیش‌روی برنامه‌ وبینارهای دادرسی کیفری چتر دانش خیلی سریع است.",
+    "چگونه تراز مانیتورینگ خود را در آزمون‌های شبیه‌ساز بعدی بالاتر ببرم؟",
+    "بودجه‌بندی و تکنیک‌های موازنه تراز در مبحث اصول فقه چیست؟"
   ];
 
   // --- SESSIONS LOG STATE ---
   const [sessions, setSessions] = useState<CounselingSession[]>(() => {
-    const stored = localStorage.getItem(`chatredanesh_sessions_${student.id}`);
+    const stored = localStorage.getItem(`taranom_mehr_sessions_${student.id}`);
     if (stored) {
       try {
         return JSON.parse(stored);
@@ -55,31 +56,30 @@ export default function CounselorView({ student }: CounselorViewProps) {
         console.error("Could not parse counseling sessions from localStorage", e);
       }
     }
-    // Pre-populated default mockup data logic
     return [
       {
         id: "session-1",
-        type: "educational",
-        title: "تحلیل موشکافانه افت تراز مبحث عقود معین و مسئولیت مدنی چتر دانش",
+        type: "academic",
+        title: "تحلیل موشکافانه تله‌های تستی حقوق تجارت و قوانین ثبت",
         date: "۱۴۰۵/۰۲/۱۵",
-        counselorName: "دکتر کریمی",
-        notes: "بررسی فرکانس عملکرد آزمون نشان می‌دهد در مبحث ضمان قهری یا حقوق تجارت تخصصی نیاز به بازسازی مفهومی زیربنایی داریم. مقرر شد داوطلب ابتدا کتاب قوانین نموداری چتر دانش را تکرار کرده و سپس ۲۵ تست مهارتی بدون محدودیت زمان بزند تا بر تله‌ها چیره شود.",
+        counselorName: "دکترین مهدوی",
+        notes: "بررسی فرکانس پاسخ‌های منفی نشان می‌دهد به علت تست‌زنی سرعتی بدون تحلیل کتب شرح آزمونی، داوطلب در مبحث اسناد تجاری با افت تراز مواجه شده است. مقرر شد ساعت مطالعه تجارت به ۶ ساعت در هفته با تاکید بر کتب چتر دانش افزایش یابد.",
         actionSteps: [
-          { text: "رفع اشکال عقد بیع و تعهدات ثالث با کتب نمودار عالی چتر دانش", completed: true },
-          { text: "حل ۴۰ تست مهارتی و تحلیل کارگاهی آرا وحدت رویه", completed: false }
+          { text: "تحلیل و خلاصه نویسی مبحث چک و سفته از روی شرح صریح", completed: true },
+          { text: "تست‌زنی جامع از آزمون‌های سال گذشته چتر دانش بدون مانیتورینگ وقت", completed: false }
         ],
         recommendedStudyHours: 48
       },
       {
         id: "session-2",
-        type: "psychological",
-        title: "مهار اضطراب زمان پله آخر آزمون وکالت اسکودا",
+        type: "motivational",
+        title: "کنترل اضطراب، رفع فرسودگی ذهنی و مدیریت زمان در پومودورو",
         date: "۱۴۰۵/۰۲/۱۸",
-        counselorName: "دکتر مهدوی",
-        notes: "ریشه اشتباهات و تله‌های رگباری دقایق آخر دفترچه دوم، ناشی از ترس از نرسیدن به حد نصاب قبولی تبیین شد. توصیه‌نامه کنترل ذهن فعال گردید. اجرای مینی‌آزمون زمان‌دار در منزل هفته‌ای دو مرتبه به شدت توصیه می‌شود.",
+        counselorName: "دکتر رادان",
+        notes: "ریشه افت راندمان در آزمون‌های شبیه‌ساز آخر هفته، کم‌خوابی مفرط و مطالعه مداوم بدون استراحت پویا گزارش شد. مقرر گردید متد ۲۵ دقیقه مطالعه و ۵ دقیقه تنفس بدون گوشی موبایل به دقت پیاده‌سازی شود.",
         actionSteps: [
-          { text: "تنفس عمیق ۳ دقیقه‌ای شکمی بر اساس شیوه ۵-۵-۵ قبل از نشستن سر دفترچه آزمون چتر دانش", completed: false },
-          { text: "تنظیم خواب شب مانیتور شده روی حداقل ۷.۵ ساعت", completed: true }
+          { text: "تنظیم ساعت خواب شبانه و ممانعت از مطالعه بعد از نیمه‌شب", completed: false },
+          { text: "استفاده از سیستم ردیابی کایزن درسی جهت ثبت مستمر ساعت مطالعه هفتگی", completed: true }
         ],
         recommendedStudyHours: 42
       }
@@ -87,9 +87,9 @@ export default function CounselorView({ student }: CounselorViewProps) {
   });
 
   // --- NEW SESSION FORM STATE ---
-  const [newType, setNewType] = useState<"educational" | "psychological">("educational");
+  const [newType, setNewType] = useState<"academic" | "motivational">("academic");
   const [newTitle, setNewTitle] = useState("");
-  const [newCName, setNewCName] = useState("آقای رادان");
+  const [newCName, setNewCName] = useState("دکتر رادان");
   const [newDate, setNewDate] = useState("۱۴۰۵/۰۳/۰۱");
   const [newNotes, setNewNotes] = useState("");
   const [newHours, setNewHours] = useState(44);
@@ -97,14 +97,12 @@ export default function CounselorView({ student }: CounselorViewProps) {
   const [newActionStepsList, setNewActionStepsList] = useState<string[]>([]);
   const [isAiGenerating, setIsAiGenerating] = useState(false);
 
-  // Auto scroll down in chat
   useEffect(() => {
     if (activeTab === "chat") {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, sending, activeTab]);
 
-  // Persist sessions
   const saveSessionsToLocal = (updated: CounselingSession[]) => {
     setSessions(updated);
     localStorage.setItem(`taranom_mehr_sessions_${student.id}`, JSON.stringify(updated));
@@ -159,14 +157,21 @@ export default function CounselorView({ student }: CounselorViewProps) {
         };
         setMessages((prev) => [...prev, modelMsg]);
       } else {
-        throw new Error("API non-200 response");
+        throw new Error("API non-200");
       }
     } catch (err) {
-      console.error("Failed to connect to AI Counselor endpoint", err);
+      console.error("Gemini AI API failed, loading local simulated logic", err);
+      let replyText = `موضوع مطالعاتی شما یعنی '${textToSend}' توسط مشاور ارشد چتر دانش بررسی شد. توصیه می‌کنیم در مباحث حقوق مدنی تله‌های مربوط به شروط ضمن عقد را ابتدا از مقالات آموزشی استخراج کرده و سپس به تست‌زنی بپردازید.`;
+      if (textToSend.includes("تله") || textToSend.includes("قانون")) {
+        replyText = "تحلیل اشتباهات تستی نشان می‌دهد ریشه مشکلات داوطلب عدم هم‌خوانی متن صریح ماده با فروض مسئله است. لطفاً روزانه ۲۰ دقیقه به خواندن متون قوانین خاص اختصاص داده و قوانین ملغی را مجزا کنید.";
+      } else if (textToSend.includes("تراز") || textToSend.includes("آزمون")) {
+        replyText = "افزایش تراز علمی شبیه‌سازها در چتر دانش به این وابسته است که پاسخ‌های غلط خود را در دفترچه عارضه‌یابی یادداشت کنید و آخر هر هفته مباحث با نمره زیر ۳۰٪ را مجدداً مرور نمایید.";
+      }
+      
       setMessages((prev) => [...prev, {
         id: (Date.now() + 1).toString(),
         role: "model",
-        content: `همکار گرامی کانون، در حال حاضر ارتباط شبکه کمی کند است. درباره ${textToSend} نگران نباش؛ برنامه‌ریزی دفتری چتر دانش بر این بنا شده که پس از تثبیت مفاهیم حقوق مدنی، تست‌های بدون زمان حل شود. روی قله تعهد خودت بمان.`,
+        content: `داوطلب گرامی؛ ${replyText} این مباحث مشاوره‌ای به صورت محلی در حافظه موقت مانیتورینگ شما ثبت شد.`,
         timestamp: new Date().toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" })
       }]);
     } finally {
@@ -178,38 +183,36 @@ export default function CounselorView({ student }: CounselorViewProps) {
     handleSendMessage(q);
   };
 
-  // --- ACTIONS FOR SESSIONS ---
   const handleAddActionStep = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newActionInput.trim()) return;
     setNewActionStepsList((prev) => [...prev, newActionInput.trim()]);
-    setNewActionInput("");
+    newActionInput && setNewActionInput("");
   };
 
   const handleRemoveActionStepFromForm = (idx: number) => {
     setNewActionStepsList((prev) => prev.filter((_, i) => i !== idx));
   };
 
-  // AI-Assisted Smart Draft Recommendation Script logic
   const handleTriggerAiDraftGenerator = () => {
     setIsAiGenerating(true);
     setTimeout(() => {
-      if (newType === "educational") {
-        setNewTitle("برنامه بهسازی عمیق تراز درس حقوق مدنی و آیین دادرسی مدنی");
-        setNewNotes("توصیه مشورتی تحصیلی: مقرر شد داوطلب عزیز بر تحلیل تست‌های کارگاهی نزده یا نادرست متمرکز شده و با هدف‌گذاری پله‌ای تراز سراسری، ساعت مطالعه هفتگی خود را حداقل تا ۵ ساعت در باکس اختصاصی حقوق مدنی ارتقا دهد. یادگیری عقود معین و تمرین صلاحیت مراجع قضایی ضروری است.");
+      if (newType === "academic") {
+        setNewTitle("برنامه مطالعه فشرده و رفع تله‌های عقود حقوق مدنی");
+        setNewNotes("توصیه مشاور علمی چتر دانش: مقرر گردید داوطلب ابتدا به بخش جزوات طلایی چتر دانش مراجعه کرده و کتب شرح آزمونی عقود معین را به مدت ۴ ساعت پیاپی پومودورو مرور کند، سپس ۲۵ تست شبیه‌ساز را تحلیل نماید.");
         setNewActionStepsList([
-          "مرور جامع مبحث عقود بیع و ضمان معین با نمودارهای چتر دانش (صفحه ۴۵)",
-          "حل روزانه ۱۵ تست تالیفی آیین دادرسی برای مهار مواعد شکایت از آرا",
-          "ایجاد خلاصه نمودارهای تعهدات و مسئولیت مدنی بر روی دیوار مطالعه"
+          "مرور متن صریح مواد عقود لازم و جایز",
+          "یادداشت تله‌های رایج آزمون سالیان گذشته کانون",
+          "ثبت تراز و درصد پاسخ‌های صحیح در پنل کایزن"
         ]);
         setNewHours(48);
       } else {
-        setNewTitle("کاهش اضطراب ثانیه‌های پایانی آزمون وکالت و فرسودگی ذهنی");
-        setNewNotes("توصیه مشورتی روانشناختی: بر اساس واکاوی اتمسفر خلقی داوطلب، مشخص شد تله‌های تراز کانون منجر به استرس شدید در پایان دفترچه آزمون می‌گردد. تجویز ۳ نوبت تنفس متمرکز شکمی قبل از نشستن سر جلسه و انجام پومودوروهای غلاف شده تراز شده در تمرینات خانه الزامی است.");
+        setNewTitle("کاهش اضطراب و استرس مفرط ممیزی قبل از آزمون جامع");
+        setNewNotes("توصیه روانشناختی چتر دانش: موازنه ساعات مطالعه با زمان‌های ریکاوری ذهن. مقرر شد داوطلب فواصل هر پومودوروی درسی را با تمارین تفکر مثبت و تمرکز ذهن سپری کند و ساعات پایانی شب را به استراحت اختصاص دهد.");
         setNewActionStepsList([
-          "اجرای تکنیک تنفس آگاهانه کادری (تمرین ۴ ثانیه‌ای) ۳ بار در روز سر جلسه آزمون آزمایشی",
-          "نوشتن جملات مثبت خودگویی و ایستایی روانی بر روی دفترچه خودکار چتر دانش",
-          "تنظیم دقیق برنامه مانیتور خواب جهت تثبیت خواب عمیق شب آزمون"
+          "پیاده‌روی صبگاهی قبل از شروع فاز مطالعه",
+          "ایجاد بستر بدون صدا و حذف محرک‌های بیرونی تمرکز",
+          "استفاده از دکمه عارضه‌یابی سریع در مواجهه با گلوگاه‌ها"
         ]);
         setNewHours(42);
       }
@@ -226,7 +229,7 @@ export default function CounselorView({ student }: CounselorViewProps) {
       type: newType,
       title: newTitle.trim(),
       date: newDate.trim() || "۱۴۰۵/۰۳/۰۱",
-      counselorName: newCName.trim() || "دکتر کریمی",
+      counselorName: newCName.trim() || "دکتر رادان",
       notes: newNotes.trim(),
       actionSteps: newActionStepsList.map(text => ({ text, completed: false })),
       recommendedStudyHours: newHours
@@ -235,7 +238,6 @@ export default function CounselorView({ student }: CounselorViewProps) {
     const updated = [created, ...sessions];
     saveSessionsToLocal(updated);
 
-    // Reset Form
     setNewTitle("");
     setNewNotes("");
     setNewActionStepsList([]);
@@ -263,45 +265,45 @@ export default function CounselorView({ student }: CounselorViewProps) {
     <div className="space-y-6" id="counselor-parent-container">
       
       {/* Prime Header Block */}
-      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-right">
         <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 bg-blue-50 text-blue-800 text-[10px] font-black rounded-lg border border-blue-105">
-              چتر دانش • اتاق دیجیتال مشاور ارشد حقوقی
+          <div className="flex items-center gap-2 justify-start">
+            <span className="px-2 py-0.5 bg-blue-50 text-blue-950 text-[10px] font-black rounded-lg border border-blue-100">
+              چتر دانش • پورتال مربیگری کایزن درسی
             </span>
             <span className="text-slate-350 text-xs">•</span>
-            <span className="text-[10px] text-slate-500 font-bold">پرونده فعال داوطلب: {student.name}</span>
+            <span className="text-[10px] text-slate-500 font-bold">پایش تحصیلی داوطلب کانون: {student.name}</span>
           </div>
-          <h1 className="text-xl font-black text-slate-800 tracking-tight">پنل مشاوره تحصیلی و سلامت روان</h1>
+          <h1 className="text-xl font-black text-slate-900 tracking-tight">پنل مشاوره ارشد و برنامه‌ریزی هدایت تحصیلی داوطلبان</h1>
           <p className="text-xs text-slate-500 leading-relaxed">
-            در این بخش می‌توانید به صورت هوشمند با مشاور گفتگو کرده یا پرونده جلسات مشاوره تحصیلی و روانشناسی خود را ثبت و پایش کنید.
+            برنامه‌ریزی، عارضه‌یابی و تبادل نظر با مشاوران علمی چتر دانش جهت دستیابی به ترازهای برتر وکالت و قضاوت.
           </p>
         </div>
 
-        {/* Dynamic Dual Tab Selector */}
+        {/* Tab Switching */}
         <div className="flex bg-slate-100 p-1 rounded-2xl border border-slate-200 w-full md:w-auto self-stretch md:self-auto">
           <button
             onClick={() => setActiveTab("chat")}
-            className={`flex-1 md:flex-none px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap ${
+            className={`flex-1 md:flex-none px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap ${
               activeTab === "chat" 
-                ? "bg-white text-blue-900 shadow-sm" 
-                : "text-slate-650 hover:text-slate-900"
+                ? "bg-white text-blue-955 shadow-sm font-black" 
+                : "text-slate-600 hover:text-slate-900"
             }`}
           >
-            <Sparkles size={14} className={activeTab === "chat" ? "text-indigo-600" : "text-slate-400"} />
-            <span>اتاق گفتگوی زنده هوشمند</span>
+            <Sparkles size={14} className={activeTab === "chat" ? "text-indigo-650" : "text-slate-400"} />
+            <span>گفتگوی هوشمند با مشاور ارشد (AI Coach)</span>
           </button>
           
           <button
             onClick={() => setActiveTab("sessions")}
-            className={`flex-1 md:flex-none px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap ${
+            className={`flex-1 md:flex-none px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap ${
               activeTab === "sessions" 
-                ? "bg-white text-indigo-950 shadow-sm font-black" 
+                ? "bg-white text-blue-955 shadow-sm font-black" 
                 : "text-slate-650 hover:text-slate-900"
             }`}
           >
             <ClipboardList size={14} className={activeTab === "sessions" ? "text-emerald-600" : "text-slate-400"} />
-            <span>ثبت و پیشینه جلسات مشاوره</span>
+            <span>برنامه‌ها و مصوبات جلسات مشاوره</span>
           </button>
         </div>
       </div>
@@ -317,22 +319,22 @@ export default function CounselorView({ student }: CounselorViewProps) {
             className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[72vh]"
             id="counselor-view-container"
           >
-            {/* Helper Tips Sidebar (1 column) */}
-            <div className="lg:col-span-1 bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between space-y-4" id="counselor-quick-tips">
+            {/* Helper Tips Sidebar */}
+            <div className="lg:col-span-1 bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between space-y-4 text-right" id="counselor-quick-tips">
               <div className="space-y-4">
-                <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
+                <div className="flex items-center gap-2 pb-2 border-b border-slate-100 justify-start">
                   <span className="p-1 px-1.5 bg-amber-50 text-amber-600 rounded-lg"><HelpCircle size={15} /></span>
-                  <h3 className="font-bold text-slate-800 text-sm">موضوعات داغ مشاوره</h3>
+                  <h3 className="font-bold text-slate-800 text-sm">موضوعات چالش بر‌انگیز آزمون</h3>
                 </div>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  از سوالات پیشنهادی زیر برای شروع مشاوره هوشمند درسی بر اساس پرونده تراز خود استفاده کنید:
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  از موضوعات آماده زیر جهت ارزیابی عمیق تراز و مهار خطاهای علمی استفاده کنید:
                 </p>
                 <div className="space-y-2 flex flex-col">
                   {quickQuestions.map((q, idx) => (
                     <button
                       key={idx}
                       onClick={() => handleQuickQuestionClick(q)}
-                      className="w-full text-right p-3 bg-slate-50 hover:bg-slate-100 border border-slate-100 rounded-xl text-xs font-semibold leading-relaxed text-slate-700 transition cursor-pointer hover:border-slate-200"
+                      className="w-full text-right p-3 bg-slate-50 hover:bg-slate-100 border border-slate-100 rounded-xl text-xs font-bold leading-relaxed text-slate-705 transition cursor-pointer"
                     >
                       {q}
                     </button>
@@ -340,33 +342,54 @@ export default function CounselorView({ student }: CounselorViewProps) {
                 </div>
               </div>
 
+              <div className="p-4 bg-rose-50/50 rounded-2xl border border-rose-100 flex flex-col gap-2">
+                <div className="flex items-start gap-2.5">
+                  <Target size={15} className="text-rose-600 flex-shrink-0 mt-0.5" />
+                  <div className="text-[10px] text-rose-950 leading-relaxed font-semibold">
+                    مباحثی که در آنها دچار اشتباه شده‌اید را بلافاصله در «بانک تله‌های تستی» ثبت کنید.
+                  </div>
+                </div>
+                <button 
+                  onClick={() => {
+                    if (onNavigate) {
+                      onNavigate("traps");
+                    } else {
+                      alert("🔗 در حال انتقال به بانک تله‌ها...");
+                    }
+                  }}
+                  className="text-[9px] font-black text-rose-700 underline text-right cursor-pointer"
+                >
+                  مشاهده تله‌های ثبت شده
+                </button>
+              </div>
+
               <div className="p-4 bg-blue-50/50 rounded-2xl border border-blue-100 flex items-start gap-2.5">
-                <AlertCircle size={15} className="text-blue-700 flex-shrink-0 mt-0.5" />
-                <div className="text-[10px] text-blue-900 leading-relaxed font-semibold">
-                  مشاور هوشمند چتر دانش به پرونده درسی، درصدهای شبیه‌سازها و اهداف تراز شما دسترسی داشته و پاسخ‌هایی اختصاصی صادر می‌کند.
+                <AlertCircle size={15} className="text-blue-900 flex-shrink-0 mt-0.5" />
+                <div className="text-[10px] text-blue-950 leading-relaxed font-semibold">
+                  مربی هوشمند چتر دانش به تراز کارنامه مانیتورینگ متصل بوده و برنامه‌های درسی کایزن را به روز می‌نماید.
                 </div>
               </div>
             </div>
 
-            {/* Live Chat Box (3 columns) */}
-            <div className="lg:col-span-3 bg-white rounded-3xl border border-slate-100 shadow-sm flex flex-col overflow-hidden" id="counselor-live-chat-box">
+            {/* Chat conversations */}
+            <div className="lg:col-span-3 bg-white rounded-3xl border border-slate-100 shadow-sm flex flex-col overflow-hidden text-right" id="counselor-live-chat-box">
               <div className="bg-slate-50 border-b border-slate-100 px-6 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="relative">
-                    <div className="w-9 h-9 rounded-xl bg-blue-900 text-white flex items-center justify-center text-xs font-bold font-sans">
+                    <div className="w-9 h-9 rounded-xl bg-blue-950 text-white flex items-center justify-center text-[10px] font-bold">
                       مشاور
                     </div>
                     <span className="absolute -bottom-0.5 -left-0.5 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></span>
                   </div>
                   <div>
-                    <span className="font-bold text-slate-800 text-sm block">آقای رادان (مشاور تحصیلی هوشمند)</span>
-                    <span className="text-[10px] text-emerald-600 font-bold block">آماده به پاسخگویی • آنلاین</span>
+                    <span className="font-bold text-slate-800 text-sm block">دکتر رادان (مشاور علمی ارشد چتر دانش)</span>
+                    <span className="text-[10px] text-emerald-600 font-bold block">برخط ● آماده پاسخ‌گویی به ابهامات حقوقی</span>
                   </div>
                 </div>
-                <span className="text-[10px] font-bold text-blue-900 bg-blue-50 border border-blue-100 px-2.5 py-1 rounded-full">پرونده: {student.name}</span>
+                <span className="text-[10px] font-bold text-blue-950 bg-blue-50 border border-blue-100 px-2.5 py-1 rounded-full">داوطلب علمی: {student.name}</span>
               </div>
 
-              {/* Chat conversations */}
+              {/* Conversations Scroller */}
               <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-slate-50/25 scroll-smooth" id="chat-messages-scroller">
                 {messages.map((msg) => (
                   <div
@@ -374,19 +397,19 @@ export default function CounselorView({ student }: CounselorViewProps) {
                     className={`flex items-start gap-3 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}
                   >
                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold flex-shrink-0 text-xs ${
-                      msg.role === "user" ? "bg-amber-500 text-white" : "bg-blue-900 text-white"
+                      msg.role === "user" ? "bg-amber-500 text-white" : "bg-blue-950 text-white"
                     }`}>
-                      {msg.role === "user" ? <User size={13} /> : <Sparkles size={13} className="text-amber-305" />}
+                      {msg.role === "user" ? <User size={13} /> : <Sparkles size={13} className="text-amber-300" />}
                     </div>
                     <div className="max-w-[75%] space-y-1">
                       <div className={`p-3.5 rounded-2xl shadow-sm text-xs leading-relaxed ${
                         msg.role === "user"
                           ? "bg-amber-500 text-white rounded-tr-none"
-                          : "bg-white text-slate-800 border border-slate-100 rounded-tl-none font-sans"
+                          : "bg-white text-slate-850 border border-slate-105 rounded-tl-none font-sans"
                       }`}>
                         {msg.content}
                       </div>
-                      <span className={`block text-[9.5px] text-slate-400 font-mono ${msg.role === "user" ? "text-left" : "text-right"}`}>
+                      <span className={`block text-[9.5px] text-slate-450 font-mono ${msg.role === "user" ? "text-left" : "text-right"}`}>
                         {msg.timestamp}
                       </span>
                     </div>
@@ -395,7 +418,7 @@ export default function CounselorView({ student }: CounselorViewProps) {
 
                 {sending && (
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-blue-900 text-white flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-lg bg-blue-950 text-white flex items-center justify-center">
                       <Sparkles size={13} className="text-amber-300 animate-spin" />
                     </div>
                     <div className="bg-white p-3 py-2.5 rounded-2xl border border-slate-100 rounded-tl-none shadow-sm flex items-center gap-1.5">
@@ -408,7 +431,7 @@ export default function CounselorView({ student }: CounselorViewProps) {
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* Input wrapper */}
+              {/* Chat Send Form */}
               <div className="p-4 bg-white border-t border-slate-100">
                 <form
                   onSubmit={(e) => {
@@ -421,13 +444,13 @@ export default function CounselorView({ student }: CounselorViewProps) {
                     type="text"
                     value={inputMessage}
                     onChange={(e) => setInputMessage(e.target.value)}
-                    placeholder="دیدگاه، پرسش درسی یا موضوع آزمونی خود را تایپ نمایید..."
-                    className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-blue-900 focus:bg-white text-slate-800"
+                    placeholder="پرسش حقوقی، مبحث مورد نظر یا درصد تراز تستی خود را بنویسید..."
+                    className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-blue-950 focus:bg-white text-slate-800 text-right"
                   />
                   <button
                     type="submit"
                     disabled={sending || !inputMessage.trim()}
-                    className="bg-blue-900 hover:bg-blue-950 text-white p-3 rounded-xl transition disabled:opacity-50 cursor-pointer shadow-sm flex-shrink-0"
+                    className="bg-blue-950 hover:bg-slate-900 text-white p-3 rounded-xl transition disabled:opacity-50 cursor-pointer shadow-sm flex-shrink-0"
                   >
                     <Send size={15} className="rotate-180" />
                   </button>
@@ -445,211 +468,133 @@ export default function CounselorView({ student }: CounselorViewProps) {
             className="grid grid-cols-1 lg:grid-cols-3 gap-6"
             id="counseling-sessions-workspace"
           >
-            {/* Input & Create Form Panel (1 Column) */}
-            <div className="lg:col-span-1 space-y-5 bg-white p-5 rounded-3xl border border-slate-100 shadow-sm self-start">
-              
+            {/* Input Form Panel (1 Column) */}
+            <div className="lg:col-span-1 space-y-5 bg-white p-5 rounded-3xl border border-slate-100 shadow-sm self-start text-right">
               <div className="flex items-center gap-2 border-b border-slate-50 pb-3 justify-between">
                 <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-blue-50 text-blue-900 rounded-lg">
+                  <div className="p-1.5 bg-blue-50 text-blue-955 rounded-lg">
                     <ClipboardList size={16} />
                   </div>
-                  <h3 className="font-black text-slate-800 text-sm">ثبت جلسه جدید مشاوره</h3>
+                  <h3 className="font-black text-slate-800 text-sm">ثبت مصوبه جدید مشاوره</h3>
                 </div>
-                {/* AI helper draft generator trigger */}
                 <button
                   type="button"
                   onClick={handleTriggerAiDraftGenerator}
                   disabled={isAiGenerating}
-                  className="px-2.5 py-1 bg-amber-550 hover:bg-amber-500 text-slate-950 font-black text-[9px] rounded-lg border border-amber-300 transition-all cursor-pointer flex items-center gap-1 shadow-sm active:scale-95 disabled:opacity-50"
-                  title="پیش‌نویس خودکار اهداف درسی و روانی کتبی برای مشاور"
+                  className="px-2.5 py-1 bg-amber-400 hover:bg-amber-500 text-slate-900 font-extrabold text-[9px] rounded-lg border border-amber-300 transition-all cursor-pointer flex items-center gap-1 shadow-sm active:scale-95 disabled:opacity-50"
                 >
                   <Sparkles size={11} className={isAiGenerating ? "animate-spin" : ""} />
-                  <span>{isAiGenerating ? "در حال تولید..." : "ایده‌دهی هوش سنج"}</span>
+                  <span>پیش‌نویس با AI</span>
                 </button>
               </div>
 
-              <form onSubmit={handleCreateSessionSubmit} className="space-y-4 text-right">
-                
-                {/* Type Selection */}
+              <form onSubmit={handleCreateSessionSubmit} className="space-y-4">
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-bold text-slate-400 block">دسته‌بندی و نوع مشاوره برگزار شده:</label>
+                  <label className="text-[10px] font-bold text-slate-400 block pb-1">موضوع مصوبه مشاوره علمی:</label>
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       type="button"
-                      onClick={() => setNewType("educational")}
+                      onClick={() => setNewType("academic")}
                       className={`py-2 px-3 rounded-xl border text-center transition cursor-pointer text-xs font-bold flex items-center justify-center gap-1.5 ${
-                        newType === "educational" 
+                        newType === "academic" 
                           ? "bg-indigo-50 border-indigo-200 text-indigo-900" 
                           : "bg-slate-50 border-slate-100 text-slate-500 hover:bg-slate-100"
                       }`}
                     >
                       <BookOpen size={13} />
-                      <span>۱. مشاوره تحصیلی و درسی</span>
+                      <span>۱. برنامه‌ریزی علمی تستی</span>
                     </button>
 
                     <button
                       type="button"
-                      onClick={() => setNewType("psychological")}
+                      onClick={() => setNewType("motivational")}
                       className={`py-2 px-3 rounded-xl border text-center transition cursor-pointer text-xs font-bold flex items-center justify-center gap-1.5 ${
-                        newType === "psychological" 
+                        newType === "motivational" 
                           ? "bg-rose-50 border-rose-200 text-rose-900" 
                           : "bg-slate-50 border-slate-100 text-slate-500 hover:bg-slate-100"
                       }`}
                     >
                       <Brain size={13} />
-                      <span>۲. مشاوره روانشناسی و خلاقیت</span>
+                      <span>۲. مشاوره روحیه و اضطراب</span>
                     </button>
                   </div>
                 </div>
 
-                {/* Session Title */}
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 block">موضوع و عنوان جلسه:</label>
+                  <label className="text-[10px] font-bold text-slate-400 block">عنوان دقیق مصوبه تحصیلی:</label>
                   <input
                     type="text"
                     required
                     value={newTitle}
                     onChange={(e) => setNewTitle(e.target.value)}
-                    placeholder="مثال: رفع ضعف تسلط بر قوانین خاص وکالت"
-                    className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:ring-2 focus:ring-blue-900 rounded-xl px-3 py-2 text-xs font-extrabold text-slate-800"
+                    placeholder="مثال: رفع عیوب تله‌های آیین دادرسی مدنی"
+                    className="w-full bg-slate-50 border border-slate-205 focus:bg-white focus:ring-2 focus:ring-blue-950 rounded-xl px-3 py-2 text-xs font-black text-slate-800 text-right"
                   />
                 </div>
 
-                {/* Counselor & Date */}
                 <div className="grid grid-cols-2 gap-2">
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-400 block">نام مشاور ثبت‌کننده:</label>
+                  <div className="space-y-1 text-right">
+                    <label className="text-[10px] font-bold text-slate-400 block text-right">مشاور مسئول:</label>
                     <input
                       type="text"
                       value={newCName}
                       onChange={(e) => setNewCName(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 text-right"
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-400 block">تاریخ برگزاری جلسه:</label>
+                    <label className="text-[10px] font-bold text-slate-400 block">تاریخ جلسه:</label>
                     <input
                       type="text"
                       value={newDate}
                       onChange={(e) => setNewDate(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-[10.5px] font-bold text-slate-800 font-mono text-center"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-[10px] font-bold text-slate-850 font-mono text-center"
                     />
                   </div>
                 </div>
 
-                {/* Session Notes */}
-                <div className="space-y-1">
-                  <div className="flex justify-between items-center">
-                    <label className="text-[10px] font-bold text-slate-400">کلیت خلاصه صورتجلسه و رهنمودهای مشاور:</label>
-                    <span className="text-[8.5px] text-slate-400">حداقل ۵ کلمه</span>
-                  </div>
+                <div className="space-y-1 text-right font-sans">
+                  <label className="text-[10px] font-bold text-slate-400 block text-right">جزئیات و مصوبات اجرایی کایزن درسی:</label>
                   <textarea
                     required
                     value={newNotes}
                     onChange={(e) => setNewNotes(e.target.value)}
                     rows={4}
-                    placeholder="نکات کلیدی صحبت‌ها، تکنیک‌های مهارتی، ترازهایی که باید مرمت شوند را پر کنید..."
-                    className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:ring-2 focus:ring-blue-900 rounded-xl px-3 py-2.5 text-xs font-semibold leading-relaxed text-slate-700"
+                    placeholder="نکات تعیین شده علمی، قوانین خاص مورد استناد، شیوه خلاصه نویسی مواد مدنی و..."
+                    className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:ring-2 focus:ring-blue-950 rounded-xl px-3 py-2.5 text-xs font-semibold leading-relaxed text-slate-700 text-right font-sans"
                   />
-                </div>
-
-                {/* Recommended weekly hours study slider */}
-                <div className="space-y-1 bg-slate-50/50 p-3 rounded-2xl border border-slate-100">
-                  <div className="flex justify-between items-center">
-                    <label className="text-[10px] font-extrabold text-slate-500">ساعت مطالعه هفتگی جدید پیشنهادی:</label>
-                    <span className="text-xs font-black text-indigo-950 font-mono bg-white border px-2 py-0.5 rounded-lg">
-                      {newHours} ساعت
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min="20"
-                    max="80"
-                    step="1"
-                    value={newHours}
-                    onChange={(e) => setNewHours(parseInt(e.target.value))}
-                    className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-650 mt-1"
-                  />
-                </div>
-
-                {/* Checklist Action Items Creator */}
-                <div className="space-y-2 bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                  <label className="text-[10px] font-extrabold text-slate-500 block">اقدامات عملی متعهد شده برای داوطلب:</label>
-                  
-                  <div className="flex gap-1.5">
-                    <input
-                      type="text"
-                      value={newActionInput}
-                      onChange={(e) => setNewActionInput(e.target.value)}
-                      placeholder="مثال: حل ۴۰ تست حقوق مدنی..."
-                      className="flex-1 bg-white border border-slate-250 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none"
-                    />
-                    <button
-                      type="button"
-                      onClick={(e) => { e.preventDefault(); handleAddActionStep(e); }}
-                      className="p-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition cursor-pointer flex items-center justify-center flex-shrink-0"
-                    >
-                      <Plus size={16} />
-                    </button>
-                  </div>
-
-                  {/* Form Action steps display badge lists */}
-                  {newActionStepsList.length > 0 && (
-                    <div className="space-y-1.5 pt-2 border-t border-slate-200/50">
-                      {newActionStepsList.map((step, sIdx) => (
-                        <div key={sIdx} className="flex justify-between items-center text-[10px] bg-white border border-slate-100 p-1.5 rounded-lg">
-                          <span className="text-slate-600 font-bold max-w-[80%] break-all text-right pr-1">• {step}</span>
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveActionStepFromForm(sIdx)}
-                            className="text-red-500 hover:text-red-700 text-[10px] font-bold px-1"
-                          >
-                            حذف
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-slate-900 hover:bg-black text-white py-3 rounded-2xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+                  className="w-full bg-blue-950 hover:bg-slate-900 text-white py-3 rounded-2xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
                 >
                   <PlusCircle size={14} />
-                  <span>ثبت و ذخیره در پرونده چتر دانش</span>
+                  <span>ذخیره مصوبه در برنامه درسی داوطلب</span>
                 </button>
               </form>
             </div>
 
-            {/* Archive List & Visual Statistics Cards (2 Columns) */}
-            <div className="lg:col-span-2 space-y-5">
-              
-              {/* Core analytics for sessions highlights */}
+            {/* Archive List (2 Columns) */}
+            <div className="lg:col-span-2 space-y-5 text-right">
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-white p-4.5 rounded-2xl border border-indigo-100 shadow-sm flex items-center justify-between">
+                <div className="bg-white p-5 rounded-2xl border border-indigo-100 shadow-sm flex items-center justify-between">
                   <div className="space-y-1 text-right">
-                    <span className="text-[10px] font-bold text-slate-400 block">جلسات ثبت‌شده آموزشی</span>
-                    <strong className="text-xl font-black text-indigo-900 font-mono">
-                      {sessions.filter(s => s.type === "educational").length} جلسه
+                    <span className="text-[10px] font-bold text-slate-400 block">برنامه‌ها و مصوبات علمی</span>
+                    <strong className="text-xl font-black text-indigo-950 font-mono">
+                      {sessions.filter(s => s.type === "academic").length} مورد
                     </strong>
-                    <p className="text-[9px] text-slate-400">جهت ارتقای تراز و برنامه چتر دانش</p>
-                  </div>
-                  <div className="p-3 bg-indigo-50 text-indigo-700 rounded-xl">
-                    <BookOpen size={20} />
+                    <p className="text-[9px] text-slate-400">تحلیل تله‌های تستی قوانین خاص</p>
                   </div>
                 </div>
 
-                <div className="bg-white p-4.5 rounded-2xl border border-rose-100 shadow-sm flex items-center justify-between">
+                <div className="bg-white p-5 rounded-2xl border border-rose-100 shadow-sm flex items-center justify-between">
                   <div className="space-y-1 text-right">
-                    <span className="text-[10px] font-bold text-slate-400 block">جلسات درمانی و روانشناختی</span>
+                    <span className="text-[10px] font-bold text-slate-400 block">مشاوره‌های روحی و روحیه</span>
                     <strong className="text-xl font-black text-rose-700 font-mono">
-                      {sessions.filter(s => s.type === "psychological").length} جلسه
+                      {sessions.filter(s => s.type === "motivational").length} مورد
                     </strong>
-                    <p className="text-[9px] text-slate-400">جهت مهار اضطراب وکالت و تمرکز قضایی</p>
-                  </div>
-                  <div className="p-3 bg-rose-50 text-rose-700 rounded-xl">
-                    <Brain size={20} />
+                    <p className="text-[9px] text-slate-400">مدیریت پومودورو، خواب و تغذیه</p>
                   </div>
                 </div>
               </div>
@@ -657,125 +602,88 @@ export default function CounselorView({ student }: CounselorViewProps) {
               {/* Saved Sessions Feed */}
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-black text-slate-700">تاریخچه کامل جلسات و مصوبات چتر دانش ({sessions.length} مورد)</span>
-                  <span className="text-[9px] text-slate-400">بروزرسانی زنده بر مبنای اقدامات</span>
+                  <span className="text-xs font-black text-slate-700">تاریخچه ممیزی برنامه‌های درسی داوطلب چتر دانش ({sessions.length})</span>
+                  <span className="text-[9px] text-slate-400">سرور کایزن آموزشی چتر دانش</span>
                 </div>
 
-                {sessions.length === 0 ? (
-                  <div className="bg-white p-12 text-center rounded-3xl border border-slate-100 shadow-sm space-y-2">
-                    <p className="text-xs font-bold text-slate-500">هیچ پرونده مشاوره‌ای ثبت نگردیده است.</p>
-                    <p className="text-[10px] text-slate-400">شما می‌توانید با کمک فرم ادمین سمت راست، اولین جلسه مشاوره را اضافه کنید.</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {sessions.map((session) => (
-                      <div 
-                        key={session.id} 
-                        className={`p-5 rounded-3xl bg-white border shadow-sm space-y-4 transition hover:shadow-md relative overflow-hidden ${
-                          session.type === "educational" 
-                            ? "border-l-4 border-l-indigo-600 border-slate-100" 
-                            : "border-l-4 border-l-rose-500 border-slate-100"
-                        }`}
-                      >
-                        {/* Background subtle graphics */}
-                        <div className="absolute top-0 left-0 w-24 h-24 pointer-events-none opacity-[0.02] transform -translate-x-4 -translate-y-4">
-                          {session.type === "educational" ? <BookOpen size={96} /> : <Brain size={96} />}
-                        </div>
-
-                        {/* Session Top Badges */}
-                        <div className="flex flex-wrap items-center justify-between gap-2.5 relative z-10">
-                          <div className="flex items-center gap-2">
-                            {session.type === "educational" ? (
-                              <span className="px-2.5 py-1 bg-indigo-50 border border-indigo-200 text-indigo-900 rounded-xl text-[9.5px] font-black flex items-center gap-1">
-                                <BookOpen size={11} className="text-indigo-600" />
-                                <span>صنف: مشاوره تحصیلی</span>
-                              </span>
-                            ) : (
-                              <span className="px-2.5 py-1 bg-rose-50 border border-rose-200 text-rose-900 rounded-xl text-[9.5px] font-black flex items-center gap-1 animate-pulse">
-                                <Brain size={11} className="text-rose-600" />
-                                <span>صنف: مشاوره روانشناسی خلقی</span>
-                              </span>
-                            )}
-                            <span className="text-[10px] text-slate-400 font-mono">{session.date}</span>
-                          </div>
-
-                          <div className="flex items-center gap-2">
-                            <span className="text-[10px] bg-slate-100 border text-slate-650 px-2 py-0.5 rounded-lg font-bold">
-                              برگزارکننده: {session.counselorName}
-                            </span>
-                            
-                            {/* Trash Action */}
-                            <button
-                              onClick={() => handleDeleteSession(session.id)}
-                              className="text-slate-400 hover:text-red-600 hover:bg-slate-50 p-1.5 rounded-lg transition"
-                              title="حذف جلسه از آرشیو محلی"
-                            >
-                              <Trash2 size={13} />
-                            </button>
-                          </div>
-                        </div>
-
-                        {/* Notes & Title */}
-                        <div className="space-y-1.5 text-right relative z-10">
-                          <h4 className="text-xs font-black text-slate-800 leading-normal">{session.title}</h4>
-                          <p className="text-xs text-slate-600 leading-relaxed font-semibold bg-slate-50/50 p-3.5 rounded-2xl border border-slate-100">
-                            {session.notes}
-                          </p>
-                        </div>
-
-                        {/* Visual study guide */}
-                        <div className="flex items-center justify-between text-[10px] border-t border-slate-100 pt-3 flex-wrap gap-2 text-slate-400">
-                          <div className="flex items-center gap-1.5">
-                            <Clock size={12} className="text-indigo-500" />
-                            <span className="font-bold text-slate-500">پیشنهاد ساعت مطالعه در برنامه درسی:</span>
-                            <span className="text-indigo-950 font-black font-mono bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">{session.recommendedStudyHours} ساعت در هفته</span>
-                          </div>
-                          <span className="text-[9px] text-slate-350">ثبت پرونده در بستر رمز شده چتر دانش</span>
-                        </div>
-
-                        {/* Mini Checklist of action items */}
-                        {session.actionSteps.length > 0 && (
-                          <div className="bg-slate-50/30 p-3.5 rounded-2xl border border-slate-100 text-right space-y-2">
-                            <span className="text-[9px] font-black text-slate-550 block flex items-center gap-1 justify-start">
-                              <CheckSquare size={11} className="text-emerald-600" />
-                              <span>لیست اقدامات مورد تعهد داوطلب چتر دانش (برای بررسی و تیک زدن):</span>
-                            </span>
-
-                            <div className="space-y-1.5">
-                              {session.actionSteps.map((step, idx) => (
-                                <div 
-                                  key={idx}
-                                  onClick={() => handleToggleStepCompletion(session.id, idx)}
-                                  className={`flex items-start gap-2.5 p-2 rounded-xl border transition-all cursor-pointer select-none ${
-                                    step.completed 
-                                      ? "bg-emerald-50/30 border-emerald-150" 
-                                      : "bg-white border-slate-100 hover:border-slate-200"
-                                  }`}
-                                >
-                                  <div className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 mt-0.5 transition-all ${
-                                    step.completed 
-                                      ? "bg-emerald-600 border-emerald-600 text-white" 
-                                      : "border-slate-300 bg-white"
-                                  }`}>
-                                    {step.completed && <Check size={10} strokeWidth={4} />}
-                                  </div>
-                                  <span className={`text-xs font-bold leading-normal ${
-                                    step.completed ? "text-slate-400 line-through" : "text-slate-700"
-                                  }`}>
-                                    {step.text}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
+                {sessions.map((session) => (
+                  <div 
+                    key={session.id} 
+                    className={`p-5 rounded-3xl bg-white border shadow-sm space-y-4 transition hover:shadow-md relative overflow-hidden ${
+                      session.type === "academic" 
+                        ? "border-l-4 border-l-indigo-600 border-slate-100" 
+                        : "border-l-4 border-l-rose-500 border-slate-100"
+                    }`}
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2.5 relative z-10 text-right">
+                      <div className="flex items-center gap-2">
+                        {session.type === "academic" ? (
+                          <span className="px-2.5 py-1 bg-indigo-50 border border-indigo-200 text-indigo-900 rounded-xl text-[9.5px] font-black flex items-center gap-1">
+                            <span>کایزن: علمی تستی</span>
+                          </span>
+                        ) : (
+                          <span className="px-2.5 py-1 bg-rose-50 border border-rose-200 text-rose-900 rounded-xl text-[9.5px] font-black flex items-center gap-1">
+                            <span>انگیزشی: روحیه پومودورو</span>
+                          </span>
                         )}
-
+                        <span className="text-[10px] text-slate-400 font-mono">{session.date}</span>
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
 
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] bg-slate-100 border text-slate-600 px-2 py-0.5 rounded-lg font-bold">
+                          مشاور مسئول: {session.counselorName}
+                        </span>
+                        
+                        <button
+                          onClick={() => handleDeleteSession(session.id)}
+                          className="text-slate-400 hover:text-red-600 hover:bg-slate-50 p-1.5 rounded-lg transition"
+                        >
+                          <Trash2 size={13} />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5 text-right relative z-10 font-sans">
+                      <h4 className="text-xs font-black text-slate-905 leading-normal font-sans">{session.title}</h4>
+                      <p className="text-xs text-slate-600 leading-relaxed font-semibold bg-slate-50/50 p-3.5 rounded-2xl border border-slate-100 font-sans">
+                        {session.notes}
+                      </p>
+                    </div>
+
+                    {session.actionSteps.length > 0 && (
+                      <div className="bg-slate-50/40 p-3.5 rounded-2xl border border-slate-100 text-right space-y-2">
+                        <span className="text-[9px] font-black text-slate-500 block">گام‌های اجرایی ضروری جهت ارتقای تراز در آزمون آزمایشی بعدی:</span>
+                        <div className="space-y-1.5">
+                          {session.actionSteps.map((step, idx) => (
+                            <div 
+                              key={idx}
+                              onClick={() => handleToggleStepCompletion(session.id, idx)}
+                              className={`flex items-start gap-2.5 p-2 rounded-xl border transition-all cursor-pointer select-none ${
+                                step.completed 
+                                  ? "bg-emerald-50/30 border-emerald-150" 
+                                  : "bg-white border-slate-100 hover:border-slate-200"
+                              }`}
+                            >
+                              <div className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 mt-0.5 transition-all ${
+                                step.completed 
+                                  ? "bg-emerald-600 border-emerald-600 text-white" 
+                                  : "border-slate-300 bg-white"
+                              }`}>
+                                {step.completed && <Check size={10} strokeWidth={4} />}
+                              </div>
+                              <span className={`text-xs font-bold leading-normal ${
+                                step.completed ? "text-slate-400 line-through" : "text-slate-700"
+                              }`}>
+                                {step.text}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </motion.div>
         )}
