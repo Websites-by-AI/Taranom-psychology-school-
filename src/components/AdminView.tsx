@@ -8,12 +8,39 @@ import { getSystemLogs, addSystemLog } from "../lib/syslogs";
 import { Student } from "../types";
 
 export default function AdminView({ student }: { student: Student }) {
-  const [activeTab, setActiveTab] = useState<"students" | "analytics" | "uploads" | "content"| "sysdocs" | "roadmap" | "architecture" | "mockexam" | "syslogs">("roadmap");
+  const [activeTab, setActiveTab] = useState<"students" | "analytics" | "uploads" | "content"| "sysdocs" | "roadmap" | "architecture" | "mockexam" | "syslogs" | "integrations">("roadmap");
   const [searchTerm, setSearchTerm] = useState("");
   const [filterField, setFilterField] = useState("all");
   const [selectedScenario, setSelectedScenario] = useState<"mvp" | "stable" | "enterprise">("stable");
   const [concurrentStudents, setConcurrentStudents] = useState<number>(12000); // Slider scale (1,000 to 100,000)
   const [isUploading, setIsUploading] = useState(false);
+  
+  // --- INTEGRATIONS STATE ---
+  const [geminiKey, setGeminiKey] = useState("");
+  const [geminiEndpoint, setGeminiEndpoint] = useState("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent");
+  const [dbApiKey, setDbApiKey] = useState("");
+  const [dbEndpoint, setDbEndpoint] = useState("https://firestore.googleapis.com/v1/projects/taranom-mehr-app/databases/(default)/documents");
+  
+  const [testStatus, setTestStatus] = useState<Record<string, "idle" | "loading" | "success" | "error">>({
+    gemini: "idle",
+    database: "idle"
+  });
+
+  const testConnection = (type: "gemini" | "database") => {
+    setTestStatus(prev => ({ ...prev, [type]: "loading" }));
+    
+    // Simulate API call
+    setTimeout(() => {
+      const isSuccess = Math.random() > 0.3; // 70% success rate for simulation
+      setTestStatus(prev => ({ ...prev, [type]: isSuccess ? "success" : "error" }));
+      
+      if (isSuccess) {
+        addSystemLog(`تست اتصال ${type === 'gemini' ? 'هوش مصنوعی' : 'دیتابیس'}`, "مدیریت ارشد", `اتصال به ${type === 'gemini' ? 'Google Gemini API' : 'Firebase Firestore'} با موفقیت برقرار شد.`);
+      } else {
+        addSystemLog(`خطای اتصال ${type === 'gemini' ? 'هوش مصنوعی' : 'دیتابیس'}`, "مدیتریت ارشد", `خطا در برقراری ارتباط با ${type === 'gemini' ? 'API Key نامعتبر' : 'Endpoint غیرقابل دسترس'}`);
+      }
+    }, 1500);
+  };
   const [uploadedFiles, setUploadedFiles] = useState<string[]>([
     "شیت_کارنامه_سردفتری_کانون_مرکز_اردیبهشت_۱۴۰۵.xlsx",
     "بودجه‌بندی_تراز_آزمون‌های_وکالت_سال_جاری.pdf"
@@ -98,7 +125,7 @@ export default function AdminView({ student }: { student: Student }) {
       period: "سال ۱۴۰۵ به بعد",
       status: "long-term",
       percentage: 0,
-      description: "رونمایی از اولین هاب استعدادیابی و ارتباط داوطلبان برتر چتر دانش با دفاتر معتبر حقوقی ملی و بین‌المللی بر پایه پروفایل تحلیل رفتاری و علمی داوطلب و توسعه زبان‌های انگلیسی و عربی.",
+      description: "رونمایی از اولین هاب استعدادیابی و ارتباط داوطلبان برتر ترنم مهر با دانشگاه‌های معتبر ملی و بین‌المللی بر پایه پروفایل تحلیل رفتاری و علمی داوطلب و توسعه زبان‌های انگلیسی و عربی.",
       tasks: [
         { id: "4-1", text: "گواهی‌نامه‌های استانداردهای بین‌المللی فرآیندهای پرتال‌های آموزشی", completed: false },
         { id: "4-2", text: "سیستم مانیتورینگ کارنامه بر اساس امتیاز توسعه متوازن (Balanced Scorecard)", completed: false },
@@ -199,16 +226,16 @@ export default function AdminView({ student }: { student: Student }) {
   const [suggestedModules, setSuggestedModules] = useState([
     {
       id: "s_oral",
-      title: "شبیه‌ساز هوشمند کارگاه شفاهی و آزمون اختبار (AI Oral Examiner)",
-      englishTitle: "AI Oral Prep & Arbitration Engine",
+      title: "شبیه‌ساز هوشمند کارگاه شفاهی و کنکور (AI Oral Examiner)",
+      englishTitle: "AI Oral Prep & Competitive Exam Engine",
       period: "سه ماهه سوم ۱۴۰۵",
-      desc: "شبیه‌ساز صوتی-سمعی آزمون نهایی اختبار (مخصوص کارآموزان وکالت کانون مرکز) مجهز به سناریوسازی هوشمند و عارضه‌یابی ضعف کلامی داوطلبان بر اساس مصادیق آرای قضایی.",
+      desc: "شبیه‌ساز صوتی-سمعی آزمون نهایی (مخصوص داوطلبان کنکور سراسری) مجهز به سناریوسازی هوشمند و عارضه‌یابی ضعف کلامی داوطلبان بر اساس مفاهیم کتب درسی.",
       tasks: [
-        "پیاده‌سازی ماژول تبدیل صوت به متن صوتی-حقوقی با مرورگر",
-        "تولید سناریوی حقوقی پیچیده بر اساس قراردادهای مزارعه و مسبوق به سابقه",
+        "پیاده‌سازی ماژول تبدیل صوت به متن آموزشی با مرورگر",
+        "تولید سناریوی آموزشی پیچیده بر اساس کتب درسی و مسبوق به سابقه",
         "سنتز کدهای تحلیل کمال‌گرایی کلامی با امتیازدهی به گفتمان داوطلب"
       ],
-      tags: ["AI Oral", "Web Speech API", "Arbitration Practice"],
+      tags: ["AI Oral", "Web Speech API", "Exam Practice"],
       color: "purple",
       icon: "Cpu"
     },
@@ -219,9 +246,9 @@ export default function AdminView({ student }: { student: Student }) {
       period: "سه ماهه چهارم ۱۴۰۵",
       desc: "اتصال به درگاه مخابراتی جهت گزارش لحظه‌ای تراز، درصد راندمان و تله‌های پایش‌شده داوطلبان به شماره تماس اولیا با قالب شخصی‌سازی‌شده صادرشده از مربی.",
       tasks: [
-        "یکپارچه‌سازی وب‌سرویس پترن‌بیس کانون مرکز برای ارسال پیامک کوتاه",
+        "یکپارچه‌سازی وب‌سرویس پترن‌بیس کشوری برای ارسال پیامک کوتاه",
         "سیستم تنظیم دلخواه فرکانس گزارش (روزانه، هفتگی، بعد از آزمون بر اساس درخواست اولیا)",
-        "فرموله‌سازی خودکار نقاط قوت حقوقی داوطلبان جهت دلگرمی تفصیلی والدین"
+        "فرموله‌سازی خودکار نقاط قوت علمی داوطلبان جهت دلگرمی تفصیلی والدین"
       ],
       tags: ["SMS Push", "Kavenegar Integrations", "Parental Care"],
       color: "emerald",
@@ -229,28 +256,28 @@ export default function AdminView({ student }: { student: Student }) {
     },
     {
       id: "s_laws",
-      title: "سیستم به‌روزرسانی آنی تغییرات قوانین خاص با هوش مصنوعی",
-      englishTitle: "Dynamic Legislation Hot-Swap Engine",
+      title: "سیستم به‌روزرسانی آنی تغییرات کتب درسی با هوش مصنوعی",
+      englishTitle: "Dynamic Curriculum Hot-Swap Engine",
       period: "سه ماهه اول ۱۴۰۶",
-      desc: "کشف، تحلیل و بازنویسی تست‌ها به محض تصویب آرای وحدت رویه جدید یا قوانین خاص در مجلس بدون از دست رفتن پایداری عملکرد بانک سوالات چتر دانش.",
+      desc: "کشف، تحلیل و بازنویسی تست‌ها به محض تغییر در کتب درسی آموزش و پرورش بدون از دست رفتن پایداری عملکرد بانک سوالات ترنم مهر.",
       tasks: [
-        "خزنده زنده روزنامه رسمی کشور مجهز به فیلتر کلمات حقوقی اختصاصی",
-        "ماشین ویرایش تله‌های تستی قدیمی بر اساس قانون جدید مصوب دولتی",
-        "نوتیفیکیشن لحظه‌ای تغییرات مواد قانونی به داوطلبان فعال و مربیان"
+        "خزنده زنده پورتال آموزش و پرورش مجهز به فیلتر کلمات آموزشی اختصاصی",
+        "ماشین ویرایش تله‌های تستی قدیمی بر اساس کتاب جدید مصوب",
+        "نوتیفیکیشن لحظه‌ای تغییرات کتب درسی به داوطلبان فعال و مربیان"
       ],
-      tags: ["Legislation Crawling", "Database Logic", "Content Sync"],
+      tags: ["Curriculum Crawling", "Database Logic", "Content Sync"],
       color: "indigo",
       icon: "Database"
     },
     {
       id: "s_fintech",
-      title: "امنیت پرداخت خرد و اشتراک اقساطی دوره‌های شبیه‌سازی وکالت",
+      title: "امنیت پرداخت خرد و اشتراک اقساطی دوره‌های شبیه‌سازی کنکور",
       englishTitle: "SaaS Installment Framework & Student Finance",
       period: "سه ماهه دوم ۱۴۰۶",
       desc: "ماژول پرداخت امن چندمرحله‌ای برای تسهیل ثبت‌نام داوطلبان در سراسر کشور با قابلیت یادآوری هوشمند سررسید دوره‌ها و لغو دسترسی زمان معوق ماندن تعهدات.",
       tasks: [
         "اتصال به وب‌سامانه‌های بانکی شتاب کشور و درگاه شاپرک",
-        "پنل پایش سررسید وام و تعهدات اقساط متقاضیان و جریمه دیرکرد آزمونی",
+        "پنل پایش سررسید اقساط متقاضیان و جریمه دیرکرد آزمونی",
         "امکان پرداخت اتوماتیک اقساط از کارت متصل بانکی داوطلب"
       ],
       tags: ["Fintech Integration", "SaaS Subscriptions", "Sub-accounts"],
@@ -294,7 +321,7 @@ export default function AdminView({ student }: { student: Student }) {
   const [selectedModuleIdx, setSelectedModuleIdx] = useState<number>(0);
   
   // Interactive Exam Generator State
-  const [selectedLawSubject, setSelectedLawSubject] = useState<string>("مدنی");
+  const [selectedLawSubject, setSelectedLawSubject] = useState<string>("زیست");
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("سخت");
   const [generatedQuestion, setGeneratedQuestion] = useState<{
     text: string;
@@ -597,10 +624,260 @@ export default function AdminView({ student }: { student: Student }) {
             <List size={16} className="text-amber-600" />
             <span className="font-black">📜 لاگ تغییرات سیستمی</span>
           </button>
+          <button
+            onClick={() => setActiveTab("integrations")}
+            className={`flex items-center gap-2 py-3 px-4 text-xs font-bold rounded-xl whitespace-nowrap transition cursor-pointer ${
+              activeTab === "integrations" ? "bg-white text-indigo-900 shadow-sm border border-slate-100" : "text-slate-500 hover:text-slate-800"
+            }`}
+          >
+            <Globe size={16} className="text-indigo-600" />
+            <span className="font-black">🔌 تنظیمات اتصال و AI</span>
+          </button>
         </div>
 
         <div className="p-6">
-          {/* TAB: SYSTEM LOGS (Added based on user request) */}
+          {/* TAB: INTEGRATIONS & AI (Added based on user request) */}
+          {activeTab === "integrations" && (
+            <div className="space-y-8 animate-fade-in" id="admin-tab-integrations" style={{ direction: "rtl" }}>
+              <div className="bg-slate-50 p-5 rounded-3xl border border-slate-150 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div className="space-y-1">
+                  <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
+                    <Globe size={18} className="text-indigo-600" />
+                    <span>اتصالات و کلیدهای دسترسی (Gateways & API Keys)</span>
+                  </h3>
+                  <p className="text-[10px] text-slate-500 font-bold">مدیریت متمرکز نقاط اتصال هوش مصنوعی گوگل و پایگاه داده‌های ابری</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full font-black border border-emerald-200 flex items-center gap-1">
+                    <ShieldCheck size={12} />
+                    <span>لایه امنیتی TLS 1.3 فعال است</span>
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 text-right">
+                {/* Google Gemini API Column */}
+                <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-6 relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-1 h-full bg-indigo-500" />
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl">
+                      <Cpu size={24} />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-black text-slate-900 leading-none">تنظیمات هوش مصنوعی Google Gemini</h4>
+                      <span className="text-[10px] text-slate-400 font-bold">مدل‌های LLM جهت تحلیل تله‌های تستی و تولید سوال</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-black text-slate-700 flex items-center gap-1.5">
+                        <Globe size={14} className="text-slate-400" />
+                        <span>لینک Endpoint (API URL)</span>
+                      </label>
+                      <input 
+                        type="text" 
+                        value={geminiEndpoint}
+                        onChange={(e) => setGeminiEndpoint(e.target.value)}
+                        className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-3 text-xs font-mono text-slate-600 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+                        style={{ direction: 'ltr' }}
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-black text-slate-700 flex items-center gap-1.5">
+                        <Key size={14} className="text-slate-400" />
+                        <span>کلید دسترسی (Gemini API Key)</span>
+                      </label>
+                      <div className="relative">
+                        <input 
+                          type="password" 
+                          value={geminiKey}
+                          onChange={(e) => setGeminiKey(e.target.value)}
+                          placeholder="AIzaSy... (محرمانه)"
+                          className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-3 text-xs font-mono text-slate-600 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+                          style={{ direction: 'ltr' }}
+                        />
+                        <button className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 hover:text-indigo-600 transition">
+                          <Copy size={14} />
+                        </button>
+                      </div>
+                    </div>
+
+                    <button 
+                      onClick={() => testConnection("gemini")}
+                      className={`w-full py-3 rounded-2xl text-xs font-black flex items-center justify-center gap-2 transition-all ${
+                        testStatus.gemini === "loading" ? "bg-slate-100 text-slate-400 cursor-wait" :
+                        testStatus.gemini === "success" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" :
+                        testStatus.gemini === "error" ? "bg-rose-50 text-rose-700 border border-rose-100" :
+                        "bg-indigo-600 text-white hover:bg-indigo-700 shadow-md shadow-indigo-100"
+                      }`}
+                    >
+                      {testStatus.gemini === "loading" ? (
+                        <>
+                          <RefreshCw size={14} className="animate-spin" />
+                          <span>در حال پینگ کردن سرور...</span>
+                        </>
+                      ) : testStatus.gemini === "success" ? (
+                        <>
+                          <Check size={14} />
+                          <span>اتصال برقرار شد (Ping: 42ms)</span>
+                        </>
+                      ) : testStatus.gemini === "error" ? (
+                        <>
+                          <AlertCircle size={14} />
+                          <span>خطا در احراز هویت (401 Unauthorized)</span>
+                        </>
+                      ) : (
+                        <>
+                          <Activity size={14} />
+                          <span>تست اتصال به هوش مصنوعی</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Database Connection Column */}
+                <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-6 relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-1 h-full bg-amber-500" />
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 bg-amber-50 text-amber-600 rounded-2xl">
+                      <Database size={24} />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-black text-slate-900 leading-none">مدیریت دیتابیس ابری (Cloud Database)</h4>
+                      <span className="text-[10px] text-slate-400 font-bold">اتصال به سیستم ذخیره‌سازی داده‌های داوطلبان</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-black text-slate-700 flex items-center gap-1.5">
+                        <Globe size={14} className="text-slate-400" />
+                        <span>لینک دیتابیس (Database URI)</span>
+                      </label>
+                      <input 
+                        type="text" 
+                        value={dbEndpoint}
+                        onChange={(e) => setDbEndpoint(e.target.value)}
+                        className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-3 text-xs font-mono text-slate-600 outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                        style={{ direction: 'ltr' }}
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-black text-slate-700 flex items-center gap-1.5">
+                        <Lock size={14} className="text-slate-400" />
+                        <span>کلید امنیتی دیتابیس (Secret API Key)</span>
+                      </label>
+                      <div className="relative">
+                        <input 
+                          type="password" 
+                          value={dbApiKey}
+                          onChange={(e) => setDbApiKey(e.target.value)}
+                          placeholder="FB_SECRET_..."
+                          className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-3 text-xs font-mono text-slate-600 outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                          style={{ direction: 'ltr' }}
+                        />
+                        <button className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 hover:text-amber-600 transition">
+                          <Copy size={14} />
+                        </button>
+                      </div>
+                    </div>
+
+                    <button 
+                      onClick={() => testConnection("database")}
+                      className={`w-full py-3 rounded-2xl text-xs font-black flex items-center justify-center gap-2 transition-all ${
+                        testStatus.database === "loading" ? "bg-slate-100 text-slate-400 cursor-wait" :
+                        testStatus.database === "success" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" :
+                        testStatus.database === "error" ? "bg-rose-50 text-rose-700 border border-rose-100" :
+                        "bg-amber-500 text-white hover:bg-amber-600 shadow-md shadow-amber-100"
+                      }`}
+                    >
+                      {testStatus.database === "loading" ? (
+                        <>
+                          <RefreshCw size={14} className="animate-spin" />
+                          <span>در حال تست کوئری...</span>
+                        </>
+                      ) : testStatus.database === "success" ? (
+                        <>
+                          <Check size={14} />
+                          <span>دیتابیس متصل و پایدار است</span>
+                        </>
+                      ) : testStatus.database === "error" ? (
+                        <>
+                          <AlertCircle size={14} />
+                          <span>خطای دسترسی (Forbidden 403)</span>
+                        </>
+                      ) : (
+                        <>
+                          <Server size={14} />
+                          <span>تست اتصال به دیتابیس</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Advanced AI Config Row */}
+              <div className="bg-gradient-to-l from-indigo-900 to-slate-900 p-8 rounded-3xl text-white space-y-6 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
+                <div className="flex items-center gap-4 relative z-10">
+                  <div className="p-3 bg-white/10 backdrop-blur-md rounded-2xl border border-white/10">
+                    <Sparkles size={28} className="text-amber-400" />
+                  </div>
+                  <div>
+                    <h4 className="text-base font-black">پارامترهای پیشرفته تولید محتوای AI</h4>
+                    <p className="text-[10px] text-indigo-200 font-bold">تنظیم دمای خلاقیت و توکن‌های خروجی برای دستیار آموزشی ترنم مهر</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[10px] font-black text-indigo-200">خلاقیت مدل (Temperature)</span>
+                      <span className="text-xs font-mono font-black text-amber-400">0.7</span>
+                    </div>
+                    <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+                      <div className="h-full w-[70%] bg-amber-400" />
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[10px] font-black text-indigo-200">حداکثر توکن خروجی</span>
+                      <span className="text-xs font-mono font-black text-amber-400">2048</span>
+                    </div>
+                    <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+                      <div className="h-full w-[40%] bg-indigo-400" />
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[10px] font-black text-indigo-200">اولویت استدلال (Top P)</span>
+                      <span className="text-xs font-mono font-black text-amber-400">0.95</span>
+                    </div>
+                    <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+                      <div className="h-full w-[95%] bg-emerald-400" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-indigo-50 p-4 rounded-2xl border border-indigo-150 flex items-start gap-3">
+                <div className="p-2 bg-white rounded-xl border border-indigo-200 text-indigo-600">
+                  <Target size={16} />
+                </div>
+                <div className="space-y-1">
+                  <strong className="text-xs font-black text-indigo-950 block">راهنمای مربی ترنم مهر:</strong>
+                  <p className="text-[10px] text-indigo-700 font-semibold leading-relaxed">
+                    برای فعال‌سازی کامل «تحلیل هوشمند تله‌های تستی»، حتماً از کلیدهای API معتبر استفاده کنید. هرگونه اختلال در اتصال دیتابیس منجر به توقف فرآیند «پیشنهاد شخصی‌سازی شده» در پنل داوطلبان خواهد شد. لاگ‌های این بخش در تب «لاگ تغییرات سیستمی» قابل رهگیری است.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
           {activeTab === "syslogs" && (
             <div className="space-y-6" id="admin-tab-syslogs" style={{ direction: "rtl" }}>
               <div className="flex justify-between items-center bg-slate-50 p-4 rounded-2xl border border-slate-150">
@@ -1877,7 +2154,7 @@ export default function AdminView({ student }: { student: Student }) {
                 <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100 space-y-2 text-right">
                   <h4 className="text-slate-400 font-bold text-xs uppercase">متوسط تراز کل جامعه آماری چتر دانش</h4>
                   <div className="text-2xl font-black text-slate-800 font-mono">۷,۳۲۰ تراز</div>
-                  <p className="text-[10px] text-emerald-600">▲ ۲.۸٪ بهبود میانگین درس تجارت و حقوق جزا</p>
+                  <p className="text-[10px] text-emerald-600">▲ ۲.۸٪ بهبود میانگین درس زیست و فیزیک</p>
                 </div>
 
                 <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100 space-y-2 text-right">

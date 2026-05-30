@@ -8,9 +8,9 @@ interface ParentsViewProps {
 
 export default function ParentsView({ student }: ParentsViewProps) {
   const [alerts, setAlerts] = useState<ParentingAlert[]>([
-    { id: "1", type: "success", message: `داوطلب گرامی در مبحث ارث حقوق مدنی با بهبود چشمگیر ۳۲٪ تراز علمی مواجه شده و رتبه اول آزمون دوره‌ای را از آن خود کرد.`, date: "۲۹ اردیبهشت" },
-    { id: "2", type: "warning", message: `کاهش ریتم مطالعه در شیفت عصر روز گذشته (افت تمرکز در تست‌زنی متون فقه) گزارش شد. برنامه کایزن ترمیمی به طور خودکار صادر گردید.`, date: "۱۵ اردیبهشت" },
-    { id: "3", type: "info", message: `ساعت مطالعه خالص ثبت شده دیروز: ۷ ساعت کامل شامل تسلط بر مواد قوانین خاص آیین دادرسی مدنی.`, date: "۱۴ اردیبهشت" }
+    { id: "1", type: "success", message: `داوطلب گرامی در مبحث ژنتیک زیست‌شناسی با بهبود چشمگیر ۳۲٪ تراز علمی مواجه شده و رتبه اول آزمون دوره‌ای را از آن خود کرد.`, date: "۲۹ اردیبهشت" },
+    { id: "2", type: "warning", message: `کاهش ریتم مطالعه در شیفت عصر روز گذشته (افت تمرکز در تست‌زنی مفاهیم فیزیک) گزارش شد. برنامه کایزن ترمیمی به طور خودکار صادر گردید.`, date: "۱۵ اردیبهشت" },
+    { id: "3", type: "info", message: `ساعت مطالعه خالص ثبت شده دیروز: ۷ ساعت کامل شامل تسلط بر مباحث استوکیومتری شیمی دهم و یازدهم.`, date: "۱۴ اردیبهشت" }
   ]);
 
   const [notifSms, setNotifSms] = useState(true);
@@ -30,7 +30,7 @@ export default function ParentsView({ student }: ParentsViewProps) {
       {/* Visual Welcome Board */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-3xl border border-slate-100 shadow-sm bg-gradient-to-tr from-indigo-50/10 to-transparent text-right">
         <div>
-          <span className="text-[10px] font-black uppercase text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-100 inline-block mb-1.5">سامانه پایش والدین چتر دانش</span>
+          <span className="text-[10px] font-black uppercase text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-100 inline-block mb-1.5">سامانه پایش والدین ترنم مهر</span>
           <h2 className="text-xl font-black text-slate-900">پورتال پایش و نظارت برخط والدین و حامیان علمی</h2>
           <p className="text-slate-500 text-xs mt-1 leading-relaxed">
             اولیاء محترم؛ در این صفحه می‌توانید تراز علمی آزمون‌های شبیه‌ساز، میزان پیشرفت درصدی دروس، هشدارهای مشاور تخصصی و استریک‌های روزانه داوطلب گرامی **{student.name}** را مانیتور کنید.
@@ -51,7 +51,7 @@ export default function ParentsView({ student }: ParentsViewProps) {
           <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4" id="parent-messages-timeline">
             <span className="font-bold text-slate-805 text-sm block flex items-center gap-1.5 border-b border-slate-50 pb-2 text-right justify-start">
               <MessageSquare className="text-blue-900" size={18} />
-              <span>اعلانات خودکار و بازخورد مربیان ناظر موسسه چتر دانش</span>
+              <span>اعلانات خودکار و بازخورد مربیان ناظر موسسه ترنم مهر</span>
             </span>
 
             <div className="space-y-3">
@@ -95,7 +95,7 @@ export default function ParentsView({ student }: ParentsViewProps) {
           </span>
 
           <p className="text-xs text-slate-400 leading-relaxed text-right">
-            آستانه و نحوه اطلاع‌رسانی از روند یادگیری فرزندتان و دریافت گزارش‌های کایزن در پیوند با ترازهای آزمون وکالت را شخصی‌سازی کنید:
+            آستانه و نحوه اطلاع‌رسانی از روند یادگیری فرزندتان و دریافت گزارش‌های کایزن در پیوند با ترازهای آزمون سراسری را شخصی‌سازی کنید:
           </p>
 
           <div className="space-y-4">

@@ -939,6 +939,113 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
         )}
       </div>
 
+      {/* Subject Performance Analysis Chart */}
+      <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-6 text-right" id="subject-performance-chart-section">
+        <div className="flex justify-between items-center border-b border-slate-50 pb-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-rose-50 text-rose-600 rounded-2xl shadow-sm">
+              <TrendingUp size={22} />
+            </div>
+            <div>
+              <h3 className="text-base font-black text-slate-900">تحلیل بصری درصد پاسخ‌گویی دروس کنکور</h3>
+              <p className="text-[11px] text-slate-500 font-bold mt-0.5">شناسایی هوشمند دروسی که نیاز به مطالعه فوری و رفع اشکال دارند</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1.5">
+              <div className="w-3 h-3 rounded-full bg-rose-500" />
+              <span className="text-[10px] text-slate-500 font-bold">نیاز به مطالعه فوری</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-3 h-3 rounded-full bg-amber-500" />
+              <span className="text-[10px] text-slate-500 font-bold">هشدار سطح تراز</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="h-[300px] w-full" style={{ direction: 'ltr' }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={chartData}
+              margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+              <XAxis 
+                dataKey="name" 
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#64748b', fontSize: 11, fontWeight: 'bold' }}
+                dy={10}
+              />
+              <YAxis 
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 'bold' }}
+                domain={[0, 100]}
+                tickFormatter={(val) => `${toPersianNum(val)}٪`}
+              />
+              <Tooltip 
+                cursor={{ fill: '#f8fafc' }}
+                content={({ active, payload }) => {
+                  if (active && payload && payload.length) {
+                    const data = payload[0].payload;
+                    return (
+                      <div className="bg-slate-900 text-white p-3 rounded-xl border border-slate-800 shadow-xl text-right font-sans">
+                        <p className="text-xs font-black mb-1">{data.fullName}</p>
+                        <div className="flex items-center gap-2 justify-end">
+                          <span className="text-xs font-mono font-black" style={{ color: data.color }}>{toPersianNum(data.percentage)}٪</span>
+                          <span className="text-[10px] text-slate-400">درصد پاسخ‌گویی:</span>
+                        </div>
+                        <div className="mt-2 pt-2 border-t border-white/5">
+                          <p className={`text-[9px] font-bold ${data.percentage < 35 ? 'text-rose-400' : 'text-amber-400'}`}>
+                            {data.percentage < 35 ? '⚠️ وضعیت بحرانی (نیاز به مطالعه فوری)' : '⚠️ وضعیت هشدار (نیاز به تمرین بیشتر)'}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
+              />
+              <Bar 
+                dataKey="percentage" 
+                radius={[8, 8, 0, 0]}
+                barSize={40}
+              >
+                {chartData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-start gap-3">
+            <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 flex items-center justify-center shrink-0">
+              <Brain size={16} className="text-indigo-600" />
+            </div>
+            <div className="space-y-1">
+              <strong className="text-xs font-black text-slate-900 block">آخرین تحلیل هوش مصنوعی:</strong>
+              <p className="text-[10px] text-slate-500 leading-relaxed font-semibold">
+                براساس نمودار فوق، درس <span className="text-rose-600 font-black">«زیست‌شناسی»</span> به دلیل درصد پاسخ‌گویی پایین ({toPersianNum(28)}٪) در اولویت اول مطالعه اضطراری قرار دارد. پیشنهاد می‌شود تمرکز خود را روی فصل‌های ژنتیک و گیاهی معطوف کنید.
+              </p>
+            </div>
+          </div>
+          <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-start gap-3">
+            <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 flex items-center justify-center shrink-0">
+              <Zap size={16} className="text-amber-500" />
+            </div>
+            <div className="space-y-1">
+              <strong className="text-xs font-black text-slate-900 block">راهکار مربیگری:</strong>
+              <p className="text-[10px] text-slate-500 leading-relaxed font-semibold">
+                درس <span className="text-amber-600 font-black">«شیمی»</span> نیز در وضعیت هشدار ({toPersianNum(35)}٪) است. حل روزانه حداقل ۳۰ تست از مبحث استوکیومتری می‌تواند تراز شما را در این درس تا ۱۵٪ بهبود بخشد.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Metrics Cards Grid - Ultra Slick Redesigned */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="metrics-grid">
         
@@ -1337,7 +1444,7 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
             onClick={() => onNavigate("report")}
             className="w-full bg-blue-950 hover:bg-slate-900 text-white py-3 rounded-2xl text-[11px] font-bold transition flex items-center justify-center gap-1.5 cursor-pointer mt-4 hover:scale-[1.01]"
           >
-            <span>مشاهده ریز درصدها، کارنامه خام و گواهی های تستی چتر دانش</span>
+            <span>مشاهده ریز درصدها، کارنامه خام و تحلیل‌های تستی آکادمی</span>
             <ChevronLeft size={14} />
           </button>
         </div>

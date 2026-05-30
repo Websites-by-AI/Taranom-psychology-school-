@@ -51,7 +51,7 @@ export interface PsychologicalAnalysis {
 
 export interface DailyPlan {
   day: string; // روز هفته برای برنامه مطالعاتی و مربی‌گری
-  morningPlan: string; // برنامه مطالعاتی فشرده شیفت صبح (خواندن کتب صریح قوانین و اصول فقه)
+  morningPlan: string; // برنامه مطالعاتی فشرده شیفت صبح (مطالعه متن کتاب درسی و جزوات آموزشی)
   afternoonPlan: string; // برنامه حل تست‌های زمان‌دار و بررسی دفترچه پاسخ تشریحی شیفت عصر
   totalQuestions: number; // تعداد هدف تستی تالیفی یا شناسنامه‌دار آن روز داوطلب
   completed?: boolean;
@@ -80,7 +80,7 @@ export interface TestTrap {
   trapType: string; // نوع تله (مثلاً تله گزینه‌های دام‌دار، تله فرمول اشتباه)
   correctAnswer: string; // پاسخ صحیح مستند به مراجع درسی
   userMistake: string; // اشتباه داوطلب و دلیل آن
-  legalNote: string; // نکته تستی طلایی جهت مرور سریع
+  testNote: string; // نکته تستی طلایی جهت مرور سریع
   importance: "high" | "medium" | "low"; // میزان اهمیت برای شب آزمون
   createdAt: string;
 }

@@ -23,13 +23,13 @@ export default function App() {
   const [role, setRole] = useState<"student" | "parent" | "admin" | null>(null);
   const [view, setView] = useState<string>("dashboard");
   const [theme, setTheme] = useState<string>(() => {
-    return localStorage.getItem("chatre_app_theme") || "classic";
+    return localStorage.getItem("taranom_app_theme") || "classic";
   });
   const [showThemeMenu, setShowThemeMenu] = useState(false);
 
   const handleThemeChange = (newTheme: string) => {
     setTheme(newTheme);
-    localStorage.setItem("chatre_app_theme", newTheme);
+    localStorage.setItem("taranom_app_theme", newTheme);
   };
 
   const getThemeCSS = (activeTheme: string) => {
@@ -121,7 +121,7 @@ export default function App() {
           <LoginView onLogin={handleLogin} />
         </main>
         <footer className="py-6 border-t border-slate-100 bg-white text-center text-xs text-slate-400">
-          <div>© چتر دانش | سامانه هوشمند آموزشی و برنامه‌ریزی آزمون‌های حقوقی با هوش مصنوعی مرکزی</div>
+          <div>© آکادمی هوشمند ترنم مهر | سامانه هوشمند آموزشی و برنامه‌ریزی کنکور سراسری با هوش مصنوعی مرکزی</div>
         </footer>
       </div>
     );
@@ -135,7 +135,7 @@ export default function App() {
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span>سامانه ابری و میکروسرویسی چتر دانش فعال است</span>
+            <span>سامانه ابری و میکروسرویسی ترنم مهر فعال است</span>
           </span>
           <span className="hidden sm:inline text-slate-500">|</span>
           <span className="hidden sm:inline bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-500/10">پروتکل امنیتی ادمین متصل است</span>
@@ -156,10 +156,10 @@ export default function App() {
                 <Layers size={22} className="text-amber-400" />
               </div>
               <div className="text-right">
-                <span className="font-black text-slate-850 text-base block leading-none text-blue-950">چتر دانش</span>
+                <span className="font-black text-slate-850 text-base block leading-none text-blue-950">آکادمی ترنم مهر</span>
                 <span className="text-[10px] text-emerald-600 font-black block mt-1 flex items-center gap-0.5 justify-end">
                   <Sparkles size={8} />
-                  <span>سامانه هوشمند آموزشی و آزمون وکالت</span>
+                  <span>سامانه هوشمند آموزشی و مشاوره‌ای کنکور</span>
                 </span>
               </div>
             </div>
@@ -175,7 +175,7 @@ export default function App() {
                     }`}
                   >
                     <LayoutDashboard size={14} />
-                    <span>🎓 پرتال داوطلب کنکور چتر دانش</span>
+                    <span>🎓 پرتال داوطلب آکادمی کنکور ترنم مهر</span>
                   </button>
                   <button
                     onClick={() => setView("manova")}
@@ -185,7 +185,7 @@ export default function App() {
                     id="btn-nav-manova-desktop-student"
                   >
                     <Sparkles size={14} className="text-amber-500 fill-amber-100" />
-                    <span className="text-blue-950 font-black">📊 ماتریس و داشبورد مانوا چتر دانش</span>
+                    <span className="text-blue-950 font-black">📊 ماتریس و داشبورد مانوا آکادمی</span>
                   </button>
                   <button
                     onClick={() => setView("report")}
@@ -212,7 +212,7 @@ export default function App() {
                     }`}
                   >
                     <MessageSquare size={14} />
-                    <span>🤖 مشاور هوشمند وکالت (AI)</span>
+                    <span>🤖 مشاور هوشمند کنکور (AI)</span>
                   </button>
                   <button
                     onClick={() => setView("progress")}
@@ -263,7 +263,7 @@ export default function App() {
                     id="btn-nav-manova-desktop-parent"
                   >
                     <Sparkles size={14} className="text-amber-500 fill-amber-100" />
-                    <span className="text-blue-950 font-black">📊 ماتریس و داشبورد مانوا چتر دانش</span>
+                    <span className="text-blue-950 font-black">📊 ماتریس و داشبورد مانوا ترنم مهر</span>
                   </button>
                   <button
                     onClick={() => setView("report")}
@@ -297,9 +297,9 @@ export default function App() {
               <div className="text-left hidden md:block">
                 <span className="font-bold text-slate-800 text-xs block text-right">{student.name}</span>
                 <span className="text-[10px] text-slate-400 font-bold block text-right mt-0.5">
-                  {role === "student" && "داوطلب آزمون‌های حقوقی کانون"}
+                  {role === "student" && "داوطلب آزمون‌های کنکور سراسری"}
                   {role === "parent" && "سیستم نظارتی و پایش والدین"}
-                  {role === "admin" && "مدیر کل و معمار ارشد چتر دانش"}
+                  {role === "admin" && "مدیر کل و معمار ارشد آکادمی"}
                 </span>
               </div>
 
@@ -323,11 +323,11 @@ export default function App() {
                     </div>
                     <div className="space-y-1">
                       {[
-                        { id: "classic", name: "سورمه‌ای اصیل (چتر دانش)", color: "bg-blue-900" },
-                        { id: "emerald", name: "زمرد کانون (سبز قضایی)", color: "bg-emerald-800" },
-                        { id: "ruby", name: "درخشش یاقوت (زرشکی دفتری)", color: "bg-rose-900" },
-                        { id: "amber", name: "کهربایی گرم (قدیمی ملّی)", color: "bg-amber-850" },
-                        { id: "obsidian", name: "فولاد دودی (کربنی خنثی)", color: "bg-slate-705" }
+                        { id: "classic", name: "سورمه‌ای اصیل (ترنم مهر)", color: "bg-blue-900" },
+                        { id: "emerald", name: "سبز کانون (آموزشی)", color: "bg-emerald-800" },
+                        { id: "ruby", name: "یاقوت درخشان (زرشکی)", color: "bg-rose-900" },
+                        { id: "amber", name: "کهربایی گرم (طلایی)", color: "bg-amber-850" },
+                        { id: "obsidian", name: "فولاد دودی (مدرن)", color: "bg-slate-705" }
                       ].map((t) => (
                         <button
                           key={t.id}
@@ -374,7 +374,7 @@ export default function App() {
                     view === "dashboard" ? "bg-blue-900 text-white" : "text-slate-500 bg-slate-50"
                   }`}
                 >
-                  پرتال داوطلب وکالت
+                  پرتال داوطلب کنکور
                 </button>
                 <button
                   onClick={() => setView("manova")}
@@ -407,7 +407,7 @@ export default function App() {
                     view === "counselor" ? "bg-blue-900 text-white" : "text-slate-500 bg-slate-50"
                   }`}
                 >
-                  مشاور هوشمند وکالت
+                  مشاور هوشمند کنکور
                 </button>
                 <button
                   onClick={() => setView("progress")}
@@ -453,7 +453,7 @@ export default function App() {
                   }`}
                   id="btn-nav-manova-mobile-parent"
                 >
-                  داشبورد مانوا چتر دانش
+                  داشبورد مانوا آکادمی
                 </button>
                 <button
                   onClick={() => setView("report")}
@@ -474,7 +474,7 @@ export default function App() {
                     view === "admin" ? "bg-blue-900 text-white" : "text-slate-500 bg-slate-50"
                   }`}
                 >
-                  مدیریت ارشد چتر دانش (SaaS)
+                  مدیریت ارشد آکادمی (SaaS)
                 </button>
               </>
             )}
@@ -514,7 +514,7 @@ export default function App() {
 
       {/* Persistent Footer */}
       <footer className="bg-white border-t border-slate-100 py-6 text-center text-xs text-slate-400 mt-10">
-        <div>پلتفرم هوشمند آموزشی و برنامه‌ریزی درسی چتر دانش بر اساس مدل ارزیابی آزمون‌های حقوقی وکالت • کپی‌رایت ۱۴۰۵</div>
+        <div>پلتفرم هوشمند آموزشی و برنامه‌ریزی درسی آکادمی ترنم مهر بر اساس مدل ارزیابی کنکور سراسری • کپی‌رایت ۱۴۰۵</div>
       </footer>
     </div>
   );

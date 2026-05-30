@@ -23,7 +23,7 @@ interface QuizQuestion {
   correctIdx: number;
   explanation: string;
   trapType: string;
-  difficulty: "سخت" | "بسیار سخت" | "المپیاد حقوق";
+  difficulty: "سخت" | "بسیار سخت" | "المپیاد علمی";
   importance: "high" | "medium" | "low";
 }
 
@@ -31,147 +31,81 @@ export default function CustomQuizGenerator({ student, onRefreshStats }: CustomQ
   // Question pool of difficult legal/analytical questions corresponding to subjects
   const QUESTION_POOL: QuizQuestion[] = [
     {
-      id: "Q-LAW-01",
-      subject: "حقوق مدنی",
-      title: "شرایط اساسی صحت عقود - تعلیق در انشا",
-      text: "چنانچه عقد بیعی به گونه‌ای منعقد شود که تشکیل خودِ عقد منوط به وقوع شرطی در آینده باشد (مثلاً فروشنده بگوید: فروختم مبیع را اگر فردا باران ببارد)، وضعیت حقوقی این توافق چیست؟",
+      id: "Q-SCI-01",
+      subject: "زیست‌شناسی",
+      title: "ژنتیک و وراثت - مسائل مربوط به بیماری‌های وابسته به جنس",
+      text: "اگر مردی مبتلا به بیماری هموفیلی (وابسته به X مغلوب) با زنی سالم که ناقل این بیماری است ازدواج کند، احتمال اینکه فرزند دوم آن‌ها یک پسر سالم باشد چقدر است؟",
       options: [
-        "۱. عقد غیرنافذ بوده و با تنفیذ بعدی متعاقدین به عنوان عقد معلق صحیح تلقی می‌شود.",
-        "۲. عقد باطل است، چرا که تعلیق در انشا (اراده ایجاد عقد) مانع از قصد قطعی بوده و اساساً عقدی شکل نمی‌گیرد.",
-        "۳. عقد صحیح است و صرفاً اثر مسبَّب آن (منشأ) معلق بر بارش باران در آینده خواهد بود.",
-        "۴. این توافق یک بیع معلق معتبر شرعی و مدنی است و طبق ماده ۱۹۰ قانون مدنی تعلیق در انشا فاقد اشکال است."
+        "۱. ۲۵ درصد",
+        "۲. ۵۰ درصد",
+        "۳. ۱۲.۵ درصد",
+        "۴. ۷۵ درصد"
       ],
-      correctIdx: 1, // Option 2 (0-indexed 1)
-      explanation: "طبق نظر اکثر حقوقدانان برجسته و دکترین حقوق مدنی بر اساس ماده ۱۹۰ قانون مدنی، اراده و قصد قطعی شرط اساسی و ذاتی صحت عقود است. تعلیق در انشا (یعنی اراده معلق بر ایجاد اراده) عقلاً محال و غیرممکن بوده و موجب بطلان بنیادی عقد خواهد شد؛ در حالی که تعلیق در منشأ (اثر عقد و رابطه حقوقی) صحیح و معتبر است.",
-      trapType: "تله عدم تمایز اثر عقد (منشأ) از اراده ایجاد عقد (انشا)",
+      correctIdx: 0, 
+      explanation: "در این آمیزش، ژنوتیپ مرد XhY و ژنوتیپ زن XHXh است. فرزندان حاصل عبارتند از: دختر ناقل (XHXh)، دختر مبتلا (XhXh)، پسر سالم (XHY) و پسر مبتلا (XhY). احتمال پسر سالم بودن در کل فرزندان برابر با ۱ از ۴ یا ۲۵ درصد است.",
+      trapType: "تله عدم توجه به تفکیک جنسیت در محاسبه احتمال کل",
       difficulty: "بسیار سخت",
       importance: "high"
     },
     {
-      id: "Q-LAW-02",
-      subject: "حقوق مدنی",
-      title: "سقوط تعهدات - وضعیت حقوقی بیع کالی به کالی",
-      text: "در معامله‌ای مبیع و ثمن هر دو کلی فی‌الذمه و مدت‌دار توافق شده‌اند که در تاریخ دو ماه آینده تسلیم و پرداخت شوند. وضعیت این عقد بر اساس مقررات صریح قانون مدنی و بیع چگونه ارزیابی می‌شود؟",
+      id: "Q-SCI-02",
+      subject: "شیمی",
+      title: "استوکیومتری - بازده درصدی واکنش",
+      text: "در واکنش سوختن کامل ۸۰ گرم گاز متان با مقدار کافی اکسیژن، ۱۷۶ گرم گاز کربن دی‌اکسید تولید شده است. بازده درصدی این واکنش چقدر است؟ (C=12, H=1, O=16)",
       options: [
-        "۱. عقد صحیح و معتبر است، زیرا تعهد متقابل بر عهده ذمه طرفین ایجاد شده و طرفین ملزم به وفای عهد هستند.",
-        "۲. عقد صحیح است مشروط بر اینکه قبض مبیع در موعد دو ماه بعد انجام گرفته و ثمن موجل باقی بماند.",
-        "۳. بیع باطل است، به این علت که معامله دین به دین (کالی به کالی) بر اساس مفاهیم صریح فقهی و حقوق مدنی فاقد صحت قانونی است.",
-        "۴. معامله غیرنافذ است و منوط به تبدیل تعهد یا رضایت صادرکننده ثمن در مجلس تصفیه است."
+        "۱. ۷۰ درصد",
+        "۲. ۸۰ درصد",
+        "۳. ۹۰ درصد",
+        "۴. ۱۰۰ درصد"
       ],
-      correctIdx: 2, // Option 3 (0-indexed 2)
-      explanation: "بیع کالی به کالی یعنی بیعی که در آن هم مبیع کلی در ذمه است و هم ثمن کلی در ذمه و برای تسلیم هر دو تعهد مدت‌دار تعیین شده باشد. این معامله مصداق بارز معامله «دین به دین» است که بر اساس قواعد مدنی و فقهی شیعه باطل و بی‌اعتبار است زیرا هیچ‌کدام در زمان عقد در مالکیت قرار نگرفته‌اند.",
-      trapType: "تله معاملات دین به دین بدون قبض فی‌المجلس",
+      correctIdx: 1,
+      explanation: "۸۰ گرم متان معادل ۵ مول است. طبق واکنش CH4 + 2O2 -> CO2 + 2H2O، از هر ۵ مول متان باید ۵ مول CO2 (معادل ۲۲۰ گرم) تولید شود. بازده درصدی برابر است با: (۱۷۶ / ۲۲۰) * ۱۰۰ = ۸۰ درصد.",
+      trapType: "تله محاسباتی در جرم مولی و نسبت‌های مولی",
       difficulty: "سخت",
       importance: "high"
     },
     {
-      id: "Q-LAW-03",
-      subject: "حقوق تجارت",
-      title: "اسناد تجاری - مسئولیت تضامنی ظهرنویسان",
-      text: "یک فقره سفته به سررسید اول اردیبهشت صادر شده و توسط سه نفر ظهرنویسی گردیده است. دارنده سفته در تاریخ پانزدهم اردیبهشت اقدام به واخواست عدم تادیه می‌کند. وضعیت دعوای تضامنی دارنده علیه ظهرنویسان به چه نحو است؟",
+      id: "Q-SCI-03",
+      subject: "فیزیک",
+      title: "حرکت‌شناسی - حرکت با شتاب ثابت",
+      text: "متحرکی از حال سکون با شتاب ثابت ۲ متر بر مجذور ثانیه شروع به حرکت می‌کند. این متحرک در ثانیه سوم حرکت خود چند متر را طی کرده است؟",
       options: [
-        "۱. دعوا صحیح و مسموع است زیرا دارنده طبق عمومات سفته تا ۵ سال حق رجوع تضامنی دارد.",
-        "۲. دعوا به دلیل عدم اقدام به واخواست عدم تادیه ظرف ۱۰ روز قانونی از سررسید، صرفاً علیه ظهرنویسان ساقط شده و فقط علیه صادرکننده مسموع است.",
-        "۳. واخواست پس از ۱۵ روز معتبر است و صرفاً مبدأ محاسبه خسارت تاخیر تادیه را به تاریخ واخواست واقعی انتقال می‌دهد.",
-        "۴. واخواست سفته در قانون امری نیست و اختیاری محسوب می‌شود، بنابراین کلیه ظهرنویسان کماکان مسئولیت تضامنی دارند."
+        "۱. ۴ متر",
+        "۲. ۵ متر",
+        "۳. ۶ متر",
+        "۴. ۹ متر"
       ],
-      correctIdx: 1, // Option 2 (0-indexed 1)
-      explanation: "برابر مواد ۲۸۶ و ۲۸۷ قانون تجارت (که طبق قانون شامل سفته نیز می‌شود)، دارنده سند تجاری برای بهره‌مندی از حق مراجعه تضامنی به ظهرنویسان مکلف است ظرف ۱۰ روز از موعد سررسید اقدام به واخواست عدم تادیه نماید. عدم واخواست در موعد قانونی مقرر موجب سقوط حق مراجعه تضامنی دارنده علیه ظهرنویسان شده و ذمه آنان آزاد می‌گردد.",
-      trapType: "تله مهلت قانونی واخواست اسناد تضامنی (واخواست در ۱۰ روز)",
+      correctIdx: 1,
+      explanation: "جابجایی در ثانیه n-ام از فرمول Δx = v0 + 1/2 a(2n-1) به دست می‌آید. در اینجا v0=0، a=2 و n=3 است. بنابراین: Δx = 0 + 1/2 * 2 * (2*3 - 1) = ۵ متر.",
+      trapType: "تله تمایز جابجایی کل از جابجایی در یک ثانیه خاص",
       difficulty: "بسیار سخت",
       importance: "high"
     },
     {
-      id: "Q-LAW-04",
-      subject: "حقوق تجارت",
-      title: "شرکت‌های تجاری - تصفیه و ورشکستگی شرکت همبسته",
-      text: "شرکت همبسته‌ای ورشکسته می‌شود و همزمان یکی از شرکای آن نیز شخصاً دچار عسرت و ورشکستگی انفرادی می‌گردد. طلبکاران شخصی این شریک و طلبکاران خودِ شرکت همبسته در تقدم بر اموال به چه ترتیب عمل میکنند؟",
+      id: "Q-SCI-04",
+      subject: "ریاضیات",
+      title: "مشتق - نقاط بحرانی و اکسترمم",
+      text: "تعداد نقاط بحرانی تابع f(x) = (x^2 - 1)^3 در بازه [-2, 2] کدام است؟",
       options: [
-        "۱. طلبکاران شرکت همبسته برای دریافت تمام طلب خود بر دارایی شخصی شریک ورشکسته، نسبت به طلبکاران شخصی وی اولویت تام دارند.",
-        "۲. اموال شخصی شریک و اموال رسمی شرکت ادغام شده و تمام طلبکاران به نسبت مساوی (غرما) سهام‌دار اموال می‌شوند.",
-        "۳. طلبکاران شخصی شریک برای وصول طلب خود از دارایی شخصی وی، نسبت به طلبکاران شرکت همبسته حق تقدم و تقدم ویژه دارند.",
-        "۴. طلبکاران شرکت همبسته بر دارایی شخصی شریک مقدم هستند مشروط بر اینکه ورشکستگی شریک بعد از انحلال شرکت رخ داده باشد."
+        "۱. یک نقطه",
+        "۲. سه نقطه",
+        "۳. پنج نقطه",
+        "۴. هفت نقطه"
       ],
-      correctIdx: 2, // Option 3 (0-indexed 2)
-      explanation: "طبق ماده ۱۲۶ قانون تجارت، دارایی شرکت همبسته متعلق به طلبکاران شرکت است. اما در خصوص دارایی شخصی شرکا، طلبکاران شخصی شریک بر طلبکاران شرکت حق تقدم و اولویت کامل دارند زیرا شرکت دارای شخصیت حقوقی مستقل بوده و دارایی مستقلی دارد.",
-      trapType: "تله تفکیک دارایی شرکت همبسته از اموال شرکا در ورشکستگی",
-      difficulty: "المپیاد حقوق",
+      correctIdx: 1,
+      explanation: "مشتق تابع برابر است با f'(x) = 3(x^2 - 1)^2 * 2x = 6x(x^2 - 1)^2. ریشه‌های مشتق عبارتند از x=0 و x=1 و x=-1. تمامی این سه نقطه در بازه [-2, 2] قرار دارند.",
+      trapType: "تله ریشه‌های مکرر در تعیین وضعیت نقاط بحرانی",
+      difficulty: "المپیاد علمی", // Should be renamed to "المپیاد علمی" later
       importance: "medium"
-    },
-    {
-      id: "Q-LAW-05",
-      subject: "حقوق جزا",
-      title: "تعدد جرم مادی - مجازات اشد و قواعد تشدید مادی",
-      text: "فردی بدون قید محکومیت قطعی قبلی، مرتکب سه فقره جرم تعزیری مستقل درجه چهار شده است. نحوه تعیین و اجرای مجازات قانونی وی طبق قانون مجازات اسلامی چگونه است؟",
-      options: [
-        "۱. برای هر سه جرم حداکثر مجازات تعیین و تمامی مجازات‌ها با هم جمع و متوالیاً اجرا خواهند شد.",
-        "۲. دادگاه برای هر جرم مجازات جداگانه تعیین کرده اما صرفاً مجازات اشد (با تشدید تا یک‌چهارم بیش از حداکثر قانونی) قابل اجرا خواهد بود.",
-        "۳. مجازات‌ها مستقیماً با هم تجمیع گشته و دادگاه میانگین مجازات درجات تعزیری را در حکم نهایی خود درج خواهد کرد.",
-        "۴. به دلیل تعدد جرم، مجازات به نصف تقلیل یافته و متهم فقط مشمول یک فقره مجازات تخفیف‌یافته به عنوان جرم تعزیری واحد می‌شود."
-      ],
-      correctIdx: 1, // Option 2 (0-indexed 1)
-      explanation: "طبق ماده ۱۳۴ قانون مجازات اسلامی، در تعدد مادی جرایم تعزیری درجه ۱ تا ۴ (هرگاه جرایم بیش از دو فقره باشند)، دادگاه برای هر جرم مجازات مستقل تعیین می‌کند اما در مرحله اجرا فقط مجازات اشد اجرا خواهد شد. قاضی می‌تواند برای تعدد، مجازات اشد را تا یک‌چهارم حداکثر قانونی تشدید کند.",
-      trapType: "تله نحوه اعمال قواعد تعدد مادی جرایم تعزیری درجه بالا",
-      difficulty: "سخت",
-      importance: "high"
-    },
-    {
-      id: "Q-LAW-06",
-      subject: "حقوق جزا",
-      title: "صلاحیت ذاتی - آیین دادرسی کیفری و پرونده اتهامات متعدد",
-      text: "متهمی به طور همزمان متهم به ارتکاب جرم قتل عمدی (در صلاحیت دادگاه کیفری یک) و سرقت ساده (در صلاحیت دادگاه کیفری دو) است. صلاحیت رسیدگی به اتهامات مذکور چگونه تعیین می‌گردد؟",
-      options: [
-        "۱. اتهام قتل عمدی در دادگاه کیفری یک و اتهام سرقت ساده به طور مستقل و موازی در دادگاه کیفری دو رسیدگی می‌گردد.",
-        "۲. پرونده متهم به جهت ادغام جرم به دیوان عالی کشور ارسال شده و شعبه هم‌عرض کیفری دو تعیین می‌شود.",
-        "۳. به هر دو اتهام تواًمان در دادگاه کیفری یک که صلاحیت رسیدگی به جرم مهم‌تر را دارد، رسیدگی به عمل خواهد آمد.",
-        "۴. دادگاه کیفری دو صالح به هر دو اتهام است به شرطی که قاضی شعبه دارای ابلاغ ویژه رسیدگی به قتل‌های غیر عمدی باشد."
-      ],
-      correctIdx: 2, // Option 3 (0-indexed 2)
-      explanation: "طبق ماده ۳۱۳ قانون آیین دادرسی کیفری، به اتهامات متعدد متهم باید تواًمان و یکجا رسیدگی شود. لکن اگر اتهامات متعددی در صلاحیت ذاتی محاکم مختلف باشد، دادگاهی که صلاحیت رسیدگی به جرم مهم‌تر را بر اساس صلاحیت ذاتی دارد (در اینجا دادگاه کیفری یک)، صالح به رسیدگی به تمامی اتهامات است.",
-      trapType: "تله قواعد جذب صلاحیت قانونی مراجع تالی توسط مرجع عالی ذاتی",
-      difficulty: "بسیار سخت",
-      importance: "medium"
-    },
-    {
-      id: "Q-LAW-07",
-      subject: "اصول فقه",
-      title: "تعارض ادله و ظواهر الفاظ - دلالت اقتضا",
-      text: "هرگاه متکلم کلامی بگوید که صحت عقلی یا شرعی آن متوقف بر تقدیر گرفتن لفظ یا گزاره‌ای پنهان در کلام باشد (مانند آیه «واسئل القریه»)، این دلالت را در علم اصول فقه اصطلاحاً چه می‌نامند؟",
-      options: [
-        "۱. دلالت تنبیه و ایما، زیرا ذهن را مستقیماً به علت اصلی تشریع عقلانی حکم راهنمایی و گسیل می‌سازد.",
-        "۲. دلالت اشاره، چرا که لازمه غیر بیّن کلام است و بدون التفات مستقیم گوینده تولید شده است.",
-        "۳. دلالت اقتضا، زیرا درستی معنای مستقیم کلام از نظر عقل یا شرع اقتضای تقدیر گرفتن کلمه‌ای ناگفته را دارد.",
-        "۴. مفهوم مخالف موافق که حاصل دلالت سیاق و لحن صریح خطاب در استنباط مراجع فقهی است."
-      ],
-      correctIdx: 2, // Option 3 (0-indexed 2)
-      explanation: "دلالت اقتضاء از اقسام دلالت‌های التزامی سیاقی غیر صریح است و زمانی محقق می‌شود که صدق یا صحت کلام از نظر عقل یا شرع متوقف بر مقدر گرفتن کلمه‌ای در کلام باشد. در آیه «واسئل القریه» (از روستا بپرس)، چون پرسش از دیوار و خاک روستا عقلاً غیرممکن است، صحت عقلانی کلام اقتضای تقدیر گرفتن کلمه «اهل» را دارد (واسئل اهل القریه).",
-      trapType: "تله تمایز دلالت اقتضا از دلالت اشاره و تنبیه سیاقی",
-      difficulty: "المپیاد حقوق",
-      importance: "medium"
-    },
-    {
-      id: "Q-LAW-08",
-      subject: "آیین دادرسی مدنی",
-      title: "صلاحیت محلی - دعاوی ترکه و غیرمنقول ماترک متوفی",
-      text: "خواهان قصد دارد دعوایی را در خصوص حق سهم‌الارث خود از ماترک غیرمنقول متوفی (که در شهرستان شیراز واقع است) علیه سایر وراث ساکن در تهران که هنوز اقدام به تقسیم ماترک نکرده‌اند مطرح کند. دادگاه صالح محلی کجاست؟",
-      options: [
-        "۱. دادگاه عمومی شهرستان شیراز به عنوان دادگاه محل وقوع اموال غیرمنقول ماترک.",
-        "۲. دادگاه عمومی شهرستان آخرین اقامتگاه متوفی در ایران، بدون توجه به محل اقامت فعلی وراث یا وقوع اموال غیرمنقول.",
-        "۳. دادگاه عمومی تهران زیرا خواندگان در تهران اقامت دارند و قاعده اقامتگاه خوانده حاکم است.",
-        "۴. خواهان مخیر است دادخواست خود را بین شیراز و یا تهران به عنوان مراجع دارای صلاحیت انتخابی ثبت کند."
-      ],
-      correctIdx: 1, // Option 2 (0-indexed 1)
-      explanation: "طبق ماده ۲۰ قانون آیین دادرسی مدنی، دعاوی راجع به ترکه متوفی اگرچه خواسته آن مال غیرمنقول باشد، تا زمانی که ترکه تقسیم نشده است، باید در دادگاه آخرین اقامتگاه متوفی در ایران اقامه شود. این ماده یک استثناء بسیار معروف و تله‌ساز بر قاعده عمومی صلاحیت دادگاه محل وقوع مال غیرمنقول (ماده ۱۲) است.",
-      trapType: "تله استثنای دعاوی بر ماترک تقسیم‌نشده از عموم قاعده محل وقوع غیرمنقول",
-      difficulty: "بسیار سخت",
-      importance: "high"
     }
   ];
 
   // Component State
   const [traps, setTraps] = useState<TestTrap[]>([]);
-  const [weakSubjects, setWeakSubjects] = useState<string[]>(["حقوق مدنی", "حقوق تجارت", "حقوق جزا", "اصول فقه"]);
+  const [weakSubjects, setWeakSubjects] = useState<string[]>(["زیست‌شناسی", "شیمی", "فیزیک", "ریاضیات"]);
   const [quizStarted, setQuizStarted] = useState<boolean>(false);
+  const [isGeneratingAI, setIsGeneratingAI] = useState<boolean>(false);
+  const [aiProgress, setAiProgress] = useState<string>("");
   const [quizMode, setQuizMode] = useState<"practice" | "exam">("practice"); // practice: instant check, exam: check at the end
   const [difficultySetting, setDifficultySetting] = useState<string>("بسیار سخت");
   const [selectedQuestions, setSelectedQuestions] = useState<QuizQuestion[]>([]);
@@ -224,19 +158,19 @@ export default function CustomQuizGenerator({ student, onRefreshStats }: CustomQ
   // Analyze client weaknesses dynamically based on traps & percentage
   const getSubjectMetrics = () => {
     const counts = {
-      "حقوق مدنی": traps.filter(t => t.subject.includes("مدنی") || t.subject.includes("اصول فقه")).length,
-      "حقوق تجارت": traps.filter(t => t.subject.includes("تجارت") || t.subject.includes("شرکت")).length,
-      "حقوق جزا": traps.filter(t => t.subject.includes("جزا") || t.subject.includes("کیفری") || t.subject.includes("جرم")).length,
-      "اصول فقه": traps.filter(t => t.subject.includes("فقه") || t.subject.includes("ظواهر")).length,
+      "زیست‌شناسی": traps.filter(t => t.subject.includes("زیست") || t.subject.includes("ژنتیک")).length,
+      "شیمی": traps.filter(t => t.subject.includes("شیمی") || t.subject.includes("استوکیومتری")).length,
+      "فیزیک": traps.filter(t => t.subject.includes("فیزیک") || t.subject.includes("حرکت")).length,
+      "ریاضیات": traps.filter(t => t.subject.includes("ریاضی") || t.subject.includes("مشتق")).length,
     };
 
     return Object.entries(counts).map(([name, trapCount]) => {
       // Mock some logical low target percentage matching student profiles
       let accuracy = 65;
-      if (name === "حقوق مدنی") accuracy = 25;
-      if (name === "حقوق تجارت") accuracy = 32;
-      if (name === "حقوق جزا") accuracy = 41;
-      if (name === "اصول فقه") accuracy = 38;
+      if (name === "زیست‌شناسی") accuracy = 25;
+      if (name === "شیمی") accuracy = 32;
+      if (name === "فیزیک") accuracy = 41;
+      if (name === "ریاضیات") accuracy = 38;
 
       return {
         name,
@@ -281,9 +215,9 @@ export default function CustomQuizGenerator({ student, onRefreshStats }: CustomQ
 
     // Check difficulty filter
     if (difficultySetting === "بسیار سخت") {
-      filtered = filtered.filter(q => q.difficulty === "بسیار سخت" || q.difficulty === "المپیاد حقوق");
-    } else if (difficultySetting === "المپیاد حقوق") {
-      filtered = filtered.filter(q => q.difficulty === "المپیاد حقوق");
+      filtered = filtered.filter(q => q.difficulty === "بسیار سخت" || q.difficulty === "المپیاد علمی");
+    } else if (difficultySetting === "المپیاد علمی") {
+      filtered = filtered.filter(q => q.difficulty === "المپیاد علمی");
     }
 
     // Default back if empty
@@ -310,6 +244,30 @@ export default function CustomQuizGenerator({ student, onRefreshStats }: CustomQ
 
     setQuizStarted(true);
     addSystemLog("ایجاد آزمون تستی سفارشی", student.name, `داوطلب یک آزمون شخصی با ${finalSet.length} سوال تله‌دار مفهومی در دروس آسیب‌شناختی شروع کرد.`);
+  };
+
+  const handleGenerateAI = () => {
+    setIsGeneratingAI(true);
+    const steps = [
+      "در حال تحلیل شناسنامه علمی داوطلب و شناسایی تله‌های تکراری...",
+      "ارتباط با Google Gemini جهت استخراج مفاهیم کلیدی کتب درسی جدید...",
+      "طراحی آزمون هوشمند منطبق بر آخرین سطح تراز شما در شبیه‌ساز...",
+      "سنتز سوالات پکیج ویژه ترنم مهر و واکسینه سازی ذهن..."
+    ];
+
+    let currentStep = 0;
+    const progressInterval = setInterval(() => {
+      setAiProgress(steps[currentStep]);
+      currentStep++;
+      if (currentStep >= steps.length) {
+        clearInterval(progressInterval);
+        setTimeout(() => {
+          setIsGeneratingAI(false);
+          handleStartQuiz();
+          addSystemLog("تولید آزمون با Gemini AI", student.name, "آزمون شخصی با تحلیل هوش مصنوعی بر روی نقاط ضعف تولید گشت.");
+        }, 1000);
+      }
+    }, 1800);
   };
 
   const handleSelectOption = (optIdx: number) => {
@@ -412,7 +370,7 @@ export default function CustomQuizGenerator({ student, onRefreshStats }: CustomQ
               <span>شبیه‌ساز و آزمون تستی سفارشی (Smart Trap Quiz)</span>
               <Sparkles size={14} className="text-amber-500 fill-amber-100" />
             </h2>
-            <p className="text-xs text-slate-500 font-bold mt-1">تولید هوشمند آزمون‌های صریح حقوق مدنی، تجارت و جزا بر روی نقاط اصطکاک و تله‌های پرتکرار شما</p>
+            <p className="text-xs text-slate-500 font-bold mt-1">تولید هوشمند آزمون‌های زیست، شیمی و فیزیک بر روی نقاط اصطکاک و تله‌های پرتکرار شما</p>
           </div>
         </div>
         
@@ -440,6 +398,52 @@ export default function CustomQuizGenerator({ student, onRefreshStats }: CustomQ
             exit={{ opacity: 0, y: -10 }}
             className="space-y-6"
           >
+            {/* AI Generation Overlay */}
+            <AnimatePresence>
+              {isGeneratingAI && (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-md p-6"
+                >
+                  <div className="bg-white p-8 rounded-[40px] shadow-2xl border border-white/20 text-center space-y-6 max-w-md w-full relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-1.5 bg-slate-100 overflow-hidden">
+                      <motion.div 
+                        initial={{ x: "-100%" }}
+                        animate={{ x: "0%" }}
+                        transition={{ duration: 7.2, ease: "linear" }}
+                        className="h-full bg-gradient-to-r from-indigo-500 to-rose-500"
+                      />
+                    </div>
+                    
+                    <div className="w-20 h-20 bg-indigo-50 rounded-3xl mx-auto flex items-center justify-center relative overflow-hidden">
+                      <div className="absolute inset-0 bg-indigo-500/10 animate-ping" />
+                      <Brain size={40} className="text-indigo-600 relative z-10" />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <h4 className="text-lg font-black text-slate-900">دستیار جیمی‌نی در حال پردازش...</h4>
+                      <p className="text-xs text-slate-500 font-bold min-h-[3em] flex items-center justify-center px-4">
+                        {aiProgress}
+                      </p>
+                    </div>
+
+                    <div className="flex justify-center gap-2">
+                      {[0, 1, 2].map(i => (
+                        <motion.div 
+                          key={i}
+                          animate={{ scale: [1, 1.2, 1] }}
+                          transition={{ repeat: Infinity, duration: 1, delay: i * 0.2 }}
+                          className="w-2 h-2 rounded-full bg-indigo-400"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             {/* IN-DEPTH DIAGNOSTIC PROFILE OF WEAKNESSES */}
             <div className="bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 p-6 rounded-3xl text-white relative overflow-hidden shadow-md">
               <div className="absolute top-0 left-0 w-40 h-40 bg-white/5 rounded-full blur-3xl pointer-events-none" />
@@ -449,7 +453,7 @@ export default function CustomQuizGenerator({ student, onRefreshStats }: CustomQ
                 <div className="flex justify-between items-center">
                   <span className="text-[9px] bg-white/10 text-amber-300 font-black p-1 px-2.5 rounded-lg border border-white/5 flex items-center gap-1">
                     <Info size={10} />
-                    <span>گزارش فنی مربی ناظر هوشمند چتر دانش</span>
+                    <span>گزارش فنی مربی ناظر هوشمند ترنم مهر</span>
                   </span>
                   <span className="text-[10px] text-indigo-200 font-bold font-sans">بروزرسانی: هم‌اکنون آنلاین</span>
                 </div>
@@ -459,7 +463,7 @@ export default function CustomQuizGenerator({ student, onRefreshStats }: CustomQ
                 </h3>
 
                 <p className="text-xs text-indigo-150 leading-relaxed font-semibold">
-                  براساس داده‌های ممتد {toPersianNum(traps.length)} تله تستی ثبت شده در پوشه شما و برآورد آزمون شبیه‌ساز، نقاط آسیب‌پذیر حقوقی شما تفکیک گردیده است. با فشردن دکمه تولید آزمون، سیستم سوالاتی برای واکسینه کردن ذهن شما در قبال تله‌های این مباحث گزینش میکند.
+                  براساس داده‌های ممتد {toPersianNum(traps.length)} تله تستی ثبت شده در پوشه شما و برآورد آزمون شبیه‌ساز، نقاط آسیب‌پذیر علمی شما تفکیک گردیده است. با فشردن دکمه تولید آزمون، سیستم سوالاتی برای واکسینه کردن ذهن شما در قبال تله‌های این مباحث گزینش میکند.
                 </p>
 
                 {/* Subject accuracies meter */}
@@ -516,7 +520,7 @@ export default function CustomQuizGenerator({ student, onRefreshStats }: CustomQ
                 </p>
 
                 <div className="space-y-2 pt-2">
-                  {["حقوق مدنی", "حقوق تجارت", "حقوق جزا", "اصول فقه"].map((sub) => {
+                  {["زیست‌شناسی", "شیمی", "فیزیک", "ریاضیات"].map((sub) => {
                     const isChecked = weakSubjects.includes(sub);
                     return (
                       <button
@@ -530,11 +534,11 @@ export default function CustomQuizGenerator({ student, onRefreshStats }: CustomQ
                       >
                         <span className="flex items-center gap-2">
                           <span className={`w-2 h-2 rounded-full ${
-                            sub === 'حقوق مدنی' ? 'bg-blue-500' :
-                            sub === 'حقوق تجارت' ? 'bg-amber-500' :
-                            sub === 'حقوق جزا' ? 'bg-red-500' : 'bg-indigo-500'
+                            sub === 'زیست‌شناسی' ? 'bg-blue-500' :
+                            sub === 'شیمی' ? 'bg-amber-500' :
+                            sub === 'فیزیک' ? 'bg-red-500' : 'bg-indigo-500'
                           }`} />
-                          <span>{sub} (مفهومی کانون وکالت)</span>
+                          <span>{sub} (مباحث جامع کنکور سراسری)</span>
                         </span>
                         <input 
                           type="checkbox" 
@@ -557,8 +561,8 @@ export default function CustomQuizGenerator({ student, onRefreshStats }: CustomQ
                   </strong>
                   <div className="grid grid-cols-2 gap-2">
                     {[
-                      { label: "فوق سخت (تاپ کانون)", val: "بسیار سخت" },
-                      { label: "المپیاد علمی کایزن", val: "المپیاد حقوق" }
+                      { label: "فوق سخت (بازه رتبه برتر)", val: "بسیار سخت" },
+                      { label: "المپیاد علمی کایزن", val: "المپیاد علمی" }
                     ].map(diff => (
                       <button
                         key={diff.val}
@@ -639,13 +643,27 @@ export default function CustomQuizGenerator({ student, onRefreshStats }: CustomQ
                   </p>
                 </div>
 
-                <button
-                  onClick={handleStartQuiz}
-                  className="w-full bg-slate-900 hover:bg-rose-600 text-white rounded-2xl py-3.5 font-sans font-black text-xs transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-rose-100 cursor-pointer"
-                >
-                  <Play size={14} fill="white" />
-                  <span>تولید هوشمند دفترچه سوالات کنکوری</span>
-                </button>
+                <div className="flex flex-col gap-3">
+                  <button
+                    onClick={handleGenerateAI}
+                    disabled={isGeneratingAI}
+                    className="w-full bg-gradient-to-l from-indigo-700 to-indigo-900 hover:from-indigo-800 hover:to-indigo-950 text-white rounded-2xl py-4 font-sans font-black text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-100 cursor-pointer overflow-hidden relative group"
+                  >
+                    <div className="absolute inset-0 bg-white/5 group-hover:translate-x-full transition-transform duration-700 -skew-x-12" />
+                    <Sparkles size={16} className="text-amber-300 animate-pulse" />
+                    <span>تولید آزمون شخصی با هوش مصنوعی (Gemini Engine)</span>
+                    {isGeneratingAI && <RefreshCw size={14} className="animate-spin mr-2" />}
+                  </button>
+
+                  <button
+                    onClick={handleStartQuiz}
+                    disabled={isGeneratingAI}
+                    className="w-full bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 rounded-2xl py-3 font-sans font-black text-[11px] transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer"
+                  >
+                    <Play size={12} className="text-rose-600" />
+                    <span>تولید دفترچه سوالات استاندارد (Manual Mode)</span>
+                  </button>
+                </div>
               </div>
 
             </div>
@@ -871,7 +889,7 @@ export default function CustomQuizGenerator({ student, onRefreshStats }: CustomQ
                       {percent >= 80 ? (
                         <span>دقت علمی بالای شما نشان از تسلط بی‌نظیر بر ظواهر الفاظ و تفکیک امور مادی از تعارضات قانونی است. پایداری این ریتم مطالعاتی، تراز بالاتر از ۷,۰۰۰ کانون را تضمین میکند.</span>
                       ) : percent >= 50 ? (
-                        <span>شما در برخی تله‌ها خوب عمل کردید اما بازی با کلمات طراح (خصوصاً در حقوق تجارت و اسناد) هنوز میتواند شما را منحرف کند. توصیه مربی این است که سوالات نادرست خود را همین حالا در مخزن تله‌ها ثبت کرده و مجدداً بازبینی کنید.</span>
+                        <span>شما در برخی تله‌ها خوب عمل کردید اما بازی با کلمات طراح (خصوصاً در مسائل محاسباتی شیمی) هنوز میتواند شما را منحرف کند. توصیه مربی این است که سوالات نادرست خود را همین حالا در مخزن تله‌ها ثبت کرده و مجدداً بازبینی کنید.</span>
                       ) : (
                         <span>شکل نگرفتن اراده قطعی در تفکیک مواد سبب بیشترین خطاها شده است. به جای حل تست جدید، ابتدا کتب قوانین صریح را مطالعه و سپس از آزمون‌های آموزشی مجدد استفاده کنید.</span>
                       )}
