@@ -381,7 +381,7 @@ export default function ReportCardView({ student, onNavigate }: ReportCardViewPr
       setRemedialPlan(data.remedialPlan || []);
       setEstimatedTraz(data.estimatedNextTraz || 0);
     } catch (err) {
-      console.warn("AI Analysis request failed, loading fallback local metrics for law candidates...", err);
+      console.warn("AI Analysis request failed, loading fallback local metrics...", err);
       
       const subjects = examToAnalyze.lessons || [];
       const weakSubjects = [...subjects].sort((a, b) => (a.percentage || 0) - (b.percentage || 0)).slice(0, 3);
@@ -392,13 +392,13 @@ export default function ReportCardView({ student, onNavigate }: ReportCardViewPr
       let simulatedTechnicalDetail = "";
       if (computedStressLevel > 70) {
         simulatedStressLabel = "بحرانی";
-        simulatedTechnicalDetail = "به دلیل موازنه ناکافی میان ساعات کاری مطالعاتی و استراحت، میزان فرسودگی ذهنی بالا گزارش شده و تله‌های آیین دادرسی حاد بوده است.";
+        simulatedTechnicalDetail = "به دلیل موازنه ناکافی میان ساعات مطالعه و استراحت، میزان فرسودگی ذهنی بالا گزارش شده و تله‌های مفهومی حاد بوده است.";
       } else if (computedStressLevel > 45) {
         simulatedStressLabel = "متوسط";
-        simulatedTechnicalDetail = "تست‌زنی سرعتی در دقایق پایانی آزمون آزمایشی سبب افت ملموس تراز در بخش حقوق تجارت گردیده است.";
+        simulatedTechnicalDetail = "تست‌زنی سرعتی در دقایق پایانی آزمون آزمایشی سبب افت ملموس تراز در بخش دروس تخصصی گردیده است.";
       } else if (computedStressLevel > 25) {
         simulatedStressLabel = "خفیف";
-        simulatedTechnicalDetail = "تمرکز داوطلب در پاسخ‌گویی به سوالات اصول فقه کاملا مطلوب است، اما در مبحث شروط عقود مدنی نیاز به تمرکز پومودورو دارد.";
+        simulatedTechnicalDetail = "تمرکز داوطلب در پاسخ‌گویی به سوالات دروس پایه کاملا مطلوب است، اما در مباحث ترکیبی نیاز به تمرکز پومودورو دارد.";
       } else {
         simulatedStressLabel = "سالم";
         simulatedTechnicalDetail = "عملکرد ذهنی عالی بدون بروز تردید تستی عمیق؛ تمرکز داوطلب در بالاترین سطح ارزیابی شد.";
@@ -416,11 +416,11 @@ export default function ReportCardView({ student, onNavigate }: ReportCardViewPr
 
       setPsychological({
         pattern: computedStressLevel > 60 ? "خستگی ذهنی حاد پومودورو (آفلاین)" : "تطابق تمرکزی عالی در آزمون‌های تستی (آفلاین)",
-        description: `کاندیدای گرامی؛ سنجش‌ها نشان می‌دهد نوسانات راندمان پاسخ‌دهی به علت کمبود استراحت بین شیفت‌های مطالعاتی بروز کرده و خستگی ذهنی معادل ${computedStressLevel}٪ ثبت شده است که عمیقا سرعت پردازش گزینه‌ها را در حقوق تجارت پایین می‌برد.`,
+        description: `کاندیدای گرامی؛ سنجش‌ها نشان می‌دهد نوسانات راندمان پاسخ‌دهی به علت کمبود استراحت بین شیفت‌های مطالعاتی بروز کرده و خستگی ذهنی معادل ${computedStressLevel}٪ ثبت شده است که عمیقا سرعت پردازش گزینه‌ها را در دروس تخصصی پایین می‌برد.`,
         correctToWrongRate: Math.max(12, Math.round(wrongRatio * 100)),
         suggestion: computedStressLevel > 60 
           ? "کاهش پارت‌های مطالعاتی پیوسته به فرکانس‌های ۲۵ دقیقه‌ای پومودورو و تخصیص ۵ دقیقه استراحت پویا بدون گوشی تلفن همراه." 
-          : "ادامه همان فرآیند مطالعه خلاصه مواد قانونی از روی شرح اصولی چتر دانش به همراه مرور در روزهای پنجشنبه.",
+          : "ادامه همان فرآیند مطالعه منابع آموزشی به همراه حل تست‌های زمان‌دار در روزهای پایانی هفته.",
         cardColor: computedStressLevel > 70 ? "red" : computedStressLevel > 45 ? "orange" : computedStressLevel > 25 ? "amber" : "blue",
         stressLevel: computedStressLevel,
         stressAnalysis: {
@@ -646,45 +646,45 @@ export default function ReportCardView({ student, onNavigate }: ReportCardViewPr
     },
     {
       id: "Q-11",
-      subject: "حقوق مدنی",
-      text: "چنانچه در عقد بیع غیرمنقول، شرط شود که خریدار حق انتقال مبیع را به غیر تحت هیچ عنوانی ندارد، وضعیت شرط مذکور و عقد بیع مربوطه چیست؟",
+      subject: "تاریخ تحلیلی",
+      text: "کدام یک از سلسله‌های زیر در تاریخ ایران باستان، بیشترین نقش را در تمرکز اداری و نظامی و ایجاد ساختار ساتراپی داشتند؟",
       options: [
-        "۱. عقد صحیح و شرط باطل است، اما خریدار حق فسخ معامله را به علت بطلان شرط دارد.",
-        "۲. هم عقد و هم شرط باطل هستند، زیرا سلب حق انتقال به طور مطلق مغایر با مقتضای ذات عقد بیع است.",
-        "۳. عقد باطل ولی شرط صحیح است، زیرا طرفین در تراضی نسبت به شروط غیرمقدور آزاد هستند.",
-        "۴. عقد صحیح و شرط نیز صحیح است، زیرا سلب حق انتقال به صورت حق عینی موقت بوده و مقتضای ذات را مخدوش نمی‌کند."
+        "۱. مادها",
+        "۲. هخامنشیان",
+        "۳. اشکانیان",
+        "۴. ساسانیان"
       ],
-      correctIdx: 3,
-      explanation: "سلب حق انتقال مبیع به نحو شرط فعل یا شرط نتیجه به طور موقت یا محدود صحیح است و با مقتضای ذات عقد بیع (که ایجاد مالکیت است) تضادی ندارد، اما سلب حق انتقال به طور دائم باطل است.",
-      trapCategory: "تله تشخیص مقتضای ذات عقد در برابر مقتضای اطلاق عقد"
+      correctIdx: 1,
+      explanation: "داریوش بزرگ هخامنشی با تقسیم کشور به ایالت‌های مختلف (ساتراپی) و گماردن ساتراپ‌ها، نظام اداری متمرکزی را بنیان نهاد که تا قرن‌ها الگوی حکمرانی در منطقه بود.",
+      trapCategory: "تله شباهت ساختارهای حکومتی ساسانی و هخامنشی"
     },
     {
       id: "Q-13",
-      subject: "حقوق تجارت",
-      text: "در صورتی که یکی از شرکا در شرکت با مسئولیت محدود، سهم‌الشرکه خود را به موجب سند عادی به دیگری انتقال دهد، این انتقال در قبال شرکت و اشخاص ثالث چه وضعیتی دارد؟",
+      subject: "جغرافیای ایران",
+      text: "کدام پدیده زمین‌شناسی، عامل اصلی شکل‌گیری دریاچه ارومیه و نوسانات سطحی آن در طول دوره‌های کواترنری بوده است؟",
       options: [
-        "۱. انتقال کاملاً صحیح و معتبر است و از تاریخ امضای سند عادی در مقابل ثالث قابل استناد می‌باشد.",
-        "۲. انتقال از اساس باطل است، زیرا انتقال سهم‌الشرکه در این شرکت‌ها الزاماً باید با موافقت کتبی تمام شرکا صورت پذیرد.",
-        "۳. انتقال بلااثر و غیرقابل استناد در مقابل شرکت و ثالث است، مگر اینکه با سند رسمی صورت گرفته باشد.",
-        "۴. انتقال غیرنافذ است و صرفاً با تنفیذ بعدی بقیه شرکایی که دارنده حداقل نصف سرمایه هستند معتبر می‌شود."
+        "۱. فرونشست تکتونیکی ناشی از گسل‌های منطقه",
+        "۲. فعالیت‌های آتشفشانی قله سهند",
+        "۳. فرسایش بادی گسترده در حوضه آبریز",
+        "۴. ذوب توده‌های یخی دوران یخبندان"
       ],
-      correctIdx: 2,
-      explanation: "نص صریح ماده ۱۰۳ قانون تجارت مقرر می‌دارد که انتقال سهم‌الشرکه در شرکت با مسئولیت محدود باید به موجب سند رسمی باشد، در غیر این‌صورت انتقال عادی در قبال شرکت و ثالث بلااثر است.",
-      trapCategory: "تله تشریفات رسمی انتقال سهم‌الشرکه در شرکت با مسئولیت محدود"
+      correctIdx: 0,
+      explanation: "دریاچه ارومیه در یک چاله‌ ساختمانی ناشی از فعالیت‌های تکتونیکی و گسل‌های بزرگ منطقه قرار دارد که فرونشست تدریجی آن بستری برای تجمع آب فراهم کرده است.",
+      trapCategory: "تله فعالیت آتشفشانی مکرر در برابر فرونشست"
     },
     {
       id: "Q-14",
-      subject: "حقوق جزا",
-      text: "چنانچه مرتکب با اعتقاد به مهدورالدم بودن مجنی‌علیه اقدام به قتل وی نماید، در صورتی که در دادگاه عدم مهدورالدم بودن مقتول اثبات شود، مسئولیت کیفری مرتکب چیست؟",
+      subject: "اقتصاد",
+      text: "در ساختار بازار انحصار کامل، منحنی تقاضای بنگاه و رابطه قیمت با درآمد نهایی چگونه است؟",
       options: [
-        "۱. مرتکب محکوم به قصاص نفس می‌شود، زیرا اعتقاد ذهنی وی تاتیری در مجازات قانونی جرم ارتکابی ندارد.",
-        "۲. قتل شبه‌عمد محسوب شده و مرتکب علاوه بر پرداخت دیه، به مجازات تعزیری مقرر محکوم می‌گردد.",
-        "۳. قتل در حکم شبه‌عمد خواهد بود که مرتکب را تنها ملزم به پرداخت دیه به اولیای دم می‌کند و مجازات تعزیری ندارد.",
-        "۴. مرتکب از مجازات قصاص و دیه کلاً معاف می‌گردد، زیرا عنصر معنوی جرم به علت شبهه موضوعیه کاملاً مخدوش شده است."
+        "۱. منحنی تقاضا کاملاً کشسان بوده و قیمت برابر درآمد نهایی است.",
+        "۲. منحنی تقاضا دارای شیب منفی بوده و قیمت همواره بیشتر از درآمد نهایی است.",
+        "۳. منحنی تقاضا عمودی بوده و درآمد نهایی صفر است.",
+        "۴. قیمت همواره برابر هزینه نهایی در نقطه سربه سر است."
       ],
       correctIdx: 1,
-      explanation: "بر اساس ماده ۳۰۲ و تبصره‌های قانون مجازات اسلامی، چنانچه کسی با اعتقاد به مهدورالدم بودن مقتول مبادرت به قتل کند و خلاف آن ثابت شود، جنایت شبه‌عمد محسوب شده و جانی علاوه بر دیه به مجازات تعزیری حبس محکوم می‌گردد.",
-      trapCategory: "تله اعتقاد به مهدورالدم بودن و مجازات تعزیری آن"
+      explanation: "در بازار انحصار کامل، به دلیل شیب منفی تقاضا، برای فروش واحد بیشتر باید قیمت کل واحدها کاهش یابد؛ لذا درآمد حاصل از آخرین واحد (MR) همواره کمتر از قیمت آن واحد (P) است.",
+      trapCategory: "تله برابری قیمت و درآمد نهایی در بازارهای رقابتی"
     }
   ];
 
@@ -749,9 +749,7 @@ export default function ReportCardView({ student, onNavigate }: ReportCardViewPr
 
     // Filter questions that match selectedCustomSubjects or closely related
     let filtered = QUESTIONS_POOL.filter(q => {
-      return selectedCustomSubjects.includes(q.subject) || 
-             (selectedCustomSubjects.some(s => s.includes("حقوق") || s.includes("جزا") || s.includes("مدنی") || s.includes("تجارت")) && 
-              (q.subject.includes("حقوق") || q.subject.includes("جزا") || q.subject.includes("مدنی") || q.subject.includes("تجارت")));
+      return selectedCustomSubjects.includes(q.subject);
     });
 
     if (filtered.length === 0) {
@@ -1769,16 +1767,16 @@ export default function ReportCardView({ student, onNavigate }: ReportCardViewPr
                                     onClick={() => {
                                       if (isSavedMap) return;
                                       
-                                      saveTestTrap({
-                                        questionTitle: q.text,
-                                        subject: q.subject,
-                                        category: (q.subject === "ریاضیات تجربی" || q.subject === "حسابان و ریاضیات" || q.subject === "شیمی" || q.subject === "فیزیک") ? "اشتباه_محاسباتی" : "مفهومی",
-                                        trapType: q.trapCategory,
-                                        correctAnswer: q.options[q.correctIdx],
-                                        userMistake: selectedIdx !== undefined ? `انتخاب نادرست گزینه شماره ${toPersianNum(selectedIdx + 1)}` : "سوال را سفید باقی گذاشتم",
-                                        legalNote: q.explanation,
-                                        importance: "high"
-                                      });
+                                        saveTestTrap({
+                                          questionTitle: q.text,
+                                          subject: q.subject,
+                                          category: (q.subject === "ریاضیات تجربی" || q.subject === "حسابان و ریاضیات" || q.subject === "شیمی" || q.subject === "فیزیک") ? "اشتباه_محاسباتی" : "مفهومی",
+                                          trapType: q.trapCategory,
+                                          correctAnswer: q.options[q.correctIdx],
+                                          userMistake: selectedIdx !== undefined ? `انتخاب نادرست گزینه شماره ${toPersianNum(selectedIdx + 1)}` : "سوال را سفید باقی گذاشتم",
+                                          educationalNote: q.explanation,
+                                          importance: "high"
+                                        });
 
                                       setSavedTrapQuestionIds(prev => ({
                                         ...prev,

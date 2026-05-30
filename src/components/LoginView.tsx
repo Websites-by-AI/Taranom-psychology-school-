@@ -124,7 +124,7 @@ export default function LoginView({ onLogin }: LoginViewProps) {
 
               {activeTab === "student" && (
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-2">کد داوطلب / شناسه کارنامه چتر دانش (اختیاری)</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-2">کد داوطلب / شناسه کارنامه ترنم مهر (اختیاری)</label>
                   <div className="relative">
                     <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
                       <Hash size={18} />

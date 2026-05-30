@@ -52,17 +52,17 @@ export default function ProgressView() {
 
   const loadDefaultExams = () => {
     const defaults: CustomExamPoint[] = [
-      { examName: "شبیه‌ساز ۱ - حقوق مدنی پایه", traz: 5120, percentage: 48, date: "۵ مهر" },
-      { examName: "شبیه‌ساز ۲ - عقود معین", traz: 5240, percentage: 51, date: "۱۹ مهر" },
-      { examName: "شبیه‌ساز ۳ - قوانین ثبتی خاص", traz: 5575, percentage: 59, date: "۱۵ آبان" },
-      { examName: "شبیه‌ساز ۴ - دادرسی مدنی مکرر", traz: 5720, percentage: 63, date: "۲۹ آذر" },
-      { examName: "شبیه‌ساز ۵ - اسناد تجاری فعال", traz: 5690, percentage: 61, date: "۱۲ دی" },
-      { examName: "شبیه‌ساز ۶ - تعارض ادله فقهی", traz: 5880, percentage: 65, date: "۲۶ دی" },
-      { examName: "شبیه‌ساز ۷ - قواعد عمومی جرم جزا", traz: 6010, percentage: 67, date: "۱۰ بهمن" },
-      { examName: "شبیه‌ساز ۸ - جامع وکالت پایلوت", traz: 6150, percentage: 70, date: "۲۴ بهمن" }
+      { examName: "شبیه‌ساز ۱ - زیست‌شناسی دهم", traz: 5120, percentage: 48, date: "۵ مهر" },
+      { examName: "شبیه‌ساز ۲ - فیزیک دوازدهم", traz: 5240, percentage: 51, date: "۱۹ مهر" },
+      { examName: "شبیه‌ساز ۳ - شیمی آلی", traz: 5575, percentage: 59, date: "۱۵ آبان" },
+      { examName: "شبیه‌ساز ۴ - ریاضیات تجربی", traz: 5720, percentage: 63, date: "۲۹ آذر" },
+      { examName: "شبیه‌ساز ۵ - ادبیات عمومی", traz: 5690, percentage: 61, date: "۱۲ دی" },
+      { examName: "شبیه‌ساز ۶ - عربی تخصصی", traz: 5880, percentage: 65, date: "۲۶ دی" },
+      { examName: "شبیه‌ساز ۷ - فلسفه و منطق", traz: 6010, percentage: 67, date: "۱۰ بهمن" },
+      { examName: "شبیه‌ساز ۸ - جامع کنکور پایلوت", traz: 6150, percentage: 70, date: "۲۴ بهمن" }
     ];
     setHistoryData(defaults);
-    localStorage.setItem("chatre_custom_exams", JSON.stringify(defaults));
+    localStorage.setItem("taranom_custom_exams", JSON.stringify(defaults));
   };
 
   // Add custom exam
@@ -134,52 +134,52 @@ export default function ProgressView() {
 
   // Simulator Initial Sliders configuration & coefficients
   const [sliderScores, setSliderScores] = useState({
-    civil: 55,       // Civil Law - Weight 3
-    procedure: 65,   // Civil Procedure - Weight 3
-    commerce: 60,    // Commerce - Weight 2
-    figh: 75,        // Principles & Figh text - Weight 1
-    penal: 80,       // Public & Private Penal - Weight 2
-    criminalProc: 70, // Criminal Procedure - Weight 2
-    constitutional: 65 // Constitution - Weight 1
+    biology: 55,     // Biology - Weight 4
+    chemistry: 65,   // Chemistry - Weight 3
+    physics: 60,     // Physics - Weight 3
+    math: 75,        // Math - Weight 2
+    literature: 80,  // Literature - Weight 1
+    arabic: 70,      // Arabic - Weight 1
+    philosophy: 65   // Philosophy - Weight 1
   });
 
   // Calculate composite weighted percentage
-  const totalCoeff = 3 + 3 + 2 + 1 + 2 + 2 + 1; // 14
+  const totalCoeff = 4 + 3 + 3 + 2 + 1 + 1 + 1; // 15
   const weightedAvg = Math.round(
-    (sliderScores.civil * 3 +
-      sliderScores.procedure * 3 +
-      sliderScores.commerce * 2 +
-      sliderScores.figh * 1 +
-      sliderScores.penal * 2 +
-      sliderScores.criminalProc * 2 +
-      sliderScores.constitutional * 1) /
+    (sliderScores.biology * 4 +
+      sliderScores.chemistry * 3 +
+      sliderScores.physics * 3 +
+      sliderScores.math * 2 +
+      sliderScores.literature * 1 +
+      sliderScores.arabic * 1 +
+      sliderScores.philosophy * 1) /
       totalCoeff
   );
 
   // Standard Formula predicting final Traz dynamically based on weighted averages
   const simulatedTraz = Math.round(3000 + weightedAvg * 55);
 
-  // Predict bar exam passing probability based on simulated Traz
+  // Predict exam passing probability based on simulated Traz
   let passProbability = 0;
   let passAlertColor = "text-rose-605 bg-rose-50 border-rose-100";
   let passAletStatus = "مردود احتمالی!";
-  let passAlertDesc = "متاسفانه تراز محاسباتی شما پاسخگوی حداقل رقابت کانون وکلای دادگستری مرکز نیست. تمرکز خود را روی حقوق مدنی و آیین دادرسی افزایش دهید.";
+  let passAlertDesc = "متاسفانه تراز محاسباتی شما با قبولی در رشته‌های تاپ (پزشکی، مهندسی) فاصله دارد. تمرکز خود را روی دروس ضریب بالا مانند زیست و شیمی افزایش دهید.";
 
-  if (simulatedTraz >= 6500) {
+  if (simulatedTraz >= 8500) {
     passProbability = 98;
     passAlertColor = "text-emerald-800 bg-emerald-50 border-emerald-150";
-    passAletStatus = "پذیرش ۱۰۰٪ تضمینی کشوری (رتبه تک‌رقمی یا دو‌رقمی کانون مرکز)";
-    passAlertDesc = "تراز علمی فوق‌العاده با ضریب پایداری چشمگیر؛ با این روند شانس قطعیت قبولی شما در کانون وکلای مرکز (تهران) بالاترین ارزش را دارد.";
-  } else if (simulatedTraz >= 5900) {
+    passAletStatus = "پذیرش ۱۰۰٪ تضمینی کشوری (رتبه زیر ۱۰۰ کنکور سراسری)";
+    passAlertDesc = "تراز علمی فوق‌العاده با ضریب پایداری چشمگیر؛ با این روند شانس قبولی شما در بهترین دانشگاه‌های تهران (شریف، تهران، بهشتی) قطعی است.";
+  } else if (simulatedTraz >= 7800) {
     passProbability = 85;
     passAlertColor = "text-blue-800 bg-blue-50 border-blue-150";
-    passAletStatus = "قبولی قطعی در کانون مرکز";
-    passAlertDesc = "تراز عالی است. شما در کور علمی پذیرفته‌شدگان قطعی تهران قرار دارید. روی عارضه‌یابی اشتباهات با تله‌های تستی مداومت کنید.";
-  } else if (simulatedTraz >= 5100) {
+    passAletStatus = "قبولی در دانشگاه‌های تراز اول کشور";
+    passAlertDesc = "تراز بسیار خوبی است. شما در کور علمی پذیرفته‌شدگان قطعی رشته‌های محبوب قرار دارید. روی عارضه‌یابی اشتباهات با تله‌های تستی مداومت کنید.";
+  } else if (simulatedTraz >= 6500) {
     passProbability = 48;
     passAlertColor = "text-amber-800 bg-amber-50 border-amber-150";
-    passAletStatus = "قبولی مرزی در کانون‌های تراز متوسط";
-    passAlertDesc = "آستانه لب مرز؛ احتمال قبولی کانون‌های با تراز معمولی وجود دارد اما برای تضمین کانون مرکز، تراز خود را با رفع خستگی مطالعاتی به بالای ۵۹۰۰ بکشانید.";
+    passAletStatus = "قبولی در دانشگاه‌های سراسری تراز متوسط";
+    passAlertDesc = "وضعیت شما در محدوده میانی قرار دارد. برای رسیدن به رشته‌های پرطرفدار دانشگاه‌های تهران، تراز خود را با رفع خستگی مطالعاتی به بالای ۷۸۰۰ بکشانید.";
   } else {
     passProbability = Math.min(25, Math.max(2, Math.round(weightedAvg * 0.3)));
   }
@@ -209,10 +209,10 @@ export default function ProgressView() {
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span className="p-1.5 bg-blue-50 rounded-lg text-blue-900"><TrendingUp size={18} /></span>
-            <h2 className="text-lg font-black text-slate-900 font-sans">پایش هوشمند تراز مکرر و شبیه‌ساز قبولی کایزن</h2>
+            <h2 className="text-lg font-black text-slate-900 font-sans">پایش هوشمند تراز مکرر و شبیه‌ساز قبولی کنکور</h2>
           </div>
           <p className="text-slate-500 text-xs mt-0.5 leading-relaxed">
-            روند تغییر علمی، محاسبات درصد رسمی آزمون کانون وکلا و پیش‌بینی قبولی خود در مرکز مشاوران را مانیتور کنید.
+            روند تغییر علمی، محاسبات درصد رسمی آزمون و پیش‌بینی قبولی خود در دانشگاه‌های برتر کشور را مانیتور کنید.
           </p>
         </div>
 
@@ -235,7 +235,7 @@ export default function ProgressView() {
             }`}
           >
             <Sliders size={13} />
-            <span className="text-indigo-950 font-black">پیش‌بینی ثبات کانون (شبیه‌ساز)</span>
+            <span className="text-indigo-950 font-black">پیش‌بینی ثبات رتبه (شبیه‌ساز)</span>
           </button>
 
           <button
@@ -260,7 +260,7 @@ export default function ProgressView() {
               <div className="text-right">
                 <span className="font-black text-slate-800 text-sm flex items-center gap-1.5">
                   <BarChart3 className="text-blue-900" size={18} />
-                  <span>آمار توزیع تراز در آزمون‌های شبیه‌ساز چتر دانش (مبتنی بر آرشیو و کدهای ثبت شده)</span>
+                  <span>آمار توزیع تراز در آزمون‌های شبیه‌ساز ترنم مهر (مبتنی بر استانداردهای کنکور)</span>
                 </span>
                 <p className="text-[10px] text-slate-400 mt-1">ترازهای شما بین {toPersianNum(minTraz + 300)} تا {toPersianNum(maxTraz - 300)} در نوسان است. نقاط را کلیک یا لمس کنید.</p>
               </div>
@@ -462,13 +462,13 @@ export default function ProgressView() {
             </div>
             <span className="text-xs font-black uppercase tracking-widest text-amber-400 flex items-center gap-1.5 justify-start">
               <Sparkles size={14} className="animate-spin-slow" />
-              <span>تخمین و پیش‌بینی هوش مصنوعی چتر دانش</span>
+              <span>تخمین و پیش‌بینی هوش مصنوعی ترنم مهر</span>
             </span>
             <h3 className="text-base font-black mt-2 font-sans">
-              برآورد اهداف ارتقاء تراز: هدف {historyData.length > 0 ? toPersianNum(historyData[historyData.length - 1].traz + 250) : toPersianNum(6400)}
+              برآورد اهداف ارتقاء تراز: هدف {historyData.length > 0 ? toPersianNum(historyData[historyData.length - 1].traz + 250) : toPersianNum(7200)}
             </h3>
             <p className="text-xs text-blue-105 mt-2 leading-relaxed">
-              بررسی {toPersianNum(historyData.length)} دوره آزمونی نشان می‌دهد پسماند منفی تراز شما عمیقاً بهبود یافته است. با غلبه بر ۳ تله عمده در آیین دادرسی مدنی مکرر و مسئولیت تضامنی صادرکنندگان چک تفکیکی، تراز آزمون‌های جامع بعدی داوطلب با جهش ملموس پایا ارتقا پیدا خواهد کرد.
+              بررسی {toPersianNum(historyData.length)} دوره آزمونی نشان می‌دهد پسماند تراز شما در دروس اختصاصی بهبود یافته است. با غلبه بر تله‌های تستی در مباحث دشوار زیست‌شناسی و حسابان، تراز آزمون‌های جامع بعدی داوطلب با جهش ملموس پایا ارتقا پیدا خواهد کرد.
             </p>
           </div>
         </div>
@@ -482,10 +482,10 @@ export default function ProgressView() {
             <div className="border-b border-slate-100 pb-4">
               <h3 className="text-base font-black text-slate-850 flex items-center gap-2">
                 <Calculator className="text-indigo-800" size={18} />
-                <span>شبیه‌ساز هوشمند کایزنی درصد، تراز کانون مد نظر و شانس قبولی</span>
+                <span>شبیه‌ساز هوشمند کایزنی درصد، تراز کنکور و شانس قبولی</span>
               </h3>
               <p className="text-slate-400 text-xs mt-1 leading-relaxed">
-                درصد هر یک از سرفصل‌های آزمون وکالت را تغییر دهید تا تراز نهایی رسمی کانون و شانس قبولی شما در استان‌های کشور بلافاصله به‌روزرسانی شود. این تخمین بر پایه ضرایب وزنی رسمی است.
+                درصد هر یک از سرفصل‌های آزمون سراسری را تغییر دهید تا تراز نهایی با استانداردهای سنجش و شانس قبولی شما بلافاصله به‌روزرسانی شود. این تخمین بر پایه ضرایب وزنی کنکور است.
               </p>
             </div>
 
@@ -536,16 +536,16 @@ export default function ProgressView() {
               {/* Sliders Input Column */}
               <div className="lg:col-span-2 space-y-5">
                 <div className="flex justify-between items-center text-xs pb-1 mb-2">
-                  <span className="font-extrabold text-slate-700">دورس امتحانی آزمون وکالت</span>
+                  <span className="font-extrabold text-slate-700">دروس امتحانی کنکور سراسری</span>
                   <button 
                     onClick={() => setSliderScores({
-                      civil: 55,
-                      procedure: 65,
-                      commerce: 60,
-                      figh: 75,
-                      penal: 80,
-                      criminalProc: 70,
-                      constitutional: 65
+                      biology: 55,
+                      chemistry: 65,
+                      physics: 60,
+                      math: 75,
+                      literature: 80,
+                      arabic: 70,
+                      philosophy: 65
                     })}
                     className="cursor-pointer text-indigo-900 hover:font-black text-[10px] flex items-center gap-1"
                   >
@@ -556,13 +556,13 @@ export default function ProgressView() {
 
                 {/* Siders List mapping with official coefficients */}
                 {[
-                  { key: "civil", label: "حقوق مدنی", coeff: 3, color: "bg-blue-600" },
-                  { key: "procedure", label: "آیین دادرسی مدنی", coeff: 3, color: "bg-blue-700" },
-                  { key: "commerce", label: "حقوق تجارت", coeff: 2, color: "bg-indigo-600" },
-                  { key: "figh", label: "اصول فقه و متون فقه", coeff: 1, color: "bg-amber-600" },
-                  { key: "penal", label: "حقوق جزا (عمومی و اختصاصی)", coeff: 2, color: "bg-rose-600" },
-                  { key: "criminalProc", label: "آیین دادرسی کیفری", coeff: 2, color: "bg-red-600" },
-                  { key: "constitutional", label: "حقوق اساسی", coeff: 1, color: "bg-slate-700" }
+                  { key: "biology", label: "زیست‌شناسی", coeff: 4, color: "bg-blue-600" },
+                  { key: "chemistry", label: "شیمی تخصصی", coeff: 3, color: "bg-blue-700" },
+                  { key: "physics", label: "فیزیک و محاسبات", coeff: 3, color: "bg-indigo-600" },
+                  { key: "math", label: "ریاضیات پایه و پیشرفته", coeff: 2, color: "bg-amber-600" },
+                  { key: "literature", label: "ادبیات فارسی", coeff: 1, color: "bg-rose-600" },
+                  { key: "arabic", label: "عربی تخصصی", coeff: 1, color: "bg-red-600" },
+                  { key: "philosophy", label: "فلسفه و منطق", coeff: 1, color: "bg-slate-700" }
                 ].map((item) => (
                   <div key={item.key} className="space-y-1.5 p-3 rounded-2xl border border-slate-50 hover:bg-slate-50/30 transition">
                     <div className="flex justify-between text-xs">
@@ -608,21 +608,21 @@ export default function ProgressView() {
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 text-right space-y-1">
-                <span className="text-[10px] text-slate-400 font-bold block">کانون وکلای مرکز (تهران)</span>
-                <span className="text-xs font-black text-slate-800 block">حداقل تراز قبولی: ۵,۹۰۰</span>
-                <p className="text-[9px] text-slate-400">نیازمند میانگین حداقل ۵۵ الی ۶۰ درصد در دروس ضریب ۳.</p>
+                <span className="text-[10px] text-slate-400 font-bold block">رشته‌های تاپ (پزشکی / دندان‌ / شریف)</span>
+                <span className="text-xs font-black text-slate-800 block">حداقل تراز قبولی: ۸,۵۰۰</span>
+                <p className="text-[9px] text-slate-400">نیازمند میانگین حداقل ۷۰ الی ۸۰ درصد در دروس اختصاصی.</p>
               </div>
 
               <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 text-right space-y-1">
-                <span className="text-[10px] text-slate-400 font-bold block">سایر کانون‌های درجه ۱ (اصفهان / خراسان)</span>
-                <span className="text-xs font-black text-slate-800 block">حداقل تراز قبولی: ۵,۳۰۰</span>
-                <p className="text-[9px] text-slate-400">نیازمند میانگین حداقل ۵۰ درصد در دروس ضریب ۳ و جزا.</p>
+                <span className="text-[10px] text-slate-400 font-bold block">دانشگاه‌های تراز ۱ (تهران / بهشتی / فردوسی)</span>
+                <span className="text-xs font-black text-slate-800 block">حداقل تراز قبولی: ۷,۸۰۰</span>
+                <p className="text-[9px] text-slate-400">نیازمند میانگین حداقل ۶۰ درصد در دروس اختصاصی و ادبیات فنی.</p>
               </div>
 
               <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 text-right space-y-1">
-                <span className="text-[10px] text-slate-400 font-bold block">امتحان تشکیلات سردفتری اسناد</span>
-                <span className="text-xs font-black text-slate-800 block">حداقل تراز قبولی: ۵,۱۰۰</span>
-                <p className="text-[9px] text-slate-400">نیازمند ثبات تراز کلی و کسب نمرات خوب در حقوق ثبت.</p>
+                <span className="text-[10px] text-slate-400 font-bold block">سایر رشته‌های سراسری روزانه</span>
+                <span className="text-xs font-black text-slate-800 block">حداقل تراز قبولی: ۶,۵۰۰</span>
+                <p className="text-[9px] text-slate-400">نیازمند ثبات تراز کلی و کسب نمرات خوب در سرفصل‌های پایه.</p>
               </div>
             </div>
           </div>
@@ -636,11 +636,17 @@ export default function ProgressView() {
           <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4">
             <span className="font-bold text-slate-800 text-sm flex items-center gap-1.5 pb-2 border-b border-slate-50 justify-start">
               <Star className="text-amber-500" size={18} />
-              <span>پیشرفت عینی به تفکیک دروس تخصصی وکالت کانون مرکزی</span>
+              <span>پیشرفت عینی به تفکیک دروس تخصصی کنکور سراسری</span>
             </span>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-right">
-              {lessonsStats.map((stat, idx) => (
+              {[
+                { name: "زیست‌شناسی (مفهومی و ترکیبی)", current: 55, previous: 25, progress: 30, count: 120 },
+                { name: "شیمی تخصصی (استوکیومتری و واکنش)", current: 65, previous: 32, progress: 33, count: 145 },
+                { name: "فیزیک تخصصی (حرکت و فشار)", current: 72, previous: 41, progress: 31, count: 85 },
+                { name: "ریاضیات (تابع و مشتق)", current: 85, previous: 72, progress: 13, count: 40 },
+                { name: "ادبیات و عربی اختصاصی", current: 92, previous: 80, progress: 12, count: 45 }
+              ].map((stat, idx) => (
                 <div key={idx} className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-between text-right">
                   <div className="space-y-1 text-right">
                     <strong className="text-sm font-black text-slate-850 block">{stat.name}</strong>
@@ -669,8 +675,8 @@ export default function ProgressView() {
           <div className="space-y-3">
             <div className="space-y-1">
               <div className="flex justify-between items-center text-xs">
-                <span className="font-semibold text-slate-600">قبولی کانون وکلای مرکز (تهران)</span>
-                <span className="font-bold text-blue-950 font-mono">تراز مطلوب: ۵,۹۰۰</span>
+                <span className="font-semibold text-slate-600">پذیرش در بهترین دانشگاه‌های تهران</span>
+                <span className="font-bold text-blue-950 font-mono">تراز مطلوب: ۸,۵۰۰</span>
               </div>
               <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                 <div className="bg-blue-900 h-full rounded-full w-[90%] font-sans"></div>
@@ -679,8 +685,8 @@ export default function ProgressView() {
 
             <div className="space-y-1">
               <div className="flex justify-between items-center text-xs">
-                <span className="font-semibold text-slate-600">کسب ردیف تراز ممتاز و نخبگان علمی کشوری</span>
-                <span className="font-bold text-blue-950 font-mono">تراز مطلوب: ۶,۵۰۰</span>
+                <span className="font-semibold text-slate-600">کسب ردیف تراز ممتاز و رتبه برتر کشوری</span>
+                <span className="font-bold text-blue-950 font-mono">تراز مطلوب: ۹,۵۰۰</span>
               </div>
               <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                 <div className="bg-amber-500 h-full rounded-full w-[75%] font-sans"></div>
@@ -692,7 +698,7 @@ export default function ProgressView() {
         <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between text-right">
           <span className="text-slate-850 font-black text-xs block">توصیه نهایی مشاوران ارشد</span>
           <p className="text-xs text-slate-500 leading-relaxed font-semibold">
-            روند کایزنی شما نشان می‌دهد در دروس با ضریب فرعی عملکرد یکنواختی دارید اما مزیت رقابتی اصلی شما باید در دروس حقوق مدنی و آیین دادرسی مدنی رقم بخورد. هر نیم درصدی بهبود در این دو درس، ترویج‌دهنده جهش بزرگتری در تراز کلی شما بر اساس ماتریس وزنی کانون است.
+            روند شما نشان می‌دهد در دروس عمومی عملکرد رو به رشدی دارید اما برای کسب رتبه برتر، باید روی دروس اختصاصی (زیست و شیمی برای تجربی یا حسابان برای ریاضی) سرمایه‌گذاری بیشتری کنید. هر یک تست صحیح در این دروس، رتبه شما را هزاران نفر ارتقا می‌دهد.
           </p>
           <div className="text-[10px] font-black text-emerald-700 mt-2 bg-emerald-50 border border-emerald-100 rounded-lg p-2 flex items-center gap-1 justify-start">
             <Check size={12} />

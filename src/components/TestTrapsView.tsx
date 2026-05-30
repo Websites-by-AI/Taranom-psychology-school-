@@ -26,7 +26,7 @@ export default function TestTrapsView({ student }: TestTrapsViewProps) {
     trapType: "",
     correctAnswer: "",
     userMistake: "",
-    testNote: "",
+    educationalNote: "",
     importance: "medium"
   });
 
@@ -45,12 +45,12 @@ export default function TestTrapsView({ student }: TestTrapsViewProps) {
     setIsAddingMode(false);
     setNewTrap({
       questionTitle: "",
-      subject: "حقوق مدنی",
-      category: "قانون‌محور",
+      subject: "زیست‌شناسی",
+      category: "مفهومی",
       trapType: "",
       correctAnswer: "",
       userMistake: "",
-      legalNote: "",
+      educationalNote: "",
       importance: "medium"
     });
   };
@@ -69,7 +69,7 @@ export default function TestTrapsView({ student }: TestTrapsViewProps) {
 
   const filteredTraps = traps.filter(t => {
     const matchesSearch = t.questionTitle.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         t.testNote.toLowerCase().includes(searchTerm.toLowerCase());
+                         t.educationalNote.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === "all" || t.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
@@ -141,7 +141,6 @@ export default function TestTrapsView({ student }: TestTrapsViewProps) {
                 className="w-full bg-slate-50 border border-slate-100 rounded-xl py-2 px-3 text-xs font-black text-slate-700 outline-none"
               >
                 <option value="all">همه تله‌ها</option>
-                <option value="قانون‌محور">قانون‌محور</option>
                 <option value="مفهومی">مفهومی</option>
                 <option value="زمان‌بر">زمان‌بر</option>
                 <option value="اشتباه_محاسباتی">اشتباه محاسباتی</option>
@@ -251,12 +250,12 @@ export default function TestTrapsView({ student }: TestTrapsViewProps) {
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-[10px] text-emerald-600 font-black block">پاسخ صحیح و مستند قانونی:</label>
+                      <label className="text-[10px] text-emerald-600 font-black block">پاسخ صحیح و تحلیل علمی:</label>
                       <textarea 
                         value={newTrap.correctAnswer}
                         onChange={(e) => setNewTrap({...newTrap, correctAnswer: e.target.value})}
                         className="w-full bg-emerald-50/30 border border-emerald-100 rounded-xl px-4 py-2.5 text-xs font-bold min-h-[80px] outline-none"
-                        placeholder="ماده قانونی مربوطه..."
+                        placeholder="پاسخ تشریحی بر اساس مراجع کنکور..."
                       />
                     </div>
                   </div>
@@ -266,8 +265,8 @@ export default function TestTrapsView({ student }: TestTrapsViewProps) {
                   <label className="text-[10px] text-indigo-600 font-black block">نکته طلایی برای شب آزمون (Cheat Sheet):</label>
                   <input 
                     type="text" 
-                    value={newTrap.testNote}
-                    onChange={(e) => setNewTrap({...newTrap, testNote: e.target.value})}
+                    value={newTrap.educationalNote}
+                    onChange={(e) => setNewTrap({...newTrap, educationalNote: e.target.value})}
                     placeholder="یک خط طلایی که همیشه یادت بماند..."
                     className="w-full bg-indigo-50/30 border border-indigo-100 rounded-2xl px-4 py-3 text-xs font-black text-indigo-900 outline-none"
                   />
@@ -339,7 +338,7 @@ export default function TestTrapsView({ student }: TestTrapsViewProps) {
                         <div className="bg-indigo-900 p-3 rounded-2xl flex items-center gap-2 group/tip shadow-inner">
                            <BookOpen size={14} className="text-amber-400 flex-shrink-0" />
                            <p className="text-[10px] text-indigo-50 font-black overflow-hidden text-ellipsis whitespace-nowrap">
-                             {trap.legalNote}
+                             {trap.educationalNote}
                            </p>
                         </div>
 

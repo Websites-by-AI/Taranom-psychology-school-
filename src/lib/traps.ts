@@ -1,7 +1,7 @@
 import { TestTrap } from "../types";
 
 export const getTestTraps = (): TestTrap[] => {
-  const saved = localStorage.getItem("chatre_test_traps");
+  const saved = localStorage.getItem("taranom_test_traps");
   if (!saved) return [
     {
       id: "TRAP-1",
@@ -11,9 +11,9 @@ export const getTestTraps = (): TestTrap[] => {
       trapType: "تله فرمول میانگین حسابی",
       correctAnswer: "تقسیم جابجایی کل بر زمان کل (نه میانگین متجانس سرعت‌ها)",
       userMistake: "سرعت اولیه و ثانویه را جمع کرده و تقسیم بر دو کردم در حالی که شتاب ثابت نبود.",
-      legalNote: "فرمول (v1 + v2)/2 فقط و فقط زمانی صادق است که شتاب حرکت ثابت باشد. در شتاب‌های متغیر باید انتگرال‌گیری یا سطح زیر نمودار محاسبه شود.",
+      educationalNote: "فرمول (v1 + v2)/2 فقط و فقط زمانی صادق است که شتاب حرکت ثابت باشد. در شتاب‌های متغیر باید انتگرال‌گیری یا سطح زیر نمودار محاسبه شود.",
       importance: "high",
-      createdAt: "۱۴۰۵/۰۲/۲۸"
+      createdAt: "۱۴۰۶/۰۳/۰۹"
     },
     {
       id: "TRAP-2",
@@ -23,9 +23,9 @@ export const getTestTraps = (): TestTrap[] => {
       trapType: "تله غشای دو لایه لپیدی",
       correctAnswer: "ریبوزوم فاقد غشا است اما راکیزه (میتوکندری) غشای دو لایه دارد",
       userMistake: "ریبوزوم را تک غشایی تلقی کردم.",
-      legalNote: "توجه شود که ریبوزوم و سانتریول از ساختارهای بدون غشا در سلول‌های یوکاریوتی هستند و نباید در محاسبات تعداد لایه‌های فسفولیپیدی وارد شوند.",
+      educationalNote: "توجه شود که ریبوزوم و سانتریول از ساختارهای بدون غشا در سلول‌های یوکاریوتی هستند و نباید در محاسبات تعداد لایه‌های فسفولیپیدی وارد شوند.",
       importance: "medium",
-      createdAt: "۱۴۰۵/۰۲/۲۸"
+      createdAt: "۱۴۰۶/۰۳/۰۹"
     }
   ];
   try {
@@ -42,12 +42,12 @@ export const saveTestTrap = (trap: Omit<TestTrap, "id" | "createdAt">) => {
     id: `TRAP-${Date.now()}`,
     createdAt: new Date().toLocaleDateString("fa-IR")
   };
-  localStorage.setItem("chatre_test_traps", JSON.stringify([newTrap, ...traps]));
+  localStorage.setItem("taranom_test_traps", JSON.stringify([newTrap, ...traps]));
   return newTrap;
 };
 
 export const deleteTestTrap = (id: string) => {
   const traps = getTestTraps();
   const filtered = traps.filter(t => t.id !== id);
-  localStorage.setItem("chatre_test_traps", JSON.stringify(filtered));
+  localStorage.setItem("taranom_test_traps", JSON.stringify(filtered));
 };

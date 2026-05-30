@@ -1,21 +1,21 @@
 import { SystemLog } from "../types";
 
 export const getSystemLogs = (): SystemLog[] => {
-  const saved = localStorage.getItem("chatre_system_logs");
+  const saved = localStorage.getItem("taranom_system_logs");
   if (!saved) return [
     { 
       id: "LOG-1001", 
       action: "ورود به سامانه", 
-      username: "admin_chatre", 
-      timestamp: "۱۴۰۵/۰۲/۲۸ - ۰۸:۳۰", 
-      detail: "ورود موفق مدیریت ارشد به پنل DevOps" 
+      username: "admin_taranom", 
+      timestamp: "۱۴۰۶/۰۳/۰۹ - ۰۸:۳۰", 
+      detail: "ورود موفق مدیریت ارشد به پنل مدیریتی ترنم مهر" 
     },
     { 
       id: "LOG-1002", 
       action: "به‌روزرسانی نقشه راه", 
-      username: "admin_chatre", 
-      timestamp: "۱۴۰۵/۰۲/۲۸ - ۰۹:۱۵", 
-      detail: "تغییر اولویت فاز ۳ معماری SaaS" 
+      username: "admin_taranom", 
+      timestamp: "۱۴۰۶/۰۳/۰۹ - ۰۹:۱۵", 
+      detail: "تغییر اولویت فازهای آمادگی کنکور تجربی" 
     }
   ];
   try {
@@ -34,5 +34,5 @@ export const addSystemLog = (action: string, username: string, detail: string) =
     timestamp: new Date().toLocaleString("fa-IR"),
     detail
   };
-  localStorage.setItem("chatre_system_logs", JSON.stringify([newLog, ...logs]));
+  localStorage.setItem("taranom_system_logs", JSON.stringify([newLog, ...logs]));
 };

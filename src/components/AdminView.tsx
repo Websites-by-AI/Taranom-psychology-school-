@@ -42,8 +42,8 @@ export default function AdminView({ student }: { student: Student }) {
     }, 1500);
   };
   const [uploadedFiles, setUploadedFiles] = useState<string[]>([
-    "شیت_کارنامه_سردفتری_کانون_مرکز_اردیبهشت_۱۴۰۵.xlsx",
-    "بودجه‌بندی_تراز_آزمون‌های_وکالت_سال_جاری.pdf"
+    "شیت_کارنامه_نهایی_آموزش_و_پرورش_اردیبهشت_۱۴۰۵.xlsx",
+    "بودجه‌بندی_تراز_آزمون‌های_کنکور_سال_جاری.pdf"
   ]);
 
   // --- NEW INTERACTIVE ROADMAP STATE & TYPES ---
@@ -70,11 +70,11 @@ export default function AdminView({ student }: { student: Student }) {
     {
       id: "phase1",
       title: "فونداسیون فنی و ادغام اولیه هوش مصنوعی جیمی‌نی",
-      englishTitle: "Core Infrastructure & Legal AI MVP",
+      englishTitle: "Core Infrastructure & Educational AI MVP",
       period: "سه ماهه اول تا چهارم ۱۴۰۳",
       status: "completed",
       percentage: 100,
-      description: "توسعه زیرساخت دیتابیس توزیع شده، پیاده‌سازی موتور پردازش تراز کارنامه آزمون‌های چتر دانش و اولین نسخه دستیار هوشمند Gemini جهت تحلیل پاسخ‌های تشریحی سوالات وکالت.",
+      description: "توسعه زیرساخت دیتابیس توزیع شده، پیاده‌سازی موتور پردازش تراز کارنامه آزمون‌های ترنم مهر و اولین نسخه دستیار هوشمند Gemini جهت تحلیل پاسخ‌های تشریحی سوالات کنکور.",
       tasks: [
         { id: "1-1", text: "احراز هویت یکپارچه و متمرکز (SSO)", completed: true },
         { id: "1-2", text: "میکروسرویس محاسباتی هوشمند تراز و رتبه داوطلب", completed: true },
@@ -91,10 +91,10 @@ export default function AdminView({ student }: { student: Student }) {
       period: "سه ماهه اول تا سوم ۱۴۰۴",
       status: "in-progress",
       percentage: 82,
-      description: "تبدیل پلتفرم تک‌کانونی به یک پرتال ابری پیشرفته (SaaS) جهت سرویس‌دهی به کانون‌های وکلای سراسر کشور، پایش آنی و عارضه‌یابی عملکرد داوطلبان توسط مشاوران تراز اول چتر دانش.",
+      description: "تبدیل پلتفرم آکادمی به یک پرتال ابری پیشرفته (SaaS) جهت سرویس‌دهی به مراکز آموزشی سراسر کشور، پایش آنی و عارضه‌یابی عملکرد داوطلبان توسط مشاوران تراز اول ترنم مهر.",
       tasks: [
-        { id: "2-1", text: "مبنای ماژولار توزیع داده کانون‌ها (SaaS Multi-Tenancy Partitioning)", completed: true },
-        { id: "2-2", text: "داشبورد اختصاصی مشاوران حقوقی جهت پایش عیوب کارنامه", completed: true },
+        { id: "2-1", text: "مبنای ماژولار توزیع داده مراکز (SaaS Multi-Tenancy Partitioning)", completed: true },
+        { id: "2-2", text: "داشبورد اختصاصی مشاوران آموزشی جهت پایش عیوب کارنامه", completed: true },
         { id: "2-3", text: "سیستم بلادرنگ همگام‌سازی تله‌های داوطلب برای ارائه مشاوره صوتی", completed: false },
         { id: "2-4", text: "کاهش زمان پاسخ فرآیندهای محاسباتی با پایش بهینه پایگاه داده", completed: true }
       ],
@@ -103,35 +103,35 @@ export default function AdminView({ student }: { student: Student }) {
     },
     {
       id: "phase3",
-      title: "اطلس قضایی، بانک تله تستی فراملی و موتور معنایی RAG",
-      englishTitle: "Legal Knowledge Graph & Predictive AI (Test Traps)",
+      title: "اطلس آموزشی، بانک تله تستی سراسری و موتور معنایی RAG",
+      englishTitle: "Education Knowledge Graph & Predictive AI (Test Traps)",
       period: "سه ماهه چهارم ۱۴۰۴ تا دوم ۱۴۰۵",
       status: "planned",
       percentage: 25,
-      description: "استقرار موتور استنتاج معنایی بر روی آرای وحدت رویه دیوان عالی کشور، انطباق با تغییرات قوانین خاص و یکپارچه‌سازی اطلس تله‌های آزمون وکالت جهت حدس تله‌های محتمل در طراح هوشمند سوال.",
+      description: "استقرار موتور استنتاج معنایی بر روی کتب درسی و بودجه‌بندی آموزش و پرورش، انطباق با تغییرات سرفصل‌ها و یکپارچه‌سازی اطلس تله‌های آزمون کنکور جهت حدس تله‌های محتمل در طراح هوشمند سوال.",
       tasks: [
-        { id: "3-1", text: "توسعه گراف معنایی بر پایه قوانین ثبتی، مدنی و مجازات اسلامی", completed: false },
-        { id: "3-2", text: "اتصال پایگاه داده وکتوری Pinecone به موتور تحلیل عارضه چتر دانش", completed: true },
-        { id: "3-3", text: "سیستم هوشمند انطباق قوانین با سوالات تستی تولید شده توسط هوش مصنوعی", completed: false },
-        { id: "3-4", text: "دستیار صوتی مشاور مجهز به سنتز سخن قضایی جهت راهنمایی داوطلب", completed: false }
+        { id: "3-1", text: "توسعه گراف معنایی بر پایه کتب درسی رشته‌های انسانی، تجربی و ریاضی", completed: false },
+        { id: "3-2", text: "اتصال پایگاه داده وکتوری Pinecone به موتور تحلیل عارضه ترنم مهر", completed: true },
+        { id: "3-3", text: "سیستم هوشمند انطباق سرفصل‌ها با سوالات تستی تولید شده توسط هوش مصنوعی", completed: false },
+        { id: "3-4", text: "دستیار صوتی مشاور مجهز به سنتز سخن آموزشی جهت راهنمایی داوطلب", completed: false }
       ],
-      tags: ["Vector Embeddings", "Semantic Legal Search", "RAG Pipeline"],
+      tags: ["Vector Embeddings", "Semantic Academic Search", "RAG Pipeline"],
       color: "indigo"
     },
     {
       id: "phase4",
-      title: "بازار کار هوشمند وکلا و توسعه بین‌المللی پلتفرم",
-      englishTitle: "Global Legal Marketplace & Career Matchmaker",
+      title: "بازار تحصیلی هوشمند و توسعه بین‌المللی پلتفرم",
+      englishTitle: "Global Academic Marketplace & Career Matchmaker",
       period: "سال ۱۴۰۵ به بعد",
       status: "long-term",
       percentage: 0,
-      description: "رونمایی از اولین هاب استعدادیابی و ارتباط داوطلبان برتر ترنم مهر با دانشگاه‌های معتبر ملی و بین‌المللی بر پایه پروفایل تحلیل رفتاری و علمی داوطلب و توسعه زبان‌های انگلیسی و عربی.",
+      description: "رونمایی از اولین هاب استعدادیابی و ارتباط داوطلبان برتر ترنم مهر با دانشگاه‌های معتبر ملی و بین‌المللی بر پایه پروفایل تحلیل رفتاری و علمی داوطلبان و توسعه زبان‌های انگلیسی و عربی.",
       tasks: [
         { id: "4-1", text: "گواهی‌نامه‌های استانداردهای بین‌المللی فرآیندهای پرتال‌های آموزشی", completed: false },
         { id: "4-2", text: "سیستم مانیتورینگ کارنامه بر اساس امتیاز توسعه متوازن (Balanced Scorecard)", completed: false },
-        { id: "4-3", text: "ماژول استخدامی هوشمند متصل به پروفایل علمی و تستی داوطلبان", completed: false }
+        { id: "4-3", text: "ماژول هدایت تحصیلی هوشمند متصل به پروفایل علمی و تستی داوطلبان", completed: false }
       ],
-      tags: ["Legal Career Hub", "Multi-Language Support", "MENA Integration"],
+      tags: ["Academic Career Hub", "Multi-Language Support", "Global Integration"],
       color: "purple"
     }
   ]);
@@ -257,35 +257,21 @@ export default function AdminView({ student }: { student: Student }) {
     {
       id: "s_laws",
       title: "سیستم به‌روزرسانی آنی تغییرات کتب درسی با هوش مصنوعی",
-      englishTitle: "Dynamic Curriculum Hot-Swap Engine",
+      englishTitle: "Dynamic Curriculum Hot-Fix Engine",
       period: "سه ماهه اول ۱۴۰۶",
-      desc: "کشف، تحلیل و بازنویسی تست‌ها به محض تغییر در کتب درسی آموزش و پرورش بدون از دست رفتن پایداری عملکرد بانک سوالات ترنم مهر.",
+      desc: "ماژولی برای رصد خودکار تغییرات حذفیات و اصلاحات کتب درسی سازمان سنجش و اعمال آنی در بانک تست‌های ترنم مهر.",
       tasks: [
-        "خزنده زنده پورتال آموزش و پرورش مجهز به فیلتر کلمات آموزشی اختصاصی",
-        "ماشین ویرایش تله‌های تستی قدیمی بر اساس کتاب جدید مصوب",
-        "نوتیفیکیشن لحظه‌ای تغییرات کتب درسی به داوطلبان فعال و مربیان"
+        "پیاده‌سازی خزنده هوشمند وب‌سایت سازمان سنجش و کتب درسی",
+        "تولید خودکار اصلاحیه برای تست‌های مسبوق به سابقه و منسوخ شده",
+        "اطلاع‌رسانی آنی تغییرات بنیادین به مربیان و داوطلبان ذینفع"
       ],
-      tags: ["Curriculum Crawling", "Database Logic", "Content Sync"],
-      color: "indigo",
-      icon: "Database"
-    },
-    {
-      id: "s_fintech",
-      title: "امنیت پرداخت خرد و اشتراک اقساطی دوره‌های شبیه‌سازی کنکور",
-      englishTitle: "SaaS Installment Framework & Student Finance",
-      period: "سه ماهه دوم ۱۴۰۶",
-      desc: "ماژول پرداخت امن چندمرحله‌ای برای تسهیل ثبت‌نام داوطلبان در سراسر کشور با قابلیت یادآوری هوشمند سررسید دوره‌ها و لغو دسترسی زمان معوق ماندن تعهدات.",
-      tasks: [
-        "اتصال به وب‌سامانه‌های بانکی شتاب کشور و درگاه شاپرک",
-        "پنل پایش سررسید اقساط متقاضیان و جریمه دیرکرد آزمونی",
-        "امکان پرداخت اتوماتیک اقساط از کارت متصل بانکی داوطلب"
-      ],
-      tags: ["Fintech Integration", "SaaS Subscriptions", "Sub-accounts"],
+      tags: ["Scraper", "Curriculum AI", "Real-time Updates"],
       color: "blue",
       icon: "ShieldCheck"
     }
   ]);
 
+  // ---------------------------------------------
   const handleAddSuggestedModule = (module: typeof suggestedModules[0]) => {
     const newPhase: RoadmapPhase = {
       id: `custom-suggested-${module.id}-${Date.now()}`,
@@ -321,7 +307,7 @@ export default function AdminView({ student }: { student: Student }) {
   const [selectedModuleIdx, setSelectedModuleIdx] = useState<number>(0);
   
   // Interactive Exam Generator State
-  const [selectedLawSubject, setSelectedLawSubject] = useState<string>("زیست");
+  const [selectedAcademicSubject, setSelectedAcademicSubject] = useState<string>("زیست");
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("سخت");
   const [generatedQuestion, setGeneratedQuestion] = useState<{
     text: string;
@@ -329,15 +315,15 @@ export default function AdminView({ student }: { student: Student }) {
     correctIdx: number;
     explanation: string;
   } | null>({
-    text: "هرگاه در عقد بیع، شرط شود که خریدار حق انتقال مبیع را به غیر ندارد، و با این حال مبیع را انتقال دهد، وضعیت معامله دوم چگونه است؟",
+    text: "در ساختار یاخته‌های جانوری، کدام اندامک مسئول بسته‌بندی و ارسال پروتئین‌ها به خارج از یاخته است؟",
     options: [
-      "معامله دوم باطل است زیرا شرط عدم انتقال، سلب حق تمتع کرده است.",
-      "معامله دوم غیرنافذ بوده و صحت آن منوط به تنفیذ متعامل مشروط‌له است.",
-      "معامله دوم صحیح است اما برای مشروط‌له حق فسخ معامله اول ایجاد می‌شود.",
-      "معامله دوم منفسخ است و مبیع به صورت قهری به بایع منتقل می‌شود."
+      "شبکه آندوپلاسمی صاف",
+      "دستگاه گلژی",
+      "ریبوزوم‌ها",
+      "کلروپلاست"
     ],
-    correctIdx: 2,
-    explanation: "بنابر رای وحدت رویه و دکترین حقوقی مدنی (کتاب دکتر کاتوزیان)، شرط عدم انتقال مبیع سلب حق انتقال به طور مطلق و دائم نیست بلکه سلب حق انتقال به عنوان شرط فعل منفی یا نتیجه مقید است. لذا معامله ناقله بعدی بر خلاف شرط، صحیح بوده اما برای بایع اولیه (مشروط‌له) اختیار و حق فسخ معامله اول به استناد تخلف از شرط ایجاد خواهد شد."
+    correctIdx: 1,
+    explanation: "دستگاه گلژی وظیفه اصلاح، بسته‌بندی و ترشح مولکول‌های زیستی از جمله پروتئین‌ها و لیپیدها را بر عهده دارد. ریبوزوم‌ها محل سنتز پروتئین هستند و شبکه صاف در سنتز لیپید نقش دارد."
   });
 
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
@@ -374,58 +360,58 @@ export default function AdminView({ student }: { student: Student }) {
     setShowExplanation(false);
     
     const questionsPool: Record<string, typeof generatedQuestion[]> = {
-      "مدنی": [
+      "زیست": [
         {
-          text: "اگر شخصی ملکی را وقف منافع عام کند ولی قبض موقوف‌علیهم رخ ندهد، عقد وقف چه وضعیتی دارد؟",
+          text: "در چرخه سلولی، بیشترین میزان همتاسازی DNA در کدام مرحله رخ می‌دهد؟",
           options: [
-            "وقف باطل است زیرا قبض در تمام انواع آن شرط صحت است.",
-            "وقف غیرنافذ است و حاکم شرع می‌تواند به نیابت از عامه آن را قبض کند.",
-            "وقف جریان یافته و قبض در موقوفات عامه اصلاً شرط لزوم یا صحت نیست.",
-            "وقف صحیح است و قبض توسط متولی منصوب یا خود حاکم صورت می‌پذیرد."
-          ],
-          correctIdx: 3,
-          explanation: "مطابق ماده ۶۲ قانون مدنی، در موقوفات عامه هرگاه موقوف‌علیهم غیرمحصور باشند یا وقف بر مصالح عامه باشد، قبض توسط متولی منصوب ملزم است و در صورت نبود متولی، حاکم (ولی فقیه یا دادرس منصوب) قبض می‌نماید تا وقف تمامیت یابد."
-        }
-      ],
-      "تجارت": [
-        {
-          text: "در صورتی که یک شرکت سهامی خاص ورشکسته شود، مسئولیت سهامداران در قبال دیون شرکت تا چه سقف مقرر است؟",
-          options: [
-            "سهامداران مسئولیت تضامنی نامحدود در قبال کلیه قروض دارند.",
-            "مسئولیت هر سهامدار محدود به ارزش اسمی سهامی است که تعهد کرده است.",
-            "مسئولیت سهامداران تا سقف دارایی شخصی آن‌ها به تساوی تقسیم می‌شود.",
-            "دارای مسئولیت نسبی بر مبنای کل سرمایه ثبت‌شده در اداره ثبت شرکت‌ها است."
+            "G1",
+            "S",
+            "G2",
+            "M"
           ],
           correctIdx: 1,
-          explanation: "بر اساس لایحه قانونی اصلاح قسمتی از قانون تجارت، در شرکت‌های سهامی (اعم از عام و خاص) مسئولیت صاحبان سهام محدود به مبلغ اسمی سهام آنهاست و بستانکاران شرکت حق رجوع به اموال شخصی سهامداران را برای وصول مطالبات خود ندارند."
+          explanation: "مرحله S (سنتز) مرحله‌ای از اینترفاز است که در آن همتاسازی DNA به منظور آماده‌سازی سلول برای تقسیم صورت می‌گیرد."
         }
       ],
-      "جزا": [
+      "شیمی": [
         {
-          text: "مجازات شروع به جرم در حقوق جزای عمومی ایران در جرایم مستوجب مجازات سلب حیات چگونه است؟",
+          text: "کدام عنصر در دمای اتاق به صورت مایع است و در گروه ۱۷ جدول تناوبی قرار دارد؟",
           options: [
-            "مجازاتی برای شروع به جرم پیش‌بینی نشده است.",
-            "حبس تعزیری درجه پنج (۲ تا ۵ سال).",
-            "حبس تعزیری درجه چهار (۵ تا ۱۰ سال).",
-            "حبس کانون اصلاح و تربیت بر اساس سن مداخله‌گر جرم."
+            "جیوه",
+            "ید",
+            "بروم",
+            "کلر"
           ],
           correctIdx: 2,
-          explanation: "طبق ماده ۱۲۲ قانون مجازات اسلامی مصوب ۱۳۹۲، در جرایمی که مجازات قانونی آن‌ها سلب حیات، حبس دائم یا قطع عضو است، شروع به جرم مستوجب حبس تعزیری درجه چهار (۵ تا ۱۰ سال) خواهد بود."
+          explanation: "بروم تنها نافلزی است که در دمای اتاق به حالت مایع دیده می‌شود و از اعضای گروه هالوژن‌ها (۱۷) است."
+        }
+      ],
+      "فیزیک": [
+        {
+          text: "طبق قانون دوم نیوتن، اگر جرم جسمی دو برابر شود و نیروی وارد بر آن ثابت بماند، شتاب آن چه تغییری می‌کند؟",
+          options: [
+            "دو برابر می‌شود",
+            "ثابت می‌ماند",
+            "نصف می‌شود",
+            "چهار برابر می‌شود"
+          ],
+          correctIdx: 2,
+          explanation: "طبق فرمول F=ma، شتاب با جرم رابطه معکوس دارد. بنابراین با دو برابر شدن جرم و ثبات نیرو، شتاب نصف می‌شود."
         }
       ]
     };
 
-    const subjectPool = questionsPool[selectedLawSubject] || questionsPool["مدنی"];
+    const subjectPool = questionsPool[selectedAcademicSubject] || questionsPool["زیست"];
     const randomQ = subjectPool[Math.floor(Math.random() * subjectPool.length)];
     setGeneratedQuestion(randomQ);
   };
 
   const mockStudents = [
-    { id: "1", name: "مریم حسینی", code: "9812405", field: "آزمون وکالت", traz: 8200, status: "فعال", advisor: "دکتر کاتوزیان (مبتدی)" },
-    { id: "2", name: "علیرضا رضایی", code: "9786431", field: "آزمون سردفتری", traz: 7450, status: "فعال", advisor: "استاد رحیمی" },
-    { id: "3", name: "امیرمحمد اکبری", code: "9921477", field: "آزمون قضاوت", traz: 6980, status: "فعال", advisor: "قاضی دیوان" },
-    { id: "4", name: "الناز کریمی", code: "9823521", field: "آزمون وکالت", traz: 8550, status: "فعال", advisor: "دکتر کاتوزیان (مبتدی)" },
-    { id: "5", name: "امیرعباس سمیعی", code: "9912004", field: "آزمون سردفتری", traz: 5120, status: "غیرفعال", advisor: "استاد رحیمی" }
+    { id: "1", name: "مریم حسینی", code: "9812405", field: "کنکور انسانی", traz: 8200, status: "فعال", advisor: "استاد رحیمی" },
+    { id: "2", name: "علیرضا رضایی", code: "9786431", field: "کنکور تجربی", traz: 7450, status: "فعال", advisor: "دکتر سمیعی" },
+    { id: "3", name: "امیرمحمد اکبری", code: "9921477", field: "کنکور ریاضی", traz: 6980, status: "فعال", advisor: "مهندس علوی" },
+    { id: "4", name: "الناز کریمی", code: "9823521", field: "کنکور انسانی", traz: 8550, status: "فعال", advisor: "استاد رحیمی" },
+    { id: "5", name: "امیرعباس سمیعی", code: "9912004", field: "کنکور تجربی", traz: 5120, status: "غیرفعال", advisor: "دکتر سمیعی" }
   ];
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -438,7 +424,7 @@ export default function AdminView({ student }: { student: Student }) {
       setUploadedFiles((prev) => [file.name, ...prev]);
       setIsUploading(false);
       addSystemLog("آپلود کارنامه", student.name, `فایل کارنامه با نام ${file.name} در دیتابیس مرکزی بارگذاری و موتور RAG برای آن فعال شد.`);
-      alert(`✅ کارنامه تراز '${file.name}' با موفقیت در سامانه چتر دانش آپلود شد و موتور تحلیل RAG فعال گردید.`);
+      alert(`✅ کارنامه تراز '${file.name}' با موفقیت در سامانه ترنم مهر آپلود شد و موتور تحلیل RAG فعال گردید.`);
     }, 1500);
   };
 
@@ -463,21 +449,21 @@ export default function AdminView({ student }: { student: Student }) {
     },
     {
       name: "crm_leads",
-      desc: "خط لوله فروش و مشاوره علاقه مندان آزمون‌های حقوقی",
+      desc: "خط لوله فروش و مشاوره علاقه‌مندان رشته‌های تحصیلی دبیرستانی",
       columns: [
         { name: "id", type: "UUID", constraint: "PRIMARY KEY", note: "شناسه رهگیری لید بازاریابی" },
         { name: "phone", type: "VARCHAR(15)", constraint: "UNIQUE", note: "تلفن تماس لید متقاضی کنکور" },
-        { name: "intended_exam", type: "VARCHAR(50)", constraint: "NOT NULL", note: "کاندید آزمون هدف (وکالت، سردفتری، قضاوت)" },
+        { name: "intended_exam", type: "VARCHAR(50)", constraint: "NOT NULL", note: "کاندید رشته هدف (تجربی، ریاضی، انسانی)" },
         { name: "campaign_source", type: "VARCHAR(100)", constraint: "NULLABLE", note: "کانال جذب داوطلب (گوگل، پیامک، معرفی تلگرام)" },
-        { name: "estimated_value", type: "DECIMAL(12, 2)", constraint: "DEFAULT 0.00", note: "ارزش احتمالی ثبت نام در دوره‌های VIP چتر دانش" }
+        { name: "estimated_value", type: "DECIMAL(12, 2)", constraint: "DEFAULT 0.00", note: "ارزش احتمالی ثبت نام در دوره‌های VIP ترنم مهر" }
       ]
     },
     {
       name: "courses",
-      desc: "داده‌های دوره‌ها، اساتید و بسته‌های آموزشی وکالت",
+      desc: "داده‌های دوره‌ها، اساتید و بسته‌های آموزشی کنکور سراسری",
       columns: [
         { name: "id", type: "UUID", constraint: "PRIMARY KEY", note: "شناسه متمایز دوره آموزشی" },
-        { name: "title", type: "VARCHAR(200)", constraint: "NOT NULL", note: "عنوان دوره (مانند کارگاه تست زنی مدنی یا اصول فقه مکرر)" },
+        { name: "title", type: "VARCHAR(200)", constraint: "NOT NULL", note: "عنوان دوره (مانند کارگاه زیست‌شناسی یا فیزیک هسته‌ای)" },
         { name: "lecturer_name", type: "VARCHAR(150)", constraint: "NOT NULL", note: "استاد ارائه‌دهنده درس و طراح سوالات" },
         { name: "price", type: "DECIMAL(12, 2)", constraint: "NULLABLE", note: "هزینه بسته آموزشی" },
         { name: "sessions_count", type: "INT", constraint: "DEFAULT 24", note: "تعداد جلسات ویدیویی در وب‌کست بستر کلاود" }
@@ -495,7 +481,7 @@ export default function AdminView({ student }: { student: Student }) {
     },
     {
       name: "ai_logs",
-      desc: "ثبت توکن، پرامپت‌ها و درخواست‌های RAG قوانین خاص",
+      desc: "ثبت توکن، پرامپت‌ها و درخواست‌های RAG محتوای آموزشی",
       columns: [
         { name: "id", type: "UUID", constraint: "PRIMARY KEY", note: "شناسه لاگ تحلیل هوش مصنوعی" },
         { name: "user_id", type: "UUID", constraint: "FOREIGN KEY", note: "ارجاع به داوطلب ارائه‌دهنده سوال" },
@@ -526,12 +512,12 @@ export default function AdminView({ student }: { student: Student }) {
         <div>
           <span className="text-[10px] bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-full border border-indigo-150 font-black inline-block mb-1 flex items-center gap-1 w-fit">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span>سامانه ابری و میکروسرویسی چتر دانش فعال است</span>
+            <span>سامانه ابری و میکروسرویسی ترنم مهر فعال است</span>
           </span>
-          <h2 className="text-xl font-black text-slate-900">مدیریت و آپلودر چتر دانش</h2>
+          <h2 className="text-xl font-black text-slate-900">مدیریت و آپلودر ترنم مهر</h2>
           <span className="text-xs text-rose-600 font-extrabold block mt-0.5">دسترسی امن ادمین</span>
           <p className="text-slate-500 text-xs mt-1 font-bold">
-            پنل مدیریت ارشد موسسه آموزشی چتر دانش • مدیریت پرونده و تراز داوطلبان آزمونهای وکالت، سردفتری و قضاوت به همراه ابزار آپلود کارنامهها و نظارت بر مدلهای AI
+            پنل مدیریت آکادمی هوشمند آموزشی ترنم مهر • مدیریت پرونده و تراز داوطلبان آزمونهای سراسری مجهز به ابزار آپلود کارنامهها و نظارت بر مدلهای AI
           </p>
         </div>
         <div className="bg-emerald-50 text-emerald-700 px-4 py-3 rounded-2xl border border-emerald-100 flex items-center gap-2 font-bold shrink-0">
@@ -568,7 +554,7 @@ export default function AdminView({ student }: { student: Student }) {
             }`}
           >
             <Sparkles size={16} className="text-emerald-600" />
-            <span className="font-extrabold text-slate-800">📝 طراح سوال و شبیه‌ساز آزمون وکالت</span>
+            <span className="font-extrabold text-slate-800">📝 طراح هوشمند سوال و شبیه‌ساز آزمون</span>
           </button>
           <button
             onClick={() => setActiveTab("students")}
@@ -577,7 +563,7 @@ export default function AdminView({ student }: { student: Student }) {
             }`}
           >
             <Users size={16} />
-            <span>👥 مدیریت شناسنامه داوطلبان وکالت</span>
+            <span>👥 مدیریت شناسنامه داوطلبان کنکور</span>
           </button>
           <button
             onClick={() => setActiveTab("analytics")}
@@ -595,7 +581,7 @@ export default function AdminView({ student }: { student: Student }) {
             }`}
           >
             <UploadCloud size={16} />
-            <span>📤 آپلود دستهجمعی کارنامههای وکالت</span>
+            <span>📤 آپلود دسته‌جمعی کارنامه‌های داوطلبان</span>
           </button>
           <button
             onClick={() => setActiveTab("content")}
@@ -604,7 +590,7 @@ export default function AdminView({ student }: { student: Student }) {
             }`}
           >
             <Film size={16} />
-            <span>📚 مدیریت فایلها و ویدیوهای چتر دانش</span>
+            <span>📚 مدیریت فایلها و منابع ترنم مهر</span>
           </button>
           <button
             onClick={() => setActiveTab("sysdocs")}
@@ -930,7 +916,7 @@ export default function AdminView({ student }: { student: Student }) {
               </div>
               
               <div className="p-4 bg-blue-50 rounded-2xl border border-blue-150 text-[10px] text-blue-800 leading-relaxed font-bold">
-                💡 نکته امنیتی: لاگ‌های سیستمی چتر دانش غیرقابل ویرایش (Immutable) بوده و به صورت خودکار در فضای ابری آرشیو می‌گردند. هرگونه تلاش برای دسترسی غیرمجاز یا تغییر در فایل‌های ممیزی توسط سپر امنیتی DevOps شناسایی و ریپورت می‌شود.
+                💡 نکته امنیتی: لاگ‌های سیستمی ترنم مهر غیرقابل ویرایش (Immutable) بوده و به صورت خودکار در فضای ابری آرشیو می‌گردند. هرگونه تلاش برای دسترسی غیرمجاز یا تغییر در فایل‌های ممیزی توسط سپر امنیتی DevOps شناسایی و ریپورت می‌شود.
               </div>
             </div>
           )}
@@ -943,9 +929,9 @@ export default function AdminView({ student }: { student: Student }) {
                   <span className="w-3 h-3 rounded-full bg-blue-900" />
                   <h3 className="text-base font-black text-slate-900">استراتژی کلان توسعه</h3>
                 </div>
-                <h4 className="text-sm font-extrabold text-slate-700">پلتفرم موازی SaaS و میکروسرویسی چتر دانش</h4>
+                <h4 className="text-sm font-extrabold text-slate-700">پلتفرم موازی SaaS و میکروسرویسی ترنم مهر</h4>
                 <p className="text-slate-500 text-xs leading-relaxed font-semibold">
-                  سند معماری کلان، دیتابیس بومی و پشته فناوری Enterprise SaaS. این مستند نقشه راه جامع ساختاریافته پروژه چتر دانش را به عنوان یک سامانه ابری مستقل، مقیاسپذیر و ماژولار توصیف میکند. اهداف کلیدی شامل اتوماسیون فرایندها، ثبتنام دیجیتال، آزمون تستی تطبیقی، سیستم CRM و هوش مصنوعی مرکزی است.
+                  سند معماری کلان، دیتابیس بومی و پشته فناوری Enterprise SaaS. این مستند نقشه راه جامع ساختاریافته پروژه ترنم مهر را به عنوان یک سامانه ابری مستقل، مقیاسپذیر و ماژولار توصیف میکند. اهداف کلیدی شامل اتوماسیون فرایندها، ثبتنام دیجیتال، آزمون تستی تطبیقی، سیستم CRM و هوش مصنوعی مرکزی است.
                 </p>
               </div>
 
@@ -991,7 +977,7 @@ export default function AdminView({ student }: { student: Student }) {
                       <Zap size={18} className="text-amber-500 animate-pulse" />
                       <span>شبیه‌ساز هوشمند مقیاسپذیری و بار کلاود (Cloud Auto-Scaler Engine)</span>
                     </h4>
-                    <p className="text-[11px] text-slate-500 font-bold">میزان کاربران همزمان پلتفرم چتر دانش را تغییر دهید تا الزامات بهینهسازی زیرساخت کلاود را به صورت زنده برآورد کنید:</p>
+                    <p className="text-[11px] text-slate-500 font-bold">میزان کاربران همزمان پلتفرم ترنم مهر را تغییر دهید تا الزامات بهینهسازی زیرساخت کلاود را به صورت زنده برآورد کنید:</p>
                   </div>
                   <span className="text-[10px] bg-slate-900 text-white rounded-lg px-2.5 py-1 font-mono font-bold tracking-widest shrink-0">
                     محاسبات بلادرنگ لایه DevOps ⚡
@@ -1027,7 +1013,7 @@ export default function AdminView({ student }: { student: Student }) {
                 </div>
 
                 <p className="text-[10px] text-slate-500 bg-amber-50 rounded-xl border border-amber-200/50 p-3 leading-relaxed font-bold">
-                  💡 با بالا و پایین بردن اسلایدر، سیستم به طور خودکار مصرف دیتابیس، کش، حجم صف پیام و کلاود سازمان چتر دانش را کالیبره کرده و منابع مورد نیاز کانتینرهای داکر/کوبرنتیز را پیشنهاد میدهد.
+                  💡 با بالا و پایین بردن اسلایدر، سیستم به طور خودکار مصرف دیتابیس، کش، حجم صف پیام و کلاود سازمان ترنم مهر را کالیبره کرده و منابع مورد نیاز کانتینرهای داکر/کوبرنتیز را پیشنهاد میدهد.
                 </p>
 
                 {/* Simulated scale properties */}
@@ -1082,7 +1068,7 @@ export default function AdminView({ student }: { student: Student }) {
                     <div className="space-y-1 bg-slate-50 p-4 rounded-xl border border-slate-100">
                       <strong className="text-xs font-black text-slate-800 block">ساختار تفکیک داده (Isolate Schema)</strong>
                       <p className="text-[10px] text-slate-500 leading-normal font-semibold">
-                        پلتفرم چتر دانش از مدل <strong>Logical Data Isolation</strong> استفاده می‌کند. هر موسسه (Tenant) دارای یک شناسنامه منحصر به فرد در ریشه دیتابیس است. قوانین امنیتی (Security Rules) به گونه‌ای تنظیم شده‌اند که هیچ موسسه‌ای قادر به مشاهده یا تغییر داده‌های موسسه رقیب نباشد.
+                        پلتفرم ترنم مهر از مدل <strong>Logical Data Isolation</strong> استفاده می‌کند. هر مرکز (Tenant) دارای یک شناسنامه منحصر به فرد در ریشه دیتابیس است. قوانین امنیتی (Security Rules) به گونه‌ای تنظیم شده‌اند که هیچ مرکزی قادر به مشاهده یا تغییر داده‌های مرکز رقیب نباشد.
                       </p>
                       <div className="flex flex-wrap gap-2 text-[9px] font-mono text-indigo-700 mt-2">
                         <span className="bg-white px-2 py-0.5 rounded border border-slate-200/80 font-bold">مسیر ریشه: /institutions/{"{instId}"}/*</span>
@@ -1120,7 +1106,7 @@ export default function AdminView({ student }: { student: Student }) {
                   <div className="flex justify-between items-center border-b border-slate-150 pb-2">
                     <h4 className="text-sm font-black text-slate-900 flex items-center gap-2">
                       <Activity size={18} className="text-rose-600 animate-pulse" />
-                      <span>نقشه اکوسیستم میکروسرویس‌ها و ماژولار چتر دانش</span>
+                      <span>نقشه اکوسیستم میکروسرویس‌ها و ماژولار ترنم مهر</span>
                     </h4>
                     <span className="text-[9px] bg-emerald-50 text-emerald-800 border border-emerald-250 font-black px-2 py-0.5 rounded">وضعیت شبکه: عملیاتی</span>
                   </div>
@@ -1136,7 +1122,7 @@ export default function AdminView({ student }: { student: Student }) {
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
                           <span className="text-[8px] bg-emerald-50 text-emerald-700 px-1.5 rounded border font-bold">فعال</span>
                         </div>
-                        <p className="text-[9px] text-slate-500 leading-normal font-semibold">تحلیل رفتار آزمونی داوطلب و شناسایی نقاط ضعف علمی بر اساس داده‌های تراز چتر دانش.</p>
+                        <p className="text-[9px] text-slate-500 leading-normal font-semibold">تحلیل رفتار آزمونی داوطلب و شناسایی نقاط ضعف علمی بر اساس داده‌های تراز ترنم مهر.</p>
                         <p className="text-[8px] font-mono text-purple-700 font-extrabold bg-white px-2 py-0.5 rounded border w-fit">LOG: متصل به مدل Gemini 1.5 Pro با لایه RAG اختصاصی.</p>
                       </div>
                       <span className="text-[9px] bg-red-50 text-red-700 border border-red-100 rounded px-1.5 py-1 font-bold shrink-0">بحرانی</span>
@@ -1208,9 +1194,9 @@ export default function AdminView({ student }: { student: Student }) {
               </div>
               <div className="bg-gradient-to-tr from-slate-900 via-indigo-950 to-blue-950 text-white p-6 rounded-3xl space-y-4">
                 <span className="text-[10px] bg-white/10 text-emerald-450 rounded border border-white/10 px-2.5 py-1 inline-block font-black uppercase">ساختار توسعه مستقل کلاود</span>
-                <h4 className="text-base font-black">چرا معماری میکروماژولار برای چتر دانش حیاتی بود؟</h4>
+                <h4 className="text-base font-black">چرا معماری میکروماژولار برای ترنم مهر حیاتی بود؟</h4>
                 <p className="text-slate-350 text-xs leading-relaxed font-medium">
-                  پلتفرم چتر دانش با هدف میزبانی از موسسات مختلف حقوقی طراحی شده است. استفاده از معماری ماژولار به ما اجازه می‌دهد تا طبق مدل <strong>SaaS Core</strong>, قابلیت‌هایی مانند «تحلیل پیشرفته هوش مصنوعی» را به صورت مجزا برای هر موسسه روشن یا خاموش کنیم بدون آنکه پایداری کل سیستم تحت‌الشعاع قرار گیرد. این امر منجر به کاهش ۴۰ درصدی بار پردازشی سرور و افزایش ضریب اطمینان داده‌ها در لایه دسترسی (Authorization) شده است.
+                  پلتفرم ترنم مهر با هدف میزبانی از مراکز مختلف آموزشی طراحی شده است. استفاده از معماری ماژولار به ما اجازه می‌دهد تا طبق مدل <strong>SaaS Core</strong>, قابلیت‌هایی مانند «تحلیل پیشرفته هوش مصنوعی» را به صورت مجزا برای هر مرکز روشن یا خاموش کنیم بدون آنکه پایداری کل سیستم تحت‌الشعاع قرار گیرد. این امر منجر به کاهش ۴۰ درصدی بار پردازشی سرور و افزایش ضریب اطمینان داده‌ها در لایه دسترسی (Authorization) شده است.
                 </p>
                 <div className="flex flex-wrap gap-4 text-xs font-bold pt-2 text-indigo-200">
                   <div className="flex items-center gap-1.5"><Check size={16} className="text-emerald-500" /> <span>مقیاس‌پذیری عمودی (Scalability)</span></div>
@@ -1222,7 +1208,7 @@ export default function AdminView({ student }: { student: Student }) {
               {/* THE 11 MODULE LIST SELECTOR */}
               <div className="p-6 bg-white border border-slate-150 rounded-3xl space-y-4">
                 <div className="space-y-1">
-                  <h4 className="text-xs font-black text-slate-800">ماژول‌های ۱۱گانه اصلی سیستم SaaS چتر دانش</h4>
+                  <h4 className="text-xs font-black text-slate-800">ماژول‌های ۱۱گانه اصلی سیستم SaaS ترنم مهر</h4>
                   <p className="text-slate-450 text-[10px] font-bold">سرفصل‌های کلی و پیاده‌سازی شده ساختار موازی ماژولار را به صورت تعاملی بررسی کنید:</p>
                 </div>
                 
@@ -1293,7 +1279,7 @@ export default function AdminView({ student }: { student: Student }) {
                         </h4>
                       </div>
                       <p className="text-[10px] text-slate-500 font-semibold leading-relaxed">
-                        این ماژول به صورت متمرکز تحت معماری موازی SaaS چتر دانش طراحی شده است. از ویژگی‌های آن می‌توان به تفکیک لایه‌ای داده‌ها، رصد و پایش وضعیت تراهم‌ها، تحلیل آماری دقیق از سطح آزمون‌ها، و دسترسی با تاخیر کم در بستر وب‌سوکت اشاره کرد.
+                        این ماژول به صورت متمرکز تحت معماری موازی SaaS ترنم مهر طراحی شده است. از ویژگی‌های آن می‌توان به تفکیک لایه‌ای داده‌ها، رصد و پایش وضعیت تراهم‌ها، تحلیل آماری دقیق از سطح آزمون‌ها، و دسترسی با تاخیر کم در بستر وب‌سوکت اشاره کرد.
                       </p>
                       <span className="inline-block mt-2 text-[10px] text-indigo-700 bg-indigo-50 px-2 rounded-md font-bold">بسته به ویژگی‌های فعال هر Tenant فیلتر می‌گردد ✓</span>
                     </div>
@@ -1308,7 +1294,7 @@ export default function AdminView({ student }: { student: Student }) {
                     <Database size={15} className="text-indigo-600" />
                     <span>مدل دیتابیس بومی و ساختار رابطه جداول (Relational Database Schema)</span>
                   </h4>
-                  <p className="text-[10px] text-slate-500 font-bold">ساختار جداول دیتابیس بومی چتر دانش را جهت پایش داده‌ها انتخاب و رهگیری کنید:</p>
+                  <p className="text-[10px] text-slate-500 font-bold">ساختار جداول دیتابیس بومی ترنم مهر را جهت پایش داده‌ها انتخاب و رهگیری کنید:</p>
                 </div>
 
                 {/* DB Tabs */}
@@ -1338,7 +1324,7 @@ export default function AdminView({ student }: { student: Student }) {
                           <th className="py-2.5 px-4">عنوان ستون دیتابیس (Column)</th>
                           <th className="py-2.5 px-4">نوع داده اصلی (Data Type)</th>
                           <th className="py-2.5 px-4">کلید و محدودیت‌ها (Constraints)</th>
-                          <th className="py-2.5 px-4">توضیح عملکردی فیلد در سیستم چتر دانش</th>
+                          <th className="py-2.5 px-4">توضیح عملکردی فیلد در سیستم ترنم مهر</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100 text-slate-700">
@@ -1385,7 +1371,7 @@ export default function AdminView({ student }: { student: Student }) {
               <div className="p-6 bg-white border border-slate-150 rounded-3xl space-y-4">
                 <div className="space-y-1">
                   <h4 className="text-xs font-black text-slate-900">برنامه فازهای اجرایی و نقشه راه استقرار SaaS (Implementation Roadmap)</h4>
-                  <p className="text-[10px] text-slate-500 font-bold">نقشه راه ۵ مرحله‌ای چتر دانش را جهت توسعه و اهداف استراتژیک رصد کنید:</p>
+                  <p className="text-[10px] text-slate-500 font-bold">نقشه راه ۵ مرحله‌ای ترنم مهر را جهت توسعه و اهداف استراتژیک رصد کنید:</p>
                 </div>
 
                 <div className="space-y-4 relative before:absolute before:right-3.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-100 pr-1">
@@ -1394,7 +1380,7 @@ export default function AdminView({ student }: { student: Student }) {
                     <div className="absolute right-2 top-1.5 w-3.5 h-3.5 rounded-full bg-blue-900 border-2 border-white ring-2 ring-blue-100" />
                     <strong className="text-xs font-black text-blue-950 block">فاز اول - MVP (پایه تجاری)</strong>
                     <h5 className="text-[10px] text-slate-550 font-black">فرم ثبت‌نام پایه، درگاه، پنل داوطلب و مشاوره حقوقی مقدماتی</h5>
-                    <p className="text-[10px] text-slate-500 leading-normal font-semibold">تمرکز بر خودکارسازی پذیرش لید، احراز هویت اولیه دو مرحله‌ای OTP، اتصال دیتابیس بومی کاربران، طراحی پنل اولیه داوطلبین جهت مشاهده ترازها و درگاه پرداخت آنلاین جهت رفاه حال دانشجویان چتر دانش.</p>
+                    <p className="text-[10px] text-slate-500 leading-normal font-semibold">تمرکز بر خودکارسازی پذیرش لید، احراز هویت اولیه دو مرحله‌ای OTP، اتصال دیتابیس بومی کاربران، طراحی پنل اولیه داوطلبین جهت مشاهده ترازها و درگاه پرداخت آنلاین جهت رفاه حال دانشجویان ترنم مهر.</p>
                   </div>
 
                   <div className="relative pr-8 space-y-1">
@@ -1408,7 +1394,7 @@ export default function AdminView({ student }: { student: Student }) {
                     <div className="absolute right-2 top-1.5 w-3.5 h-3.5 rounded-full bg-blue-900 border-2 border-white ring-2 ring-blue-100" />
                     <strong className="text-xs font-black text-blue-950 block">فاز سوم - نسخه تجاری (گسترش بازار)</strong>
                     <h5 className="text-[10px] text-slate-550 font-black">سامانه CRM تکامل‌یافته، اتوماسیون تبلیغات، پنلهای چندگانه و اپلیکیشن فلاتر</h5>
-                    <p className="text-[10px] text-slate-500 leading-normal font-semibold">تکمیل پایپلاین خط لوله فروش، پیگیری اتوماتیک مشتری، فیلترینگ کمپین‌ها بصورت A/B، انتشار عمومی اپ اندروید و آیاواس داوطلبین چتر دانش با کش محلی به همراه پیاده‌سازی همزمان تمام پنلهای فرعی (منابع انسانی، ناظرین مالی، بازاریابان).</p>
+                    <p className="text-[10px] text-slate-500 leading-normal font-semibold">تکمیل پایپلاین خط لوله فروش، پیگیری اتوماتیک مشتری، فیلترینگ کمپین‌ها بصورت A/B، انتشار عمومی اپ اندروید و آیاواس داوطلبین ترنم مهر با کش محلی به همراه پیاده‌سازی همزمان تمام پنلهای فرعی (منابع انسانی، ناظرین مالی، بازاریابان).</p>
                   </div>
 
                   <div className="relative pr-8 space-y-1">
@@ -1443,9 +1429,9 @@ export default function AdminView({ student }: { student: Student }) {
                       <TrendingUp size={24} />
                     </div>
                     <div>
-                      <h3 className="text-lg font-black text-slate-850">پلتفرم استراتژیک نقشه راه تحول چتر دانش</h3>
+                      <h3 className="text-lg font-black text-slate-850">پلتفرم استراتژیک نقشه راه تحول ترنم مهر</h3>
                       <p className="text-slate-500 text-xs font-semibold leading-relaxed">
-                        ردیابی، برنامه‌ریزی زنده و فازهای توسعه پورتال Legal-Tech هوشمند کانون وکلا
+                        ردیابی، برنامه‌ریزی زنده و فازهای توسعه پورتال Ed-Tech هوشمند آموزش سراسری
                       </p>
                     </div>
                   </div>
@@ -1526,11 +1512,11 @@ export default function AdminView({ student }: { student: Student }) {
                     </div>
                     <div>
                       <h4 className="text-base font-black text-slate-100 flex items-center gap-2">
-                        <span>دستیار هوشمند مدیریت محصول چتر دانش (AI Product Advisor)</span>
+                        <span>دستیار هوشمند مدیریت محصول ترنم مهر (AI Product Advisor)</span>
                         <span className="text-[9px] bg-amber-400 text-slate-950 font-bold px-2 py-0.5 rounded-full">پیشنهادی</span>
                       </h4>
                       <p className="text-slate-400 text-[11px] font-semibold mt-1">
-                        ماژول‌های اولویت‌دار جهت ارتقای پورتال به سطح استانداردهای تراز اول سنجش حقوقی
+                        ماژول‌های اولویت‌دار جهت ارتقای پورتال به سطح استانداردهای تراز اول سنجش تحصیلی
                       </p>
                     </div>
                   </div>
@@ -1626,7 +1612,7 @@ export default function AdminView({ student }: { student: Student }) {
                     <Check className="mx-auto text-emerald-400" size={28} />
                     <h5 className="text-sm font-black text-emerald-400">تمام ایده‌های تحول با موفقیت ثبت گردیدند!</h5>
                     <p className="text-[11px] text-slate-400 leading-relaxed max-w-md mx-auto">
-                      کلیه ماژول‌های پیشنهادی مشاور ارشد چتر دانش به عنوان پروژه‌های برنامه‌ریزی‌شده و پویا به فونداسیون نقشه راه توسعه سیستم متصل شده و کدهای تخصیص تراز برای آن‌ها محاسبه گردید.
+                      کلیه ماژول‌های پیشنهادی مشاور ارشد ترنم مهر به عنوان پروژه‌های برنامه‌ریزی‌شده و پویا به فونداسیون نقشه راه توسعه سیستم متصل شده و کدهای تخصیص تراز برای آن‌ها محاسبه گردید.
                     </p>
                   </div>
                 )}
@@ -1638,7 +1624,7 @@ export default function AdminView({ student }: { student: Student }) {
                   <div className="flex justify-between items-center border-b border-blue-100 pb-3">
                     <div className="flex items-center gap-2">
                       <Sparkles className="text-blue-900" size={18} />
-                      <h4 className="text-sm font-black text-slate-850">ایجاد فاز سفارشی جدید برای توسعه چتر دانش</h4>
+                      <h4 className="text-sm font-black text-slate-850">ایجاد فاز سفارشی جدید برای توسعه ترنم مهر</h4>
                     </div>
                     <button 
                       type="button"
@@ -1941,10 +1927,10 @@ export default function AdminView({ student }: { student: Student }) {
               <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 p-6 rounded-3xl text-white text-center space-y-2 shadow-2xl relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 to-transparent opacity-30 animate-pulse" style={{ animationDuration: '6s' }} />
                 <p className="text-sm font-black italic relative z-10 leading-relaxed">
-                  "نقشه راه تحول چتر دانش، تبلور همگرایی دانش عمیق حقوقی و تکنولوژی‌های طراز اول هوش مصنوعی کلاود در سطح ملّی است."
+                  "نقشه راه تحول ترنم مهر، تبلور همگرایی دانش عمیق آموزشی و تکنولوژی‌های طراز اول هوش مصنوعی کلاود در سطح ملّی است."
                 </p>
                 <p className="text-[10px] text-indigo-300 font-bold relative z-10 uppercase tracking-widest leading-loose">
-                  — موسسه آموزش عالی آزاد چتر دانش • دپارتمان استراتژی دیجیتال و هوش مصنوعی
+                  — آکادمی هوشمند آموزشی ترنم مهر • دپارتمان استراتژی دیجیتال و هوش مصنوعی
                 </p>
               </div>
             </div>
@@ -1958,24 +1944,26 @@ export default function AdminView({ student }: { student: Student }) {
                   <span className="p-1.5 bg-emerald-50 text-emerald-700 rounded-lg border border-emerald-200">
                     <Sparkles size={18} />
                   </span>
-                  <h3 className="text-base font-black text-slate-900">طراح سوال و شبیه‌ساز آزمون وکالت چتر دانش</h3>
+                  <h3 className="text-base font-black text-slate-900">طراح سوال و شبیه‌ساز آزمون کنکور ترنم مهر</h3>
                 </div>
-                <p className="text-slate-500 text-xs">تولید دینامیک پرسش‌های کانون وکلا، قوه قضائیه، سردفتری بر اساس استانداردهای حقوقی و آرای وحدت رویه</p>
+                <p className="text-slate-500 text-xs">تولید دینامیک پرسش‌های کنکور انسانی، تجربی و ریاضی بر اساس آخرین استانداردهای سازمان سنجش</p>
               </div>
 
               {/* Parameter Settings */}
               <div className="bg-white p-5 rounded-3xl border border-slate-100 grid grid-cols-1 md:grid-cols-3 gap-6 text-right">
                 
                 <div className="space-y-2">
-                  <label className="text-[11px] font-black text-slate-700 block">انتخاب ماده درسی حقوقی (Subject)</label>
+                  <label className="text-[11px] font-black text-slate-700 block">انتخاب سرفصل درسی (Subject)</label>
                   <select
-                    value={selectedLawSubject}
-                    onChange={(e) => setSelectedLawSubject(e.target.value)}
+                    value={selectedAcademicSubject}
+                    onChange={(e) => setSelectedAcademicSubject(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none"
                   >
-                    <option value="مدنی">⚖️ حقوق مدنی (قوانین تعهدات و اموال)</option>
-                    <option value="تجارت">💼 حقوق تجارت (شرکت‌ها و اسناد تجاری)</option>
-                    <option value="جزا">🛡️ حقوق جزا (عمومی و اختصاصی مجازات‌ها)</option>
+                    <option value="ادبیات">📖 ادبیات اختصاصی (علوم انسانی)</option>
+                    <option value="فلسفه">🧐 فلسفه و منطق (تحلیلی)</option>
+                    <option value="زیست">🧬 زیست‌شناسی (علوم تجربی)</option>
+                    <option value="شیمی">🧪 شیمی تخصصی</option>
+                    <option value="فیزیک">⚡ فیزیک و محاسبات</option>
                   </select>
                 </div>
 
@@ -2017,7 +2005,7 @@ export default function AdminView({ student }: { student: Student }) {
                   <div className="absolute top-0 right-0 left-0 h-1.5 bg-emerald-500" />
                   
                   <div className="flex justify-between items-center text-[10px] text-slate-400 font-bold border-b border-slate-100 pb-3">
-                    <span>بودجه‌بندی آزمون کانون وکلا • مرکز مشاوران</span>
+                    <span>بودجه‌بندی آزمون‌های سراسری سازمان سنجش آموزش کشور</span>
                     <span className="text-emerald-700">سطح: {selectedDifficulty} و تحلیلی</span>
                   </div>
 
@@ -2065,7 +2053,7 @@ export default function AdminView({ student }: { student: Student }) {
                     <div className="bg-blue-50/70 border border-blue-150 p-5 rounded-2xl space-y-2 animate-fadeIn">
                       <h5 className="text-xs font-black text-blue-955 flex items-center gap-1.5 leading-none">
                         <BookOpen size={14} />
-                        <span>تحلیل مستند قانونی و آرای وحدت رویه:</span>
+                        <span>تحلیل سرفصل‌های درسی و نکات طلایی کنکور:</span>
                       </h5>
                       <p className="text-[11px] text-blue-900 leading-relaxed font-semibold">
                         {generatedQuestion.explanation}
@@ -2104,10 +2092,10 @@ export default function AdminView({ student }: { student: Student }) {
                     onChange={(e) => setFilterField(e.target.value)}
                     className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-xs font-semibold text-slate-700 focus:outline-none"
                   >
-                    <option value="all">کلیه آزمون‌ها</option>
-                    <option value="آزمون وکالت">آزمون وکالت کانون</option>
-                    <option value="آزمون سردفتری">آزمون سردفتری قوه قضائیه</option>
-                    <option value="آزمون قضاوت">آزمون قضاوت و منصب قضا</option>
+                    <option value="all">کلیه رشته‌ها</option>
+                    <option value="کنکور انسانی">کنکور علوم انسانی</option>
+                    <option value="کنکور تجربی">کنکور علوم تجربی</option>
+                    <option value="کنکور ریاضی">کنکور ریاضی و فیزیک</option>
                   </select>
                 </div>
               </div>
@@ -2118,9 +2106,9 @@ export default function AdminView({ student }: { student: Student }) {
                     <tr className="bg-slate-50 border-b border-slate-100 text-slate-600 font-bold">
                       <th className="py-4 px-6">نام کاربری داوطلب</th>
                       <th className="py-4 px-6">شناسه کارنامه کنکور</th>
-                      <th className="py-4 px-6">نوع آزمون حقوقی هدف</th>
+                      <th className="py-4 px-6">رشته تحصیلی هدف</th>
                       <th className="py-4 px-6">تراز هوشمند تخمینی</th>
-                      <th className="py-4 px-6">استاد راهنما ناظر کانون</th>
+                      <th className="py-4 px-6">استاد راهنما و مشاور</th>
                       <th className="py-4 px-6">وضعیت حضور پورتال</th>
                     </tr>
                   </thead>
@@ -2152,21 +2140,21 @@ export default function AdminView({ student }: { student: Student }) {
             <div className="space-y-6" id="admin-tab-analytics">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100 space-y-2 text-right">
-                  <h4 className="text-slate-400 font-bold text-xs uppercase">متوسط تراز کل جامعه آماری چتر دانش</h4>
+                  <h4 className="text-slate-400 font-bold text-xs uppercase">متوسط تراز کل جامعه آماری ترنم مهر</h4>
                   <div className="text-2xl font-black text-slate-800 font-mono">۷,۳۲۰ تراز</div>
                   <p className="text-[10px] text-emerald-600">▲ ۲.۸٪ بهبود میانگین درس زیست و فیزیک</p>
                 </div>
 
                 <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100 space-y-2 text-right">
                   <h4 className="text-slate-400 font-bold text-xs uppercase">گلوگاه تحلیلی ضعف بیشترین داوطلبان عمومی</h4>
-                  <div className="text-2xl font-black text-slate-805 font-sans">قوانین خاص ثبتی و تجارت الکترونیک</div>
+                  <div className="text-2xl font-black text-slate-805 font-sans">مباحث تحلیلی فلسفه و ریاضیات گسسته</div>
                   <p className="text-[10px] text-red-500">نیاز مبرم به دوره‌های فشرده تست زدن</p>
                 </div>
 
                 <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100 space-y-2 text-right">
                   <h4 className="text-slate-400 font-bold text-xs uppercase">تلرانس تخمین موفقیت تراز با AI</h4>
                   <div className="text-2xl font-black text-slate-800 font-mono">۲.۴٪</div>
-                  <p className="text-[10px] text-emerald-600">پایش دقیق در لایه فونداسیون RAG قوانین</p>
+                  <p className="text-[10px] text-emerald-600">پایش دقیق در لایه فونداسیون RAG کنکور</p>
                 </div>
               </div>
 
@@ -2174,7 +2162,7 @@ export default function AdminView({ student }: { student: Student }) {
               <div className="flex items-center gap-3 p-4 bg-emerald-50 rounded-2xl border border-emerald-100 text-right">
                 <HeartPulse className="text-emerald-700 animate-pulse flex-shrink-0" size={20} />
                 <div className="text-xs text-emerald-800 leading-relaxed font-semibold">
-                  سلامت سیستم پردازش چتر دانش تایید شد. مدل `'gemini-2.5-flash'` به همراه مخزن وکتور قوانین وکالت بدون گلوگاه متصل است.
+                  سلامت سیستم پردازش ترنم مهر تایید شد. مدل `'gemini-2.5-flash'` به همراه مخزن وکتور سرفصل‌های کنکور بدون گلوگاه متصل است.
                 </div>
               </div>
             </div>
@@ -2194,13 +2182,13 @@ export default function AdminView({ student }: { student: Student }) {
                   <UploadCloud size={32} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-slate-850 text-base">اکسل تراز یا جزوات کنکور کانون وکلا را در این‌جا رها کنید</h4>
+                  <h4 className="font-bold text-slate-850 text-base">اکسل تراز یا جزوات و منابع رتبه برتر را در این‌جا رها کنید</h4>
                   <p className="text-slate-400 text-xs mt-1">فرمت‌های مجاز: .pdf, .xlsx, .xls (حداکثر حجم فایل ۱۰ مگابایت)</p>
                 </div>
                 {isUploading && (
                   <div className="text-xs text-blue-900 flex justify-center items-center gap-2">
                     <span className="w-4 h-4 border-2 border-blue-955 border-t-transparent rounded-full animate-spin"></span>
-                    <span>اسکن اتصالات تراز و پایش آماری قوانین...</span>
+                    <span>اسکن اتصالات تراز و پایش آماری سرفصل‌ها...</span>
                   </div>
                 )}
               </div>
@@ -2227,28 +2215,28 @@ export default function AdminView({ student }: { student: Student }) {
           {activeTab === "content" && (
             <div className="p-8 text-center bg-slate-50 rounded-3xl border border-slate-100 space-y-4" id="admin-tab-content">
               <Film size={40} className="mx-auto text-slate-400" />
-              <h4 className="font-bold text-slate-800 text-sm">مخزن درسنامه‌ها و ویدیوهای کنکور چتر دانش</h4>
-              <p className="text-slate-455 text-xs">در این بخش قادر خواهید بود ویدیوهای آموزشی تحلیل قوانین خاص و آرای وحدت رویه را آپلود نمایید تا با مدل به داوطلبین توصیه گردد.</p>
+              <h4 className="font-bold text-slate-800 text-sm">مخزن درسنامه‌ها و ویدیوهای آموزشی ترنم مهر</h4>
+              <p className="text-slate-455 text-xs">در این بخش قادر خواهید بود ویدیوهای آموزشی سرفصل‌های نهایی و کنکوری را آپلود نمایید تا با مدل به داوطلبین توصیه گردد.</p>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pt-3 text-right">
                 <div className="p-4 bg-white border border-slate-150 rounded-2xl space-y-2">
-                  <span className="text-[9px] text-amber-600 font-bold block">مجموعه مدنی</span>
-                  <h5 className="text-xs font-black text-slate-900">تحلیل مدنی دکتر کاتوزیان</h5>
+                  <span className="text-[9px] text-amber-600 font-bold block">مجموعه انسانی</span>
+                  <h5 className="text-xs font-black text-slate-900">تحلیل منطق و فلسفه سال دوازدهم</h5>
                   <p className="text-[9px] text-slate-400">۲۴ قسمت تصویری فشرده کلاود</p>
                 </div>
                 <div className="p-4 bg-white border border-slate-150 rounded-2xl space-y-2">
-                  <span className="text-[9px] text-indigo-600 font-bold block">مجموعه تجارت</span>
-                  <h5 className="text-xs font-black text-slate-900">مسئولیت شرکا و اسناد تجاری</h5>
+                  <span className="text-[9px] text-indigo-600 font-bold block">مجموعه تجربی</span>
+                  <h5 className="text-xs font-black text-slate-900">زیست‌شناسی و شیمی تخصصی</h5>
                   <p className="text-[9px] text-slate-400">۱۲ جلسه رفع لول اشکال تستی</p>
                 </div>
                 <div className="p-4 bg-white border border-slate-150 rounded-2xl space-y-2">
-                  <span className="text-[9px] text-rose-500 font-bold block">قوانین خاص</span>
-                  <h5 className="text-xs font-black text-slate-900">شبیه‌ساز تندخوانی خاص ثبتی</h5>
+                  <span className="text-[9px] text-rose-500 font-bold block">مجموعه عمومی</span>
+                  <h5 className="text-xs font-black text-slate-900">تندخوانی و درک متن ادبیات</h5>
                   <p className="text-[9px] text-slate-400">فول تراز ۱۰۰٪ صوتی و متنی</p>
                 </div>
                 <div className="p-4 bg-white border border-slate-150 rounded-2xl space-y-2">
-                  <span className="text-[9px] text-emerald-600 font-bold block">اصول فقه</span>
-                  <h5 className="text-xs font-black text-slate-900">بودجه‌بندی اصول فقه مظفر</h5>
+                  <span className="text-[9px] text-emerald-600 font-bold block">مجموعه ریاضی</span>
+                  <h5 className="text-xs font-black text-slate-900">دیفرانسیل و هندسه تحلیلی</h5>
                   <p className="text-[9px] text-slate-400">۱۸ کارگاه مهارتی تست زنی</p>
                 </div>
               </div>
@@ -2278,9 +2266,9 @@ export default function AdminView({ student }: { student: Student }) {
                   </div>
 
                   <div className="space-y-1.5">
-                    <h3 className="font-black text-slate-100 text-base">کانال امن مستندات و DevOps چتر دانش</h3>
+                    <h3 className="font-black text-slate-100 text-base">کانال امن مستندات فنی ترنم مهر</h3>
                     <p className="text-[11px] text-slate-400 font-medium leading-relaxed px-2">
-                      مستندات استقرار، بنچ‌مارک موازی، اسکریپت‌های کایزن ابری و ترازهای کلاود در این بخش گنجانده شده‌اند.
+                      مستندات استقرار، بنچ‌مارک موازی و ترازهای کلاود در این بخش گنجانده شده‌اند.
                     </p>
                   </div>
 
@@ -2327,7 +2315,7 @@ export default function AdminView({ student }: { student: Student }) {
                         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
                         <span className="text-[9px] text-slate-400 font-bold">اتصال زنده به کانتینر Cloud Run</span>
                       </div>
-                      <h3 className="font-black text-slate-200 text-base">پایگاه مهندسی مستندات و اسکریپت‌های چتر دانش</h3>
+                      <h3 className="font-black text-slate-200 text-base">پایگاه مهندسی مستندات و اسکریپت‌های ترنم مهر</h3>
                       <p className="text-[10px] text-slate-400 leading-normal font-medium">
                         آموزش استقرار در کلاود ابری ابزار، داکر، وب‌سرویس Express لیسن شده روی پورت ۳۰۰۰ و هماهنگ با معاهدات آموزشی در این ترم جامع ذخیره شده است.
                       </p>
@@ -2360,7 +2348,7 @@ export default function AdminView({ student }: { student: Student }) {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="bg-slate-950 border border-indigo-500/20 p-4 rounded-2xl flex items-center justify-between">
                         <div className="space-y-1 text-right">
-                          <span className="text-[9px] font-black text-indigo-400">آدرس وب‌سرویس چتر دانش در هلدینگ</span>
+                          <span className="text-[9px] font-black text-indigo-400">آدرس وب‌سرویس ترنم مهر در هلدینگ</span>
                           <p className="font-mono text-xs text-slate-300">
                             http://localhost:3000/api/health
                           </p>

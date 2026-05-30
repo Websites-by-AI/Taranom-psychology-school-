@@ -28,7 +28,7 @@ interface QuizQuestion {
 }
 
 export default function CustomQuizGenerator({ student, onRefreshStats }: CustomQuizGeneratorProps) {
-  // Question pool of difficult legal/analytical questions corresponding to subjects
+  // Question pool of difficult questions corresponding to subjects
   const QUESTION_POOL: QuizQuestion[] = [
     {
       id: "Q-SCI-01",
@@ -65,44 +65,44 @@ export default function CustomQuizGenerator({ student, onRefreshStats }: CustomQ
       importance: "high"
     },
     {
-      id: "Q-SCI-03",
-      subject: "فیزیک",
-      title: "حرکت‌شناسی - حرکت با شتاب ثابت",
-      text: "متحرکی از حال سکون با شتاب ثابت ۲ متر بر مجذور ثانیه شروع به حرکت می‌کند. این متحرک در ثانیه سوم حرکت خود چند متر را طی کرده است؟",
+      id: "Q-HUM-01",
+      subject: "فلسفه و منطق",
+      title: "منطق - مغالطات و استدلال",
+      text: "در استدلال «هر انسانی میرنده است؛ سقراط انسان است؛ پس سقراط میرنده است»، اگر حد وسط در مقدمات تکرار نشود، چه مغالطه‌ای رخ می‌دهد؟",
       options: [
-        "۱. ۴ متر",
-        "۲. ۵ متر",
-        "۳. ۶ متر",
-        "۴. ۹ متر"
+        "۱. مغالطه عدم تکرار حد وسط",
+        "۲. مغالطه ایهام انعکاس",
+        "۳. مغالطه مصادره به مطلوب",
+        "۴. مغالطه اشتراک لفظ"
       ],
-      correctIdx: 1,
-      explanation: "جابجایی در ثانیه n-ام از فرمول Δx = v0 + 1/2 a(2n-1) به دست می‌آید. در اینجا v0=0، a=2 و n=3 است. بنابراین: Δx = 0 + 1/2 * 2 * (2*3 - 1) = ۵ متر.",
-      trapType: "تله تمایز جابجایی کل از جابجایی در یک ثانیه خاص",
+      correctIdx: 0,
+      explanation: "در منطق صوری، تکرار دقیق حد وسط در هر دو مقدمه شرط صحت قیاس است. در غیر این صورت استدلال فاقد رابطه منطقی بوده و مغالطه عدم تکرار حد وسط رخ می‌دهد.",
+      trapType: "تله مفهومی در شرایط صحت قیاس",
       difficulty: "بسیار سخت",
       importance: "high"
     },
     {
-      id: "Q-SCI-04",
-      subject: "ریاضیات",
-      title: "مشتق - نقاط بحرانی و اکسترمم",
-      text: "تعداد نقاط بحرانی تابع f(x) = (x^2 - 1)^3 در بازه [-2, 2] کدام است؟",
+      id: "Q-HUM-02",
+      subject: "اقتصاد",
+      title: "عرضه و تقاضا - نقطه تعادل",
+      text: "اگر در بازاری تقاضا ثابت بماند و عرضه کاهش یابد، وضعیت تعادل جدید چگونه خواهد بود؟",
       options: [
-        "۱. یک نقطه",
-        "۲. سه نقطه",
-        "۳. پنج نقطه",
-        "۴. هفت نقطه"
+        "۱. قیمت تعادلی افزایش و مقدار تعادلی کاهش می‌یابد.",
+        "۲. قیمت تعادلی کاهش و مقدار تعادلی افزایش می‌یابد.",
+        "۳. هر دو افزایش می‌یابند.",
+        "۴. هر دو کاهش می‌یابند."
       ],
-      correctIdx: 1,
-      explanation: "مشتق تابع برابر است با f'(x) = 3(x^2 - 1)^2 * 2x = 6x(x^2 - 1)^2. ریشه‌های مشتق عبارتند از x=0 و x=1 و x=-1. تمامی این سه نقطه در بازه [-2, 2] قرار دارند.",
-      trapType: "تله ریشه‌های مکرر در تعیین وضعیت نقاط بحرانی",
-      difficulty: "المپیاد علمی", // Should be renamed to "المپیاد علمی" later
+      correctIdx: 0,
+      explanation: "کاهش عرضه باعث انتقال منحنی عرضه به سمت چپ می‌شود. با توجه به ثابت بودن تقاضا، نقطه تعادل در قیمت بالاتر و مقدار کمتری شکل می‌گیرد.",
+      trapType: "تله تحلیل جابجایی منحنی‌ها",
+      difficulty: "سخت",
       importance: "medium"
     }
   ];
 
   // Component State
   const [traps, setTraps] = useState<TestTrap[]>([]);
-  const [weakSubjects, setWeakSubjects] = useState<string[]>(["زیست‌شناسی", "شیمی", "فیزیک", "ریاضیات"]);
+  const [weakSubjects, setWeakSubjects] = useState<string[]>(["زیست‌شناسی", "شیمی", "فیزیک", "ریاضیات", "فلسفه و منطق", "اقتصاد"]);
   const [quizStarted, setQuizStarted] = useState<boolean>(false);
   const [isGeneratingAI, setIsGeneratingAI] = useState<boolean>(false);
   const [aiProgress, setAiProgress] = useState<string>("");
@@ -162,6 +162,8 @@ export default function CustomQuizGenerator({ student, onRefreshStats }: CustomQ
       "شیمی": traps.filter(t => t.subject.includes("شیمی") || t.subject.includes("استوکیومتری")).length,
       "فیزیک": traps.filter(t => t.subject.includes("فیزیک") || t.subject.includes("حرکت")).length,
       "ریاضیات": traps.filter(t => t.subject.includes("ریاضی") || t.subject.includes("مشتق")).length,
+      "فلسفه و منطق": traps.filter(t => t.subject.includes("فلسفه") || t.subject.includes("منطق")).length,
+      "اقتصاد": traps.filter(t => t.subject.includes("اقتصاد")).length,
     };
 
     return Object.entries(counts).map(([name, trapCount]) => {
@@ -171,6 +173,8 @@ export default function CustomQuizGenerator({ student, onRefreshStats }: CustomQ
       if (name === "شیمی") accuracy = 32;
       if (name === "فیزیک") accuracy = 41;
       if (name === "ریاضیات") accuracy = 38;
+      if (name === "فلسفه و منطق") accuracy = 29;
+      if (name === "اقتصاد") accuracy = 44;
 
       return {
         name,
@@ -339,8 +343,8 @@ export default function CustomQuizGenerator({ student, onRefreshStats }: CustomQ
       category: "مفهومی",
       trapType: q.trapType,
       correctAnswer: q.options[q.correctIdx],
-      userMistake: "این سوال مفهومی را در آزمون سفارشی شبیه‌سازی اشتباه پاسخ دادم و فریب تله طراح وکالت را خوردم.",
-      legalNote: q.explanation,
+      userMistake: "خطای مفهومی در تشخیص گزینه‌های مشابه",
+      educationalNote: q.explanation || "مرور دقیق مبحث و توجه به کلمات کلیدی در پاراگراف‌های درسی جهت اجتناب از تله‌های مشابه.",
       importance: "high"
     });
 
@@ -520,7 +524,7 @@ export default function CustomQuizGenerator({ student, onRefreshStats }: CustomQ
                 </p>
 
                 <div className="space-y-2 pt-2">
-                  {["زیست‌شناسی", "شیمی", "فیزیک", "ریاضیات"].map((sub) => {
+                  {["زیست‌شناسی", "شیمی", "فیزیک", "ریاضیات", "فلسفه و منطق", "اقتصاد"].map((sub) => {
                     const isChecked = weakSubjects.includes(sub);
                     return (
                       <button
@@ -536,7 +540,9 @@ export default function CustomQuizGenerator({ student, onRefreshStats }: CustomQ
                           <span className={`w-2 h-2 rounded-full ${
                             sub === 'زیست‌شناسی' ? 'bg-blue-500' :
                             sub === 'شیمی' ? 'bg-amber-500' :
-                            sub === 'فیزیک' ? 'bg-red-500' : 'bg-indigo-500'
+                            sub === 'فیزیک' ? 'bg-red-500' :
+                            sub === 'فلسفه و منطق' ? 'bg-purple-500' :
+                            sub === 'اقتصاد' ? 'bg-emerald-500' : 'bg-indigo-500'
                           }`} />
                           <span>{sub} (مباحث جامع کنکور سراسری)</span>
                         </span>
@@ -845,7 +851,7 @@ export default function CustomQuizGenerator({ student, onRefreshStats }: CustomQ
               let badgeColor = "bg-rose-500 text-white";
 
               if (percent >= 80) {
-                titleMsg = "شاهکار تله‌شناسی! شما در برابر شگردهای طراح وکالت ایمن شدید";
+                titleMsg = "شاهکار تله‌شناسی! شما در برابر شگردهای طراح کنکور ایمن شدید";
                 colorClasses = "from-emerald-50 to-blue-50 border-emerald-100 text-slate-950";
                 badgeColor = "bg-emerald-600 text-white";
               } else if (percent >= 50) {

@@ -80,7 +80,7 @@ export interface TestTrap {
   trapType: string; // نوع تله (مثلاً تله گزینه‌های دام‌دار، تله فرمول اشتباه)
   correctAnswer: string; // پاسخ صحیح مستند به مراجع درسی
   userMistake: string; // اشتباه داوطلب و دلیل آن
-  testNote: string; // نکته تستی طلایی جهت مرور سریع
+  educationalNote: string; // نکته تستی طلایی جهت مرور سریع
   importance: "high" | "medium" | "low"; // میزان اهمیت برای شب آزمون
   createdAt: string;
 }

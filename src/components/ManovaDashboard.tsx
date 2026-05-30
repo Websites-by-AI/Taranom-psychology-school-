@@ -14,18 +14,18 @@ import {
 import { addSystemLog } from "../lib/syslogs";
 import { Student } from "../types";
 
-// TypeScript interfaces for types of the rebranded Chatre Danesh matrix
-interface LawLead {
+// TypeScript interfaces for types of the rebranded Tarmanom Mehr matrix
+interface StudentLead {
   id: string;
   name: string;
-  field: "وکالت" | "سردفتری" | "قضاوت";
+  field: "تجربی" | "ریاضی" | "انسانی";
   recentScore: number; // Simulated mock traz
   satisfaction: number; // 1 to 5
   status: "آماده ثبت‌نام" | "در حال پیگیری" | "انصراف موقت" | "ثبت‌نام قطعی";
   acquisitionChannel: string;
 }
 
-interface LawCourseLine {
+interface CourseLine {
   id: string;
   name: string;
   instructor: string;
@@ -35,7 +35,7 @@ interface LawCourseLine {
   stopTime: number; // minutes delayed
 }
 
-interface LawBookStock {
+interface AcademicBookStock {
   id: string;
   name: string;
   currentStock: number;
@@ -61,7 +61,7 @@ interface AuditReport {
   lessonName: string;
   testedCount: number;
   passedCount: number;
-  failedReason: "عدم تطابق با قانون مصوب" | "تداخل مباحث" | "غلط املایی دفترچه" | "سطح دشواری نامناسب" | "سالم";
+  failedReason: "عدم تطابق با بودجه‌بندی" | "تداخل مباحث" | "غلط املایی دفترچه" | "سطح دشواری نامناسب" | "سالم";
   operator: string;
 }
 
@@ -88,26 +88,26 @@ export default function ManovaDashboard({ student }: { student: Student }) {
   const [inventorySearch, setInventorySearch] = useState("");
   const [ordersFilter, setOrdersFilter] = useState<string>("همه");
   const [selectedRouteId, setSelectedRouteId] = useState<string>("R-1");
-  const [leads, setLeads] = useState<LawLead[]>([
-    { id: "L-101", name: "امیرحسین رضایی", field: "وکالت", recentScore: 7200, satisfaction: 5, status: "ثبت‌نام قطعی", acquisitionChannel: "معرفی دوستان" },
-    { id: "L-102", name: "فاطمه معتمدآریا", field: "سردفتری", recentScore: 5800, satisfaction: 4, status: "آماده ثبت‌نام", acquisitionChannel: "وب‌سایت موسسه" },
-    { id: "L-103", name: "علی دایی", field: "قضاوت", recentScore: 4900, satisfaction: 2, status: "در حال پیگیری", acquisitionChannel: "اینستاگرام" },
-    { id: "L-104", name: " سارا عباسی", field: "وکالت", recentScore: 6500, satisfaction: 4, status: "ثبت‌نام قطعی", acquisitionChannel: "تماس تلفنی" },
-    { id: "L-105", name: "محمدحسین مهدویان", field: "قضاوت", recentScore: 8100, satisfaction: 5, status: "ثبت‌نام قطعی", acquisitionChannel: "همایش‌های چتر دانش" },
-    { id: "L-106", name: "زهرا حسینی", field: "سردفتری", recentScore: 4200, satisfaction: 3, status: "انصراف موقت", acquisitionChannel: "وب‌سایت موسسه" },
-    { id: "L-107", name: "رامین رحیمی", field: "وکالت", recentScore: 7600, satisfaction: 5, status: "آماده ثبت‌نام", acquisitionChannel: "تبلیغات محیطی" },
-    { id: "L-108", name: "مهناز افشار", field: "سردفتری", recentScore: 5100, satisfaction: 4, status: "در حال پیگیری", acquisitionChannel: "اینستاگرام" },
-    { id: "L-109", name: "کوروش نوری", field: "قضاوت", recentScore: 6900, satisfaction: 4, status: "ثبت‌نام قطعی", acquisitionChannel: "معرفی اساتید" }
+  const [leads, setLeads] = useState<StudentLead[]>([
+    { id: "L-101", name: "امیرحسین رضایی", field: "تجربی", recentScore: 7200, satisfaction: 5, status: "ثبت‌نام قطعی", acquisitionChannel: "معرفی دوستان" },
+    { id: "L-102", name: "فاطمه معتمدآریا", field: "ریاضی", recentScore: 5800, satisfaction: 4, status: "آماده ثبت‌نام", acquisitionChannel: "وب‌سایت موسسه" },
+    { id: "L-103", name: "علی دایی", field: "انسانی", recentScore: 4900, satisfaction: 2, status: "در حال پیگیری", acquisitionChannel: "اینستاگرام" },
+    { id: "L-104", name: " سارا عباسی", field: "تجربی", recentScore: 6500, satisfaction: 4, status: "ثبت‌نام قطعی", acquisitionChannel: "تماس تلفنی" },
+    { id: "L-105", name: "محمدحسین مهدویان", field: "انسانی", recentScore: 8100, satisfaction: 5, status: "ثبت‌نام قطعی", acquisitionChannel: "همایش‌های ترنم مهر" },
+    { id: "L-106", name: "زهرا حسینی", field: "ریاضی", recentScore: 4200, satisfaction: 3, status: "انصراف موقت", acquisitionChannel: "وب‌سایت موسسه" },
+    { id: "L-107", name: "رامین رحیمی", field: "تجربی", recentScore: 7600, satisfaction: 5, status: "آماده ثبت‌نام", acquisitionChannel: "تبلیغات محیطی" },
+    { id: "L-108", name: "مهناز افشار", field: "ریاضی", recentScore: 5100, satisfaction: 4, status: "در حال پیگیری", acquisitionChannel: "اینستاگرام" },
+    { id: "L-109", name: "کوروش نوری", field: "انسانی", recentScore: 6900, satisfaction: 4, status: "ثبت‌نام قطعی", acquisitionChannel: "معرفی اساتید" }
   ]);
   const [newCName, setNewCName] = useState("");
-  const [newCField, setNewCField] = useState<LawLead["field"]>("وکالت");
+  const [newCField, setNewCField] = useState<StudentLead["field"]>("تجربی");
   const [newCChannel, setNewCChannel] = useState("وب‌سایت موسسه");
 
   const [salesTimeframe, setSalesTimeframe] = useState<"daily" | "weekly" | "monthly" | "yearly">("daily");
   const [profitProductFilter, setProfitProductFilter] = useState<string>("همه دوره‌ها");
 
   // Webinar/Course planning states
-  const [newCourseName, setNewCourseName] = useState<string>("حقوق مدنی پپیشرفته - دکتر رادان");
+  const [newCourseName, setNewCourseName] = useState<string>("فیزیک دوازدهم - مهندس علوی");
   const [newCourseCapacity, setNewCourseCapacity] = useState<number>(250);
   const [newCourseTargetLine, setNewCourseTargetLine] = useState<string>("L-1");
 
@@ -128,7 +128,7 @@ export default function ManovaDashboard({ student }: { student: Student }) {
 
   const addLead = () => {
     if (!newCName) return;
-    const newLead: LawLead = {
+    const newLead: StudentLead = {
       id: `L-${leads.length + 101}`,
       name: newCName,
       field: newCField,
@@ -159,17 +159,17 @@ export default function ManovaDashboard({ student }: { student: Student }) {
   ];
 
   const crmSegmentData = [
-    { name: "وکالت", value: leads.filter(l => l.field === "وکالت").length, color: "#1e3a8a" },
-    { name: "سردفتری", value: leads.filter(l => l.field === "سردفتری").length, color: "#f59e0b" },
-    { name: "قضاوت", value: leads.filter(l => l.field === "قضاوت").length, color: "#10b981" },
+    { name: "تجربی", value: leads.filter(l => l.field === "تجربی").length, color: "#1e3a8a" },
+    { name: "ریاضی", value: leads.filter(l => l.field === "ریاضی").length, color: "#f59e0b" },
+    { name: "انسانی", value: leads.filter(l => l.field === "انسانی").length, color: "#10b981" },
   ];
 
   // 2. COURSES / WEBINAR PLANNER STATE & VARIABLES
-  const [courses, setCourses] = useState<LawCourseLine[]>([
-    { id: "L-1", name: "قواین خاص و حقوق مدنی تطبیقی", instructor: "دکتر مهدوی", enrolledProgress: 88, defects: 0, status: "در حال برگزاری", speed: 45, stopTime: 0, risk: "پایین" } as any,
-    { id: "L-2", name: "آیین دادرسی کیفری و کارگاه تست‌زنی", instructor: "استاد ناصری", enrolledProgress: 94, defects: 2, status: "در حال برگزاری", speed: 60, stopTime: 10, risk: "پایین" } as any,
-    { id: "L-3", name: "حقوق تجارت و لایحه اصلاحی ثبتی", instructor: "دکتر رادان", enrolledProgress: 45, defects: 15, status: "موقت متوقف", speed: 0, stopTime: 90, risk: "بحرانی" } as any,
-    { id: "L-4", name: "شبیه‌ساز تستی اصول فقه پایه", instructor: "استاد فیاض", enrolledProgress: 100, defects: 1, status: "تکمیل شده", speed: 50, stopTime: 0, risk: "پایین" } as any,
+  const [courses, setCourses] = useState<CourseLine[]>([
+    { id: "L-1", name: "شیمی جامع کنکور", instructor: "دکتر مهدوی", enrolledProgress: 88, status: "در حال برگزاری", attendanceRate: 92, stopTime: 0 },
+    { id: "L-2", name: "ریاضیات تجربی و هندسه کلامی", instructor: "استاد ناصری", enrolledProgress: 94, status: "در حال برگزاری", attendanceRate: 95, stopTime: 10 },
+    { id: "L-3", name: "ادبیات فارسی و آرایه‌های ادبی", instructor: "دکتر رادان", enrolledProgress: 45, status: "موقت متوقف", attendanceRate: 88, stopTime: 90 },
+    { id: "L-4", name: "زیست‌شناسی پایه و ژنتیک", instructor: "استاد فیاض", enrolledProgress: 100, status: "تکمیل شده", attendanceRate: 98, stopTime: 0 },
   ]);
 
   const startCourse = (id: string) => {
@@ -188,7 +188,7 @@ export default function ManovaDashboard({ student }: { student: Student }) {
   const handleAddNewCourseSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const newId = `L-${courses.length + 1}`;
-    const entry: LawCourseLine = {
+    const entry: CourseLine = {
       id: newId,
       name: newCourseName,
       instructor: "مشاور علمی ارشد",
@@ -198,16 +198,16 @@ export default function ManovaDashboard({ student }: { student: Student }) {
       stopTime: 0
     };
     setCourses([...courses, entry]);
-    alert(`💡 دوره هوشمند جدید '${newCourseName}' در چتر دانش ثبت گردید و وبینار اتوماتیک آن راه‌اندازی شد.`);
+    alert(`💡 دوره هوشمند جدید '${newCourseName}' در ترنم مهر ثبت گردید و وبینار اتوماتیک آن راه‌اندازی شد.`);
   };
 
   // 3. BOOKS & STUDY PAMPHLETS INVENTORY STATE & VARIABLES
-  const [books, setBooks] = useState<LawBookStock[]>([
-    { id: "I-201", name: "کتاب طلایی شرح صریح حقوق مدنی چتر دانش", currentStock: 450, reorderPoint: 100, maxStock: 800, unit: "جلد", shelfLocation: "قفسه الف-۳" },
-    { id: "I-202", name: "مجموعه تست دوقلو آیین دادرسی مدنی مکتوب", currentStock: 85, reorderPoint: 120, maxStock: 600, unit: "جلد", shelfLocation: "قفسه ب-۷" },
-    { id: "I-203", name: "شرح قانون مجازات اسلامی و جزای عمومی", currentStock: 340, reorderPoint: 80, maxStock: 500, unit: "جلد", shelfLocation: "قفسه ج-۱" },
-    { id: "I-204", name: "درسنامه اصول و متون فقه دانشگاهی", currentStock: 12, reorderPoint: 50, maxStock: 300, unit: "جلد", shelfLocation: "قفسه د-۴" },
-    { id: "I-205", name: "مجموعه قوانین ثبتی و خاص وکالت چتر دانش", currentStock: 600, reorderPoint: 150, maxStock: 1000, unit: "جلد", shelfLocation: "قفسه ه-۲" },
+  const [books, setBooks] = useState<AcademicBookStock[]>([
+    { id: "I-201", name: "کتاب طلایی تله‌های زیست‌شناسی ترنم مهر", currentStock: 450, reorderPoint: 100, maxStock: 800, unit: "جلد", shelfLocation: "قفسه الف-۳" },
+    { id: "I-202", name: "مجموعه تست دوقلو حسابان و ریاضیات مکتوب", currentStock: 85, reorderPoint: 120, maxStock: 600, unit: "جلد", shelfLocation: "قفسه ب-۷" },
+    { id: "I-203", name: "جامعه‌شناسی جامع کنکور (انسانی)", currentStock: 340, reorderPoint: 80, maxStock: 500, unit: "جلد", shelfLocation: "قفسه ج-۱" },
+    { id: "I-204", name: "درسنامه فلسفه و منطق کایزن", currentStock: 12, reorderPoint: 50, maxStock: 300, unit: "جلد", shelfLocation: "قفسه د-۴" },
+    { id: "I-205", name: "مجموعه دفترچه‌های آزمون آزمایشی ترنم مهر", currentStock: 600, reorderPoint: 150, maxStock: 1000, unit: "جلد", shelfLocation: "قفسه ه-۲" },
   ]);
 
   const filteredBooks = useMemo(() => {
@@ -224,16 +224,16 @@ export default function ManovaDashboard({ student }: { student: Student }) {
       }
       return b;
     }));
-    alert("📦 موجودی انبار کتب مرکزی چتر دانش موازنه و بازرسی گردید.");
+    alert("📦 موجودی انبار کتب مرکزی ترنم مهر موازنه و بازرسی گردید.");
   };
 
   // 4. BOOK ORDER TRANSACTIONS STATE & VARIABLES
   const [orders, setOrders] = useState<BookOrder[]>([
-    { id: "O-501", client: "امیرحسین رضایی", date: "۱۴۰۵/۰۲/۲۰", bookName: "کتاب طلایی شرح صریح حقوق مدنی چتر دانش", amount: 1.2, status: "پرداخت شده", channel: "درگاه آنلاین بانک ملی" },
-    { id: "O-502", client: "دارالکتاب دانشگاه البرز", date: "۱۴۰۵/۰۲/۲۲", bookName: "مجموعه قوانین ثبتی و خاص وکالت چتر دانش", amount: 14.5, status: "پرداخت شده", channel: "حواله پایا" },
-    { id: "O-503", client: "فاطمه معتمدآریا", date: "۱۴۰۵/۰۲/۲۳", bookName: "مجموعه تست دوقلو آیین دادرسی مدنی مکتوب", amount: 0.9, status: "معوق", channel: "درگاه آنلاین بانک ملی" },
-    { id: "O-504", client: "کتابفروشی صراط قم", date: "۱۴۰۵/۰۲/۲۴", bookName: "درسنامه اصول و متون فقه دانشگاهی", amount: 8.4, status: "پرداخت شده", channel: "کارت به کارت" },
-    { id: "O-505", client: "سهیل بهرامی", date: "۱۴۰۵/۰۲/۲۵", bookName: "شرح قانون مجازات اسلامی و جزای عمومی", amount: 1.5, status: "لغو شده", channel: "درگاه آنلاین ملت" },
+    { id: "O-501", client: "امیرحسین رضایی", date: "۱۴۰۵/۰۲/۲۰", bookName: "کتاب طلایی تله‌های زیست‌شناسی ترنم مهر", amount: 1.2, status: "پرداخت شده", channel: "درگاه آنلاین بانک ملی" },
+    { id: "O-502", client: "دارالکتاب دانشگاه البرز", date: "۱۴۰۵/۰۲/۲۲", bookName: "مجموعه دفترچه‌های آزمون آزمایشی ترنم مهر", amount: 14.5, status: "پرداخت شده", channel: "حواله پایا" },
+    { id: "O-503", client: "فاطمه معتمدآریا", date: "۱۴۰۵/۰۲/۲۳", bookName: "مجموعه تست دوقلو حسابان و ریاضیات مکتوب", amount: 0.9, status: "معوق", channel: "درگاه آنلاین بانک ملی" },
+    { id: "O-504", client: "کتابفروشی صراط قم", date: "۱۴۰۵/۰۲/۲۴", bookName: "درسنامه فلسفه و منطق کایزن", amount: 8.4, status: "پرداخت شده", channel: "کارت به کارت" },
+    { id: "O-505", client: "سهیل بهرامی", date: "۱۴۰۵/۰۲/۲۵", bookName: "جامعه‌شناسی جامع کنکور (انسانی)", amount: 1.5, status: "لغو شده", channel: "درگاه آنلاین ملت" },
   ]);
 
   const filteredOrders = useMemo(() => {
@@ -252,7 +252,7 @@ export default function ManovaDashboard({ student }: { student: Student }) {
   ]);
 
   const [deliveryRoutes, setDeliveryRoutes] = useState<any[]>([
-    { id: "R-1", text: "تهران - شعبه مرکزی به انتشارات چتر دانش پاسداران", progress: 65, totalKM: 12, estMinutes: 25, status: "در مسیر" },
+    { id: "R-1", text: "تهران - شعبه مرکزی به انتشارات ترنم مهر پاسداران", progress: 65, totalKM: 12, estMinutes: 25, status: "در مسیر" },
     { id: "R-2", text: "ارسال کتب - انبار میدان انقلاب به ترمینال مسافربری غرب", progress: 90, totalKM: 8, estMinutes: 15, status: "نزدیک مقصد" },
     { id: "R-3", text: "تهران - انبار مرکزی به دفتر پست منطقه ۱۱ شهری", progress: 100, totalKM: 5, estMinutes: 12, status: "تکمیل شده" },
   ]);
@@ -304,15 +304,15 @@ export default function ManovaDashboard({ student }: { student: Student }) {
 
   // 6. DETAILED EDUCATIONAL AUDIT REPORTS
   const [audits, setAudits] = useState<AuditReport[]>([
-    { id: "Q-901", batchId: "B-405", lessonName: "حقوق مدنی شبیه‌ساز ۱", testedCount: 150, passedCount: 147, failedReason: "سالم", operator: "مهندس علوی" },
-    { id: "Q-902", batchId: "B-406", lessonName: "آیین دادرسی مدنی ۲", testedCount: 200, passedCount: 184, failedReason: "تداخل مباحث", operator: "دکتر مهدوی" },
-    { id: "Q-903", batchId: "B-407", lessonName: "اصول فقه شبیه‌ساز ۳", testedCount: 120, passedCount: 95, failedReason: "سطح دشواری نامناسب", operator: "استاد فیاض" },
-    { id: "Q-904", batchId: "B-408", lessonName: "قوانین خاص وکالت ۴", testedCount: 250, passedCount: 248, failedReason: "سالم", operator: "دکترین رادان" },
+    { id: "Q-901", batchId: "B-405", lessonName: "زیست‌شناسی شبیه‌ساز ۱", testedCount: 150, passedCount: 147, failedReason: "سالم", operator: "مهندس علوی" },
+    { id: "Q-902", batchId: "B-406", lessonName: "شیمی تخصصی ۲", testedCount: 200, passedCount: 184, failedReason: "تداخل مباحث", operator: "دکتر مهدوی" },
+    { id: "Q-903", batchId: "B-407", lessonName: "فلسفه و منطق شبیه‌ساز ۳", testedCount: 120, passedCount: 95, failedReason: "سطح دشواری نامناسب", operator: "استاد فیاض" },
+    { id: "Q-904", batchId: "B-408", lessonName: "ریاضیات تجربی ۴", testedCount: 250, passedCount: 248, failedReason: "سالم", operator: "دکترین رادان" },
   ]);
 
   // 7. CRM ACCOUNTS & PREDICTIVE ANALYTICS
   const [crmAccounts, setCrmAccounts] = useState<CrmAccount[]>([
-    { id: "ACC-01", username: "admin_chatre", role: "مدیر ارشد", lastActive: "۱۰ دقیقه پیش", status: "فعال" },
+    { id: "ACC-01", username: "admin_tarannom", role: "مدیر ارشد", lastActive: "۱۰ دقیقه پیش", status: "فعال" },
     { id: "ACC-02", username: "m_mahdavi", role: "کارشناس آموزش", lastActive: "هم‌اکنون", status: "فعال" },
     { id: "ACC-03", username: "sale_expert1", role: "اپراتور فروش", lastActive: "۱ ساعت پیش", status: "فعال" },
   ]);
@@ -343,11 +343,11 @@ export default function ManovaDashboard({ student }: { student: Student }) {
     { period: "هفته ۸ (فعلی)", score: 6200, predicted: 6200 },
     { period: "هفته ۱۰ (پیش‌بینی)", score: null, predicted: 6900 },
     { period: "هفته ۱۲ (پیش‌بینی)", score: null, predicted: 7600 },
-    { period: "آزمون کانون", score: null, predicted: 8400 },
+    { period: "کنکور سراسری", score: null, predicted: 8400 },
   ];
 
   const handleAuditSubmit = () => {
-    alert("📝 صورت‌جلسه ارزیابی و ممیزی سوالات آزمون‌ها با موفقیت در مخزن استانداردسازی آموزشی چتر دانش ذخیره گردید.");
+    alert("📝 صورت‌جلسه ارزیابی و ممیزی سوالات آزمون‌ها با موفقیت در مخزن استانداردسازی آموزشی ترنم مهر ذخیره گردید.");
   };
 
   return (
@@ -358,12 +358,12 @@ export default function ManovaDashboard({ student }: { student: Student }) {
         <div className="space-y-1">
           <div className="flex items-center gap-2 justify-start">
             <span className="px-2.5 py-0.5 bg-blue-900 text-white text-[9px] font-black rounded-lg">
-              پایش عملیاتی چتر دانش
+              پایش عملیاتی ترنم مهر
             </span>
             <span className="text-slate-300 text-xs">•</span>
             <span className="text-[10px] text-slate-500 font-bold">ماتریس و داشبورد مدیریتی مانوا</span>
           </div>
-          <h1 className="text-xl font-black text-slate-900 tracking-tight">پنل مانیتورینگ جامع و ماتریس چندبعدی هوشمند مانوا چتر دانش</h1>
+          <h1 className="text-xl font-black text-slate-900 tracking-tight">پنل مانیتورینگ جامع و ماتریس چندبعدی هوشمند مانوا ترنم مهر</h1>
           <p className="text-xs text-slate-500 leading-relaxed">
             سیستم کنترل یکپارچه آموزشی و مالی: پایش مستمر روند ثبت نام داوطلبان، کایزن درسی، توزیع کتب و ترازهای علمی.
           </p>
@@ -474,9 +474,9 @@ export default function ManovaDashboard({ student }: { student: Student }) {
                           onChange={(e: any) => setNewCField(e.target.value)}
                           className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-black text-slate-700 text-right focus:outline-none"
                         >
-                          <option value="وکالت">وکالت (آمادگی کانون)</option>
-                          <option value="سردفتری">سردفتری اسناد رسمی</option>
-                          <option value="قضاوت">قضاوت قوه قضاییه</option>
+                          <option value="تجربی">علوم تجربی</option>
+                          <option value="ریاضی">ریاضی و فیزیک</option>
+                          <option value="انسانی">علوم انسانی</option>
                         </select>
                       </div>
 
@@ -578,14 +578,14 @@ export default function ManovaDashboard({ student }: { student: Student }) {
                     </div>
                     <div className="space-y-2">
                        <div className="flex justify-between items-center text-[10px]">
-                          <span className="text-slate-400 font-bold">احتمال قبولی در کانون وکلا:</span>
+                          <span className="text-slate-400 font-bold">احتمال قبولی در کنکور:</span>
                           <span className="text-emerald-400 font-black">۸۴٪ (بسیار بالا)</span>
                        </div>
                        <div className="w-full bg-white/10 h-1 rounded-full overflow-hidden">
                           <div className="bg-emerald-500 h-full w-[84%] shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
                        </div>
                        <p className="text-[9px] text-slate-400 leading-relaxed font-medium">
-                         تحلیل رفتار داوطلب نشان‌دهنده شیب صعودی پایدار است. با حفظ روند فعلی در دروس قوانین خاص، تراز هدف ۸هزار در دسترس خواهد بود.
+                         تحلیل رفتار داوطلب نشان‌دهنده شیب صعودی پایدار است. با حفظ روند فعلی در دروس تخصصی، تراز هدف ۸هزار در دسترس خواهد بود.
                        </p>
                     </div>
                   </div>
@@ -739,7 +739,7 @@ export default function ManovaDashboard({ student }: { student: Student }) {
                       type="submit"
                       className="bg-blue-950 hover:bg-slate-900 text-white py-2.5 rounded-xl text-xs font-bold transition shadow-sm w-full cursor-pointer"
                     >
-                      تایید تاسیس و شروع وبینار چتر دانش
+                      تایید تاسیس و شروع وبینار ترنم مهر
                     </button>
                   </form>
                 </div>
@@ -833,9 +833,9 @@ export default function ManovaDashboard({ student }: { student: Student }) {
                       <thead>
                         <tr className="bg-slate-50 text-slate-500 font-bold border-b border-slate-100">
                           <th className="py-3 px-4">کد موجودی</th>
-                          <th className="py-3 px-4">نام مکتوب یا جزوه وکالت</th>
+                          <th className="py-3 px-4">نام مکتوب یا جزوه آموزشی</th>
                           <th className="py-3 px-4">موجودی فعلی</th>
-                          <th className="py-3 px-4">موقعیت انبار انقلاب</th>
+                          <th className="py-3 px-4">موقعیت انبار مرکزی</th>
                           <th className="py-3 px-4">آلارم شارژ انبار</th>
                         </tr>
                       </thead>
@@ -1002,7 +1002,7 @@ export default function ManovaDashboard({ student }: { student: Student }) {
                   {/* Toast alerts */}
                   {showDispatchToast && (
                     <div className="p-3.5 bg-indigo-50 text-indigo-900 rounded-xl border border-indigo-100 text-xs leading-relaxed animate-pulse">
-                      ✓ بارنامه دیجیتال با موفقیت در چتر دانش صادر گردید! مسیر پیک بلافاصله بر روی ردیاب ماهواره‌ای به کار گرفته شد.
+                      ✓ بارنامه دیجیتال با موفقیت در ترنم مهر صادر گردید! مسیر پیک بلافاصله بر روی ردیاب ماهواره‌ای به کار گرفته شد.
                     </div>
                   )}
 
@@ -1057,14 +1057,14 @@ export default function ManovaDashboard({ student }: { student: Student }) {
 
                   {showSignatureToast && (
                     <div className="p-3.5 bg-emerald-50 text-emerald-900 rounded-xl border border-emerald-100 text-xs animate-bounce">
-                      ✓ امضای الکترونیک دانشجو ثبت شد و مسیر R-1 چتر دانش در وضعیت 'تکمیل شده' طبقه‌بندی گردید.
+                      ✓ امضای الکترونیک دانشجو ثبت شد و مسیر R-1 ترنم مهر در وضعیت 'تکمیل شده' طبقه‌بندی گردید.
                     </div>
                   )}
                 </div>
 
                 {/* Dispatch Monitor routes */}
                 <div className="lg:col-span-2 space-y-4">
-                  <h3 className="text-xs font-black text-slate-800">مانیتورینگ برخط ناوگان و پیک حومه تهران چتر دانش</h3>
+                  <h3 className="text-xs font-black text-slate-800">مانیتورینگ برخط ناوگان و پیک حومه تهران ترنم مهر</h3>
                   <div className="space-y-3.5">
                     {deliveryRoutes.map((route, idx) => (
                       <div key={route.id} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-3 text-right">
@@ -1115,7 +1115,7 @@ export default function ManovaDashboard({ student }: { student: Student }) {
                 <div className="bg-indigo-50/50 p-5 rounded-2xl border border-indigo-100/40 text-right flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                   <div className="space-y-0.5">
                     <h3 className="text-xs font-black text-indigo-950">کنترل ممیزی و استاندارد سوالات آزمون‌های آزمایشی</h3>
-                    <p className="text-[11px] text-indigo-700">پایش سوالات طرح شده اساتید چتر دانش از فیلتر عدم تداخل مباحث علمی کانون وکلا</p>
+                    <p className="text-[11px] text-indigo-700">پایش سوالات طرح شده اساتید ترنم مهر از فیلتر عدم تداخل مباحث علمی کنکور</p>
                   </div>
                   <button 
                     onClick={handleAuditSubmit}
@@ -1156,8 +1156,8 @@ export default function ManovaDashboard({ student }: { student: Student }) {
                       </div>
 
                       <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1">
-                        <span>بازرس مسئول: {aud.operator}</span>
-                        <span>موسسه علمی چتر دانش</span>
+                        <span>بازرس مسئول: {audits[0].operator}</span>
+                        <span>موسسه علمی ترنم مهر</span>
                       </div>
                     </div>
                   ))}

@@ -78,7 +78,7 @@ export default function TrapsTreeMap({ studentId, studentName, onRefreshStats }:
         trapType: "تله غشای دو لایه لپیدی",
         correctAnswer: "ریبوزوم و سانتریول فاقد غشا هستند.",
         userMistake: "من فکر کردم ریبوزوم تک غشایی است و در محاسبات لایه‌های فسفولیپیدی واردش کردم.",
-        testNote: "توجه شود که ریبوزوم و سانتریول از ساختارهای بدون غشا در سلول‌های یوکاریوتی هستند و نباید در محاسبات تعداد لایه‌های فسفولیپیدی وارد شوند.",
+        educationalNote: "توجه شود که ریبوزوم و سانتریول از ساختارهای بدون غشا در سلول‌های یوکاریوتی هستند و نباید در محاسبات تعداد لایه‌های فسفولیپیدی وارد شوند.",
         importance: "high"
       };
     } else if (subjectKey === 'physics') {
@@ -89,7 +89,7 @@ export default function TrapsTreeMap({ studentId, studentName, onRefreshStats }:
         trapType: "تله فرمول میانگین حسابی",
         correctAnswer: "تقسیم جابجایی کل بر زمان کل",
         userMistake: "سرعت اولیه و ثانویه را جمع کرده و تقسیم بر دو کردم در حالی که شتاب ثابت نبود.",
-        testNote: "فرمول (v1 + v2)/2 فقط و فقط زمانی صادق است که شتاب حرکت ثابت باشد. در شتاب‌های متغیر باید انتگرال‌گیری یا سطح زیر نمودار محاسبه شود.",
+        educationalNote: "فرمول (v1 + v2)/2 فقط و فقط زمانی صادق است که شتاب حرکت ثابت باشد. در شتاب‌های متغیر باید انتگرال‌گیری یا سطح زیر نمودار محاسبه شود.",
         importance: "high"
       };
     } else {
@@ -100,7 +100,7 @@ export default function TrapsTreeMap({ studentId, studentName, onRefreshStats }:
         trapType: "تله بازده نظری در مقابل عملی",
         correctAnswer: "بازده درصدی = (مقدار عملی / مقدار نظری) × ۱۰۰",
         userMistake: "مقدار نظری را با مقدار عملی جابجا گرفتم و درصد بازده را بالای ۱۰۰ به دست آوردم.",
-        testNote: "همیشه مقدار عملی کمتر یا مساوی مقدار نظری است. اگر بازده بالای ۱۰۰ شد، جای صورت و مخرج اشتباه شده است.",
+        educationalNote: "همیشه مقدار عملی کمتر یا مساوی مقدار نظری است. اگر بازده بالای ۱۰۰ شد، جای صورت و مخرج اشتباه شده است.",
         importance: "medium"
       };
     }
@@ -458,7 +458,7 @@ export default function TrapsTreeMap({ studentId, studentName, onRefreshStats }:
                 <div className="bg-emerald-50/50 p-3.5 rounded-2xl border-r-4 border-emerald-400 space-y-1">
                   <span className="text-[9px] text-emerald-700 font-extrabold flex items-center gap-1.5">
                     <CheckCircle size={12} />
-                    <span>پاسخ صحیح و استدلال قانونی:</span>
+                    <span>پاسخ صحیح و استدلال علمی:</span>
                   </span>
                   <p className="text-xs font-black text-slate-800 leading-relaxed">
                     {selectedTrapDetail.correctAnswer}
@@ -473,7 +473,7 @@ export default function TrapsTreeMap({ studentId, studentName, onRefreshStats }:
                 <div className="space-y-0.5">
                   <span className="text-[9px] text-indigo-200 font-black block">رهنمود طلایی شب آزمون (Cheat Sheet):</span>
                   <p className="text-xs font-bold text-indigo-50 leading-relaxed">
-                    {selectedTrapDetail.testNote}
+                    {selectedTrapDetail.educationalNote}
                   </p>
                 </div>
               </div>
