@@ -4,6 +4,50 @@ export interface Student {
   code: string; // شماره داوطلبی یا شناسه کاربری
   field: "tajrobi" | "riazi" | "ensani"; // رشته‌های تحصیلی کنکور: علوم تجربی (tajrobi)، ریاضی فیزیک (riazi)، علوم انسانی (ensani)
   grade: string; // نام شعبه، رتبه یا دوره هدف آموزشی (مثلا "هدف پزشکی تهران - تراز شبیه‌ساز ۷,۸۶۰")
+  city?: string; // شهر محل سکونت داوطلب
+  age?: number; // سن داوطلب
+  
+  // Family & Contextual Data
+  parentalContext?: {
+    fatherAlive?: boolean;
+    motherAlive?: boolean;
+    childrenCount?: number;
+    fatherEducation?: string;
+    motherEducation?: string;
+    householdIncome?: "low" | "mid" | "high" | "excellent";
+    familySupportLevel?: "high" | "medium" | "low";
+  };
+  
+  // Academic & Progress Data
+  academicProfile?: {
+    studyHoursPerDay?: number;
+    educationLevel?: string; // مثلاً "پایه دوازدهم"، "فارغ‌التحصیل"، "دبستان"
+    currentGpa?: number; // معدل فعلی
+    targetGpa?: number; // معدل هدف
+    currentTraz?: number; // آخرین تراز آزمون کشوری
+    targetTraz?: number; // تراز هدف نهایی
+  };
+
+  // Goals & Expectations
+  goals?: {
+    studentVision?: string; // هدف و رویای خود دانش‌آموز
+    familyExpectation?: string; // انتظار و هدف خانواده برای دانش‌آموز
+  };
+
+  familyContext?: string; // وضعیت حمایت خانواده و جو منزل
+  financialStatus?: "good" | "limited" | "challenging"; // وضعیت مالی و بودجه تهیه منابع
+  mainGoal?: string; // هدف غایی داوطلب (مثلا "قبولی پزشکی تهران")
+  priorityTopics?: string; // سرفصل‌های اولویت‌دار و مباحث درسی ضعیف (وارد شده توسط کاربر)
+  additionalNotes?: string; // سایر داده‌های زمینه‌ای که خانواده می‌تواند کمک کند
+  paymentStatus?: "paid" | "pending" | "failed"; // وضعیت پرداخت اشتراک / ثبت‌نام
+  subscriptionType?: "free" | "vip" | "premium"; // نوع اشتراک داوطلب
+}
+
+export interface ZarinPalConfig {
+  merchantId: string;
+  callbackUrl: string;
+  amount: number; // مبلغ پیش‌فرض ثبت‌نام (تومان)
+  description: string;
 }
 
 export interface Exam {
@@ -62,6 +106,7 @@ export interface ChatMessage {
   role: "user" | "model";
   content: string;
   timestamp: string;
+  isError?: boolean;
 }
 
 export interface SystemLog {
@@ -90,4 +135,15 @@ export interface ParentingAlert {
   type: "success" | "warning" | "info";
   message: string; // پیام‌های مدیریتی نظارت والدین یا مربیان ناظر ارشد بر یادگیری فرزندان
   date: string;
+}
+
+export interface SmartNotification {
+  id: string;
+  type: "challenge" | "motivation" | "alert" | "nudge";
+  title: string;
+  message: string;
+  actionLabel?: string;
+  timestamp: string;
+  read: boolean;
+  points?: number;
 }

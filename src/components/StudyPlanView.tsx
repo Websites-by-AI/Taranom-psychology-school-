@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Sparkles, CheckCircle2, RefreshCw, Calendar, Clock, BookOpen, ArrowUp, ArrowDown } from "lucide-react";
+import { Sparkles, CheckCircle2, RefreshCw, Calendar, Clock, BookOpen, ArrowUp, ArrowDown, Brain } from "lucide-react";
 import { motion } from "motion/react";
 import { DailyPlan } from "../types";
+import PomodoroTimer from "./PomodoroTimer";
 
 export default function StudyPlanView() {
   const [loading, setLoading] = useState(false);
@@ -83,6 +84,57 @@ export default function StudyPlanView() {
           )}
           <span>بهینه‌سازی برنامه مطالعاتی با AI</span>
         </button>
+      </div>
+
+      {/* AI-Powered Pomodoro Timer */}
+      <PomodoroTimer />
+
+      {/* Recommended Modules / Shortcuts */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4" id="study-plan-shortcuts">
+        <div className="bg-gradient-to-br from-indigo-600 to-blue-700 p-5 rounded-3xl text-white shadow-lg shadow-indigo-500/20 flex flex-col justify-between">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Sparkles size={18} className="text-amber-300" />
+              <h4 className="text-xs font-black">تحلیل تله‌های تستی</h4>
+            </div>
+            <p className="text-[10px] text-indigo-100 leading-relaxed font-medium">
+              بر اساس اشتباهات آزمون‌های اخیر، ۱۲ تله متداول برای شما شناسایی شده است.
+            </p>
+          </div>
+          <button className="mt-4 w-full py-2.5 bg-white/20 hover:bg-white/30 rounded-xl text-[10px] font-black transition backdrop-blur-sm border border-white/10 uppercase">
+            ورود به بانک تله‌ها
+          </button>
+        </div>
+
+        <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-rose-600">
+              <Brain size={18} />
+              <h4 className="text-xs font-black">آزمون سفارشی کایزن</h4>
+            </div>
+            <p className="text-[10px] text-slate-500 leading-relaxed font-medium text-right">
+              یک آزمون ۱۰ دقیقه‌ای از مباحث ضعیف هفته گذشته توسط AI آماده شده است.
+            </p>
+          </div>
+          <button className="mt-4 w-full py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-[10px] font-black transition shadow-md">
+            شروع آزمون آنی
+          </button>
+        </div>
+
+        <div className="bg-slate-900 p-5 rounded-3xl text-white shadow-xl flex flex-col justify-between">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-amber-400">
+              <Calendar size={18} />
+              <h4 className="text-xs font-black">جلسه مربیگری حضوری</h4>
+            </div>
+            <p className="text-[10px] text-slate-400 leading-relaxed font-medium text-right">
+              نزدیک‌ترین جلسه رفع اشکال گروهی در سامانه وبینار برای فردا ساعت ۱۸:۳۰ رزرو شده است.
+            </p>
+          </div>
+          <button className="mt-4 w-full py-2.5 bg-slate-800 hover:bg-slate-700 rounded-xl text-[10px] font-black transition border border-slate-700">
+            مشاهده جزییات وبینار
+          </button>
+        </div>
       </div>
 
       {/* Progress tracking KPI bar */}
@@ -193,6 +245,27 @@ export default function StudyPlanView() {
             </div>
           ))
         )}
+      </div>
+
+      {/* Module Guide / Index */}
+      <div className="p-6 bg-slate-50 border border-slate-100 rounded-3xl space-y-4">
+        <h4 className="text-xs font-black text-slate-800 flex items-center gap-2">
+          <BookOpen size={14} className="text-blue-600" />
+          <span>راهنمای ماژول‌های فعال در پنل مربیگری هوشمند</span>
+        </h4>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {[
+            { name: "مانیتورینگ کایزن", status: "فعال", color: "text-emerald-600" },
+            { name: "شبیه‌ساز تراز", status: "در دسترس", color: "text-blue-600" },
+            { name: "آنالیز کارنامه AI", status: "آماده پایش", color: "text-indigo-600" },
+            { name: "پومودورو K-Focus", status: "ورژن ۱.۰.۲", color: "text-amber-600" }
+          ].map((mod, i) => (
+            <div key={i} className="bg-white p-3 rounded-2xl border border-slate-200/60 shadow-sm flex flex-col gap-1">
+              <span className="text-[10px] font-black text-slate-800">{mod.name}</span>
+              <span className={`text-[8px] font-bold ${mod.color}`}>{mod.status}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

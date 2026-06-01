@@ -16,11 +16,17 @@ import {
 } from "recharts";
 import { motion, AnimatePresence } from "motion/react";
 import { Student } from "../types";
+import { BRAND_CONFIG } from "../constants";
 
 export interface AIInsight {
   likelihood: number;
   text: string;
   recommendations: string[];
+  detailedMetrics?: {
+    label: string;
+    value: string;
+    status: "success" | "warning" | "danger";
+  }[];
 }
 
 interface GoalTrackerProps {
@@ -36,7 +42,7 @@ export default function GoalTracker({ student, currentTraz = 5575, currentPercen
   const [targetGrowth, setTargetGrowth] = useState<number>(10); // بهبود تراز
   const [latestQuizScore, setLatestQuizScore] = useState<number>(63); // عیار آخرین نمونه تستی کیفیت (کوییز)
   
-  // تاریخچه سنجش تحصیلی چتر دانش
+  // تاریخچه سنجش تحصیلی {BRAND_CONFIG.examProvider}
   const [trazHistory, setTrazHistory] = useState<any[]>([]);
   const [showAddTrazForm, setShowAddTrazForm] = useState<boolean>(false);
   const [newExamLabel, setNewExamLabel] = useState<string>("");
@@ -200,7 +206,7 @@ export default function GoalTracker({ student, currentTraz = 5575, currentPercen
   };
 
   const handleResetHistory = () => {
-    if (confirm("آیا مایلید تاریخچه مانیتورینگ کارایی را به حالت اولیه چتر دانش بازگردانید؟")) {
+    if (confirm("آیا مایلید تاریخچه مانیتورینگ کارایی را به حالت اولیه ترنم مهر بازگردانید؟")) {
       const defaultHistory = [
         { examName: "سنجش فروردین", actualTraz: 5120, targetTraz: Math.max(5000, targetTraz - 400) },
         { examName: "سنجش اردیبهشت ۱", actualTraz: 5280, targetTraz: Math.max(5100, targetTraz - 300) },
@@ -252,7 +258,7 @@ export default function GoalTracker({ student, currentTraz = 5575, currentPercen
       });
 
       if (!res.ok) {
-        throw new Error("اختلال شبکه در سرور هوشمند چتر دانش");
+        throw new Error(`اختلال شبکه در سرور هوشمند ${BRAND_CONFIG.examProvider}`);
       }
 
       const data = await res.json();
@@ -270,7 +276,7 @@ export default function GoalTracker({ student, currentTraz = 5575, currentPercen
       }
     } catch (err: any) {
       console.error("AI Insight retrieval failed:", err);
-      setInsightError("سیستم شبیه‌ساز ابری چتر دانش با تاخیر مواجه شد. لطفاً چند ثانیه دیگر تلاش کنید.");
+      setInsightError("سیستم شبیه‌ساز ابری ترنم مهر با تاخیر مواجه شد. لطفاً چند ثانیه دیگر تلاش کنید.");
     } finally {
       setLoadingInsight(false);
     }
@@ -304,7 +310,7 @@ export default function GoalTracker({ student, currentTraz = 5575, currentPercen
     
     const daysNeeded = Math.ceil(trazDiff / activeVelocity) * 14;
     
-    // موعد آزمون کانون وکلا را بر اساس ثبات تحصیلی تخمین می‌زند
+    // موعد کنکور سراسری را بر اساس ثبات تحصیلی تخمین می‌زند
     const baseTime = new Date("2026-05-23T16:15:16Z").getTime();
     const targetTime = baseTime + (daysNeeded * 24 * 60 * 60 * 1000);
     setTargetEstDate(new Date(targetTime));
@@ -356,7 +362,7 @@ export default function GoalTracker({ student, currentTraz = 5575, currentPercen
           <span className="p-1.5 bg-indigo-50 text-indigo-750 rounded-lg">
             <Target size={18} />
           </span>
-          <h2 className="text-lg font-bold text-slate-900">سامانه پایش اهداف تحصیلی و کایزن درسی چتر دانش</h2>
+          <h2 className="text-lg font-bold text-slate-900">سامانه پایش اهداف تحصیلی و کایزن درسی {BRAND_CONFIG.name}</h2>
         </div>
         <button
           onClick={() => {
@@ -443,7 +449,7 @@ export default function GoalTracker({ student, currentTraz = 5575, currentPercen
           className="bg-emerald-50 text-emerald-700 p-3 rounded-xl border border-emerald-100 text-xs font-bold flex items-center gap-1.5"
         >
           <CheckCircle size={14} />
-          <span>اهداف تحصیلی داوطلب با موفقیت در چتر دانش به‌روزرسانی شد.</span>
+          <span>اهداف تحصیلی داوطلب با موفقیت در ترنم مهر به‌روزرسانی شد.</span>
         </motion.div>
       )}
 
@@ -556,9 +562,9 @@ export default function GoalTracker({ student, currentTraz = 5575, currentPercen
           <div className="space-y-0.5">
             <h3 className="text-xs font-black text-slate-800 flex items-center gap-1.5">
               <TrendingUp size={14} className="text-blue-900" />
-              <span>منحنی تغییرات تراز داوطلب در ۵ آزمون شبیه‌ساز اخیر چتر دانش</span>
+              <span>منحنی تغییرات تراز داوطلب در ۵ آزمون شبیه‌ساز اخیر {BRAND_CONFIG.examProvider}</span>
             </h3>
-            <p className="text-[10px] text-slate-500">رصد پایداری تراز علمی واقعی در مقابل خط قرمز تراز هدف کانون وکلا</p>
+            <p className="text-[10px] text-slate-500">رصد پایداری تراز علمی واقعی در مقابل خط قرمز تراز هدف ترنم مهر</p>
           </div>
           
           <div className="flex items-center gap-1.5 self-start">
@@ -572,7 +578,7 @@ export default function GoalTracker({ student, currentTraz = 5575, currentPercen
             <button
               onClick={handleResetHistory}
               className="text-[10px] p-1.5 bg-neutral-100 text-slate-600 border border-slate-200 hover:bg-neutral-200 rounded-xl transition cursor-pointer"
-              title="بارگذاری مجدد فرضیات اولیه چتر دانش"
+              title="بارگذاری مجدد فرضیات اولیه ترنم مهر"
             >
               <RotateCcw size={11} />
             </button>
@@ -665,7 +671,7 @@ export default function GoalTracker({ student, currentTraz = 5575, currentPercen
                 iconType="circle"
                 iconSize={8}
                 wrapperStyle={{ fontSize: 10, fontWeight: 'bold', paddingTop: 0 }}
-                formatter={(value) => value === "actualTraz" ? "تراز شبیه‌ساز واقعی داوطلب" : "هدف‌گذاری میان‌مدت چتر دانش"}
+                formatter={(value) => value === "actualTraz" ? "تراز شبیه‌ساز واقعی داوطلب" : `هدف‌گذاری میان‌مدت ${BRAND_CONFIG.name}`}
               />
               <Line 
                 type="monotone" 
@@ -712,29 +718,29 @@ export default function GoalTracker({ student, currentTraz = 5575, currentPercen
         const milestonesData = [
           {
             step: "گام ۱ (آزمون آزمایشی ماه بعد)",
-            name: "سنجش جامع حقوق مدنی، جزا و آیین دادرسی",
+            name: "سنجش جامع زیست‌شناسی، شیمی و فیزیک (اختصاصی ۱)",
             projectedTraz: lastTraz + activeVelocity,
             date: "۱۴۰۵/۰۳/۱۶",
             weeklyHours: velocityPreset === "slow" ? 36 : velocityPreset === "intensive" ? 54 : 45,
-            focus: "رفع تله تستی عقود با کتب شرح صریح چتر دانش",
+            focus: `رفع تله تستی مفاهیم با کتب تحلیل صریح ${BRAND_CONFIG.examProvider}`,
             badgeColor: "bg-teal-50 text-teal-700 border-teal-100"
           },
           {
             step: "گام ۲ (شبیه‌ساز پیشرفته)",
-            name: "آزمون تخصصی حقوق تجارت، ثبت و اصول فقه",
+            name: "آزمون تخصصی ریاضیات، زمین‌شناسی و خلاقیت تصویری",
             projectedTraz: lastTraz + (activeVelocity * 2),
             date: "۱۴۰۵/۰۳/۳۰",
             weeklyHours: velocityPreset === "slow" ? 40 : velocityPreset === "intensive" ? 58 : 48,
-            focus: "کمرنگ کردن ریسک نمره منفی در جزئیات قوانین خاص ثبتی",
+            focus: "کمرنگ کردن ریسک نمره منفی در جزئیات محاسباتی و دقت علمی",
             badgeColor: "bg-indigo-50 text-indigo-700 border-indigo-100"
           },
           {
-            step: "گام ۳ (کنکور آزمایشی مرحله نهایی کانون)",
-            name: "آزمون جامع شبیه‌ساز کانون وکلا چتر دانش",
+            step: "گام ۳ (کنکور آزمایشی مرحله نهایی شبیه‌ساز)",
+            name: `آزمون جامع شبیه‌ساز کنکور سراسری ${BRAND_CONFIG.examProvider}`,
             projectedTraz: lastTraz + (activeVelocity * 3),
             date: "۱۴۰۵/۰۴/۱۳",
             weeklyHours: velocityPreset === "slow" ? 42 : velocityPreset === "intensive" ? 64 : 52,
-            focus: "تضمین ارتقای تراز، رفع نمره‌ منفی و پیش‌روی برنامه‌ درسی چتر دانش",
+            focus: `تضمین ارتقای تراز، رفع نمره‌ منفی و پیش‌روی برنامه‌ درسی ${BRAND_CONFIG.examProvider}`,
             badgeColor: "bg-amber-50 text-amber-700 border-amber-100"
           }
         ];
@@ -747,7 +753,7 @@ export default function GoalTracker({ student, currentTraz = 5575, currentPercen
                   <LayoutList size={14} className="text-indigo-650" />
                   <span>پیش‌بینی هوشمند صعود تراز مطالعاتی بر مبنای آهنگ رشد شما</span>
                 </h3>
-                <p className="text-[10px] text-slate-500">تخمین کارنامه و شانس قبولی آزمون بر اساس میزان پومودوروی هفتگی</p>
+                <p className="text-[10px] text-slate-500">تخمین رتبه و شانس قبولی در رشته‌های برتر بر اساس میزان پومودوروی هفتگی</p>
               </div>
 
               {/* Study Pace Interactive Switch */}
@@ -765,7 +771,7 @@ export default function GoalTracker({ student, currentTraz = 5575, currentPercen
                   onClick={() => setVelocityPreset("normal")}
                   className={`px-2 py-1 rounded-lg transition cursor-pointer ${velocityPreset === "normal" ? "bg-blue-955 text-white" : "text-slate-655 hover:bg-slate-50"}`}
                 >
-                  نرمال چتر دانش
+                  نرمال ترنم مهر
                 </button>
                 <button
                   type="button"
@@ -785,7 +791,7 @@ export default function GoalTracker({ student, currentTraz = 5575, currentPercen
                 </div>
                 <div className="space-y-0.5 text-right">
                   <h4 className="text-xs font-extrabold text-slate-800">ساعت مطالعه فعال داوطلب در هفته (Study Hours):</h4>
-                  <p className="text-[10px] text-slate-500">ساعت مطالعه کل دروس حقوقی خود را جهت پیشران برنامه‌ریزی تنظیم نمایید</p>
+                  <p className="text-[10px] text-slate-500">ساعت مطالعه کل دروس تخصصی و عمومی خود را جهت پیشران برنامه‌ریزی تنظیم نمایید</p>
                 </div>
               </div>
               
@@ -876,7 +882,7 @@ export default function GoalTracker({ student, currentTraz = 5575, currentPercen
                           <div className="flex items-center justify-center gap-1.5">
                             <span className="text-xs font-black text-slate-850 font-mono">{toPersianNum(milestone.projectedTraz)}</span>
                             {isSuccess ? (
-                              <span className="text-[9px] bg-emerald-50 text-emerald-700 border border-emerald-100 font-bold px-1.5 py-0.5 rounded-md">تراز قبولی کانون</span>
+                              <span className="text-[9px] bg-emerald-50 text-emerald-700 border border-emerald-100 font-bold px-1.5 py-0.5 rounded-md">تراز رتبه برتر کنکور</span>
                             ) : null}
                           </div>
                         </td>
@@ -919,8 +925,8 @@ export default function GoalTracker({ student, currentTraz = 5575, currentPercen
               <Hourglass className="animate-spin-slow" size={20} />
             </div>
             <div className="space-y-0.5">
-              <h4 className="text-xs font-black text-slate-100">زمان تخمینی باقیمانده تا قبولی قطعی داوطلب در چتر دانش:</h4>
-              <p className="text-[10px] text-slate-400">تاریخ فرضی آزمون نهایی کانون وکلا: <strong className="font-mono text-amber-300 block sm:inline">{toPersianNum(toPersianDateString(targetEstDate))}</strong></p>
+              <h4 className="text-xs font-black text-slate-100">زمان تخمینی باقیمانده تا قبولی قطعی داوطلب در {BRAND_CONFIG.examProvider}:</h4>
+              <p className="text-[10px] text-slate-400">تاریخ فرضی کنکور نهایی شبیه‌ساز: <strong className="font-mono text-amber-300 block sm:inline">{toPersianNum(toPersianDateString(targetEstDate))}</strong></p>
             </div>
           </div>
           
@@ -949,8 +955,8 @@ export default function GoalTracker({ student, currentTraz = 5575, currentPercen
               <Brain size={16} />
             </div>
             <div className="text-right">
-              <h3 className="text-xs font-black text-slate-100">برآورد شانس قبولی آزمون کانون وکلا با هوش مصنوعی (AI)</h3>
-              <p className="text-[10px] text-slate-400">محاسبه الگوریتمی احتمال موفقیت و پوشش کامل قوانین خاص</p>
+              <h3 className="text-xs font-black text-slate-100">برآورد شانس قبولی و رتبه کنکور با هوش مصنوعی (AI)</h3>
+              <p className="text-[10px] text-slate-400">محاسبه الگوریتمی احتمال موفقیت بر اساس بودجه‌بندی مباحث و تراز تجمعی</p>
             </div>
           </div>
 
@@ -978,7 +984,7 @@ export default function GoalTracker({ student, currentTraz = 5575, currentPercen
         {loadingInsight ? (
           <div className="py-8 text-center space-y-3">
             <div className="w-8 h-8 border-4 border-amber-400/30 border-t-amber-400 rounded-full animate-spin mx-auto"></div>
-            <p className="text-xs text-slate-400 font-bold animate-pulse">موتور هوش سنج چتر دانش در حال ارزیابی متغیرها، تعهدات مطالعاتی داوطلب و درصد پاسخ‌های منفی است...</p>
+            <p className="text-xs text-slate-400 font-bold animate-pulse">موتور هوش سنج {BRAND_CONFIG.examProvider} در حال ارزیابی متغیرها، تعهدات مطالعاتی داوطلب و درصد پاسخ‌های منفی است...</p>
           </div>
         ) : insightError ? (
           <div className="p-4 bg-red-950/50 border border-red-800 rounded-2xl flex items-center gap-3 text-red-100 text-xs text-right leading-relaxed font-semibold">
@@ -1016,7 +1022,7 @@ export default function GoalTracker({ student, currentTraz = 5575, currentPercen
                 <div className="flex items-center gap-2">
                   <span className="px-2 py-0.5 text-[9px] bg-amber-400 text-slate-950 font-black rounded">رده تراز داوطلب</span>
                   <span className="text-[10px] text-amber-200 font-bold">
-                    {aiInsight.likelihood >= 80 ? "رتبه دو رقمی کانون" : aiInsight.likelihood >= 50 ? "رده متوسط قبولی" : "تلاش مضاعف کایزن"}
+                    {aiInsight.likelihood >= 80 ? "رتبه زیر ۱۰۰۰ کشوری" : aiInsight.likelihood >= 50 ? "رده متوسط قبولی" : "تلاش مضاعف کایزن"}
                   </span>
                 </div>
                 <p className="text-xs text-slate-200 leading-relaxed font-medium">
@@ -1025,11 +1031,78 @@ export default function GoalTracker({ student, currentTraz = 5575, currentPercen
               </div>
             </div>
 
+            {/* Detailed metrics grid */}
+            {aiInsight.detailedMetrics && (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {aiInsight.detailedMetrics.map((metric, idx) => (
+                  <div key={idx} className="bg-white/5 border border-white/5 px-4 py-3 rounded-2xl flex items-center justify-between">
+                    <span className="text-[10px] text-slate-400 font-bold">{metric.label}:</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-black text-slate-100 font-mono">{metric.value}</span>
+                      <div className={`w-1.5 h-1.5 rounded-full ${metric.status === 'success' ? 'bg-emerald-400' : metric.status === 'warning' ? 'bg-amber-400' : 'bg-rose-400'}`}></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Subject-wise Detailed AI Insights */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="bg-white/5 border border-white/5 p-4 rounded-2xl space-y-3">
+                <div className="flex items-center gap-2 text-indigo-300">
+                  <Brain size={14} />
+                  <span className="text-[11px] font-black">تحلیل عمق تسلط (Subject Depth):</span>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-[10px]">
+                    <span className="text-slate-400">دروس اختصاصی ۱ (Math/Bio):</span>
+                    <span className="text-emerald-400 font-bold">بسیار خوب</span>
+                  </div>
+                  <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                    <div className="bg-emerald-500 h-full w-[72%]"></div>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-[10px]">
+                    <span className="text-slate-400">دروس اختصاصی ۲ (Physics/Chem):</span>
+                    <span className="text-amber-400 font-bold">نیاز به تمرکز</span>
+                  </div>
+                  <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                    <div className="bg-amber-500 h-full w-[48%]"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white/5 border border-white/5 p-4 rounded-2xl space-y-3">
+                <div className="flex items-center gap-2 text-amber-300">
+                  <Flame size={14} />
+                  <span className="text-[11px] font-black">تخمین رتبه احتمالی (Predicted Rank):</span>
+                </div>
+                <div className="flex items-end justify-between py-1">
+                  <div>
+                    <span className="text-[9px] text-slate-400 block">بدبینانه:</span>
+                    <span className="text-sm font-black text-slate-300 font-mono">+{toPersianNum(4500)}</span>
+                  </div>
+                  <div className="text-left">
+                    <span className="text-[9px] text-amber-400 font-black block">پیش‌بینی کایزن:</span>
+                    <span className="text-xl font-black text-amber-300 font-mono">{toPersianNum(1200)}</span>
+                  </div>
+                </div>
+                <button 
+                  onClick={fetchGoalInsight}
+                  className="w-full py-2 bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-200 border border-indigo-500/30 rounded-xl text-[10px] font-black transition flex items-center justify-center gap-1.5"
+                >
+                  <Sparkles size={12} />
+                  <span>مانیتورینگ آنی رده قبولی</span>
+                </button>
+              </div>
+            </div>
+
             {/* Recommendations */}
             <div className="space-y-3">
               <h4 className="text-[11px] font-black text-amber-300 flex items-center gap-1.5 justify-start">
                 <LayoutList size={12} />
-                <span>اقدامات توصیه شده مربیگری جهت پیروزی در کنکور وکالت:</span>
+                <span>اقدامات توصیه شده مربیگری جهت پیروزی در کنکور سراسری:</span>
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {aiInsight.recommendations && aiInsight.recommendations.map((rec, i) => (
@@ -1047,7 +1120,7 @@ export default function GoalTracker({ student, currentTraz = 5575, currentPercen
           <div className="bg-white/5 border border-white/5 p-5 rounded-2xl text-center space-y-2.5">
             <HelpCircle size={32} className="mx-auto text-slate-600" />
             <p className="text-xs text-slate-400 font-semibold leading-relaxed">
-              با فشردن دکمه «دریافت تخمین موفقیت با AI» در بالا، هوش مصنوعی کلان پارامترهای کارنامه (شاخص های تراز آزمون، ساعات مطالعه هفتگی و ضرایب سخت کانون) را مقایسه می‌کند تا شانس قبولی نهایی شما را برآورد کند.
+              با فشردن دکمه «دریافت تخمین موفقیت با AI» در بالا، هوش مصنوعی کلان پارامترهای کارنامه (شاخص های تراز آزمون، ساعات مطالعه هفتگی و بودجه‌بندی کنکور) را مقایسه می‌کند تا شانس قبولی نهایی شما را برآورد کند.
             </p>
           </div>
         )}

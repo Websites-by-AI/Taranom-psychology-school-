@@ -163,7 +163,7 @@ export default function ParentsView({ student }: ParentsViewProps) {
           <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 flex items-start gap-2.5 text-right">
             <ShieldAlert className="text-amber-600 flex-shrink-0 mt-0.5" size={16} />
             <div className="text-[10px] text-amber-900 leading-relaxed text-right">
-              پیکربندی هوشمند شما با موفقیت ذخیره شد. کادر ناظرین چتر دانش اهتمام مستمر خود را در همیاری داوطلبان به کار خواهد بست.
+              پیکربندی هوشمند شما با موفقیت ذخیره شد. کادر ناظرین ترنم مهر اهتمام مستمر خود را در همیاری داوطلبان به کار خواهد بست.
             </div>
           </div>
         </div>

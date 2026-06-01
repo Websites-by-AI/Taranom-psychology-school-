@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { 
   Target, Plus, Search, Filter, Trash2, Brain, 
-  AlertTriangle, BookOpen, Star, ChevronDown, CheckCircle, Download 
+  AlertTriangle, BookOpen, Star, ChevronDown, CheckCircle, Download,
+  TrendingDown, TrendingUp, Zap, Ghost, Eye, RefreshCw
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { TestTrap, Student } from "../types";
+import { TestTrap, Student, Exam } from "../types";
 import { getTestTraps, saveTestTrap, deleteTestTrap } from "../lib/traps";
 import { addSystemLog } from "../lib/syslogs";
 
@@ -18,21 +19,46 @@ export default function TestTrapsView({ student }: TestTrapsViewProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [isAddingMode, setIsAddingMode] = useState(false);
 
-  // New trap form state
-  const [newTrap, setNewTrap] = useState<Omit<TestTrap, "id" | "createdAt">>({
-    questionTitle: "",
-    subject: "زیست‌شناسی",
-    category: "مفهومی",
-    trapType: "",
-    correctAnswer: "",
-    userMistake: "",
-    educationalNote: "",
-    importance: "medium"
-  });
+  // Simulated frequency for demonstration (as per requirement)
+  const [trapFrequencyMap, setTrapFrequencyMap] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    setTraps(getTestTraps());
+    const fetchedTraps = getTestTraps();
+    setTraps(fetchedTraps);
+    
+    // Simulate frequency: count occurrences of same trapType + subject
+    const freq: Record<string, number> = {};
+    fetchedTraps.forEach(t => {
+      const key = `${t.subject}-${t.trapType}`;
+      freq[key] = (freq[key] || 0) + 1;
+    });
+    setTrapFrequencyMap(freq);
   }, []);
+
+  // Calculate top 3 subjects with most negative marks based on student field
+  const topNegativeSubjects = useMemo(() => {
+    // Hardcoded mock stats based on field to match other views (Kaizen/ReportCard)
+    if (student.field === "riazi") {
+      return [
+        { name: "هندسه و گسسته", count: 56, severity: "critical" },
+        { name: "حسابان و ریاضیات", count: 48, severity: "critical" },
+        { name: "فیزیک تخصصی", count: 32, severity: "warning" }
+      ];
+    } else if (student.field === "ensani") {
+      return [
+        { name: "ادبیات فارسی تخصصی", count: 62, severity: "critical" },
+        { name: "عربی تخصصی", count: 54, severity: "critical" },
+        { name: "جامعه‌شناسی", count: 45, severity: "warning" }
+      ];
+    } else {
+      // tajrobi
+      return [
+        { name: "زیست‌شناسی", count: 74, severity: "critical" },
+        { name: "شیمی", count: 59, severity: "critical" },
+        { name: "فیزیک", count: 42, severity: "warning" }
+      ];
+    }
+  }, [student.field]);
 
   const handleSave = () => {
     if (!newTrap.questionTitle || !newTrap.correctAnswer) {
@@ -40,12 +66,18 @@ export default function TestTrapsView({ student }: TestTrapsViewProps) {
       return;
     }
     const saved = saveTestTrap(newTrap);
-    setTraps([saved, ...traps]);
+    const updatedTraps = [saved, ...traps];
+    setTraps(updatedTraps);
+    
+    // Update frequency
+    const key = `${saved.subject}-${saved.trapType}`;
+    setTrapFrequencyMap(prev => ({ ...prev, [key]: (prev[key] || 0) + 1 }));
+
     addSystemLog("ثبت تله تستی", student.name, `تله جدید در مبحث ${newTrap.subject} ثبت شد.`);
     setIsAddingMode(false);
     setNewTrap({
       questionTitle: "",
-      subject: "زیست‌شناسی",
+      subject: student.field === "ensani" ? "ادبیات فارسی تخصصی" : student.field === "riazi" ? "حسابان و ریاضیات" : "زیست‌شناسی",
       category: "مفهومی",
       trapType: "",
       correctAnswer: "",
@@ -67,15 +99,75 @@ export default function TestTrapsView({ student }: TestTrapsViewProps) {
     window.print();
   };
 
-  const filteredTraps = traps.filter(t => {
-    const matchesSearch = t.questionTitle.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         t.educationalNote.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "all" || t.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+  // Logic: "List test traps based on most frequency"
+  const sortedAndFilteredTraps = useMemo(() => {
+    return traps
+      .filter(t => {
+        const matchesSearch = t.questionTitle.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                             t.educationalNote.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesCategory = selectedCategory === "all" || t.category === selectedCategory;
+        return matchesSearch && matchesCategory;
+      })
+      .sort((a, b) => {
+        const freqA = trapFrequencyMap[`${a.subject}-${a.trapType}`] || 0;
+        const freqB = trapFrequencyMap[`${b.subject}-${b.trapType}`] || 0;
+        return freqB - freqA; // Descent order of frequency
+      });
+  }, [traps, searchTerm, selectedCategory, trapFrequencyMap]);
+
+  // New trap form state
+  const [newTrap, setNewTrap] = useState<Omit<TestTrap, "id" | "createdAt">>({
+    questionTitle: "",
+    subject: student.field === "ensani" ? "ادبیات فارسی تخصصی" : student.field === "riazi" ? "حسابان و ریاضیات" : "زیست‌شناسی",
+    category: "مفهومی",
+    trapType: "",
+    correctAnswer: "",
+    userMistake: "",
+    educationalNote: "",
+    importance: "medium"
   });
 
   return (
     <div className="space-y-6" style={{ direction: "rtl" }}>
+      {/* 🛡️ TOP MONITORING MODULE: PRIORITY SUBJECTS */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-fade-in print:hidden">
+        {topNegativeSubjects.map((subj, idx) => (
+          <motion.div 
+            key={idx}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: idx * 0.1 }}
+            className={`p-5 rounded-3xl border-2 flex flex-col justify-between relative overflow-hidden group shadow-sm ${
+              subj.severity === 'critical' ? 'bg-rose-50 border-rose-100' : 'bg-amber-50 border-amber-100'
+            }`}
+          >
+            <div className="absolute -left-2 -bottom-2 opacity-5 group-hover:scale-110 transition-transform">
+              <TrendingDown size={80} />
+            </div>
+            <div className="flex justify-between items-start">
+              <div>
+                <span className={`text-[9px] font-black px-2 py-0.5 rounded-lg uppercase tracking-wider mb-1 inline-block ${
+                  subj.severity === 'critical' ? 'bg-rose-500 text-white' : 'bg-amber-500 text-white'
+                }`}>
+                  {idx === 0 ? "اولویت اول رفع نقص" : idx === 1 ? "تمرکز ویژه" : "نیاز به بازبینی"}
+                </span>
+                <h3 className="text-sm font-black text-slate-900">{subj.name}</h3>
+              </div>
+              <div className={`p-2 rounded-xl ${subj.severity === 'critical' ? 'bg-rose-200/50 text-rose-700' : 'bg-amber-200/50 text-amber-700'}`}>
+                <AlertTriangle size={18} />
+              </div>
+            </div>
+            <div className="mt-4 flex items-end justify-between">
+               <div>
+                  <span className="text-2xl font-black text-slate-800 tracking-tighter">{subj.count}</span>
+                  <span className="text-[10px] text-slate-500 font-bold mr-1">نمره منفی مجموع</span>
+               </div>
+               <div className="text-[10px] text-slate-400 font-bold">پایش ۴ آزمون اخیر</div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
       {/* Header section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-3xl border border-slate-100 shadow-sm print:hidden">
         <div className="flex items-center gap-3">
@@ -193,7 +285,7 @@ export default function TestTrapsView({ student }: TestTrapsViewProps) {
                         type="text" 
                         value={newTrap.questionTitle}
                         onChange={(e) => setNewTrap({...newTrap, questionTitle: e.target.value})}
-                        placeholder="مثلاً: بطلان بیع کالی به کالی"
+                        placeholder="مثلاً: تله طراح در سوالات مبحث مشتق یا ژنتیک"
                         className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-xs font-bold focus:bg-white transition-all outline-none"
                       />
                     </div>
@@ -205,13 +297,32 @@ export default function TestTrapsView({ student }: TestTrapsViewProps) {
                           onChange={(e) => setNewTrap({...newTrap, subject: e.target.value})}
                           className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2.5 text-xs font-black text-slate-700 outline-none"
                         >
-                          <option>زیست‌شناسی</option>
-                          <option>شیمی</option>
-                          <option>فیزیک</option>
-                          <option>ریاضیات</option>
-                          <option>زمین‌شناسی</option>
-                          <option>ادبیات فارسی</option>
-                          <option>عربی تخصصی</option>
+                          {student.field === "tajrobi" && (
+                            <>
+                              <option>زیست‌شناسی</option>
+                              <option>شیمی</option>
+                              <option>فیزیک</option>
+                              <option>ریاضیات تجربی</option>
+                              <option>زمین‌شناسی</option>
+                            </>
+                          )}
+                          {student.field === "riazi" && (
+                            <>
+                              <option>حسابان و ریاضیات</option>
+                              <option>هندسه و گسسته</option>
+                              <option>فیزیک تخصصی</option>
+                              <option>شیمی تخصصی</option>
+                            </>
+                          )}
+                          {student.field === "ensani" && (
+                            <>
+                              <option>ادبیات فارسی تخصصی</option>
+                              <option>عربی تخصصی</option>
+                              <option>فلسفه و منطق</option>
+                              <option>جامعه‌شناسی</option>
+                              <option>روان‌شناسی</option>
+                            </>
+                          )}
                         </select>
                       </div>
                       <div className="space-y-1.5">
@@ -289,27 +400,37 @@ export default function TestTrapsView({ student }: TestTrapsViewProps) {
                 animate={{ opacity: 1 }}
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 print:grid-cols-1"
               >
-                {filteredTraps.length > 0 ? (
-                  filteredTraps.map((trap) => (
-                    <div 
-                      key={trap.id} 
-                      className="bg-white p-5 rounded-3xl border border-slate-150 relative group hover:border-slate-300 transition-all shadow-sm hover:shadow-md print:shadow-none print:border-slate-300 print:break-inside-avoid"
-                    >
-                      <div className="flex justify-between items-start mb-3">
-                        <div className="flex items-center gap-2">
-                          <span className={`w-2 h-2 rounded-full ${
-                             trap.importance === 'high' ? 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.4)]' : 
-                             trap.importance === 'medium' ? 'bg-amber-500' : 'bg-slate-400'
-                          }`} />
-                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">#{trap.id}</span>
+                {sortedAndFilteredTraps.length > 0 ? (
+                  sortedAndFilteredTraps.map((trap) => {
+                    const frequency = trapFrequencyMap[`${trap.subject}-${trap.trapType}`] || 0;
+                    return (
+                      <div 
+                        key={trap.id} 
+                        className="bg-white p-5 rounded-3xl border border-slate-150 relative group hover:border-slate-300 transition-all shadow-sm hover:shadow-md print:shadow-none print:border-slate-300 print:break-inside-avoid"
+                      >
+                        <div className="flex justify-between items-start mb-3">
+                          <div className="flex items-center gap-2">
+                            <span className={`w-2 h-2 rounded-full ${
+                               trap.importance === 'high' ? 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.4)]' : 
+                               trap.importance === 'medium' ? 'bg-amber-500' : 'bg-slate-400'
+                            }`} />
+                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">#{trap.id}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {frequency > 1 && (
+                              <span className="flex items-center gap-1 bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-lg text-[9px] font-black border border-indigo-100">
+                                <RefreshCw size={10} className="animate-spin-slow" />
+                                <span>تکرار: {frequency} بار</span>
+                              </span>
+                            )}
+                            <button 
+                              onClick={() => handleDelete(trap.id)}
+                              className="opacity-0 group-hover:opacity-100 p-1.5 text-slate-300 hover:text-rose-600 transition-opacity print:hidden"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          </div>
                         </div>
-                        <button 
-                          onClick={() => handleDelete(trap.id)}
-                          className="opacity-0 group-hover:opacity-100 p-1.5 text-slate-300 hover:text-rose-600 transition-opacity print:hidden"
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      </div>
 
                       <div className="space-y-3">
                         <div className="flex justify-between items-center">
@@ -348,7 +469,8 @@ export default function TestTrapsView({ student }: TestTrapsViewProps) {
                         </div>
                       </div>
                     </div>
-                  ))
+                  );
+                  })
                 ) : (
                   <div className="col-span-2 py-20 text-center space-y-4">
                      <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto">

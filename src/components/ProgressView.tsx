@@ -125,11 +125,11 @@ export default function ProgressView() {
 
   // Lessons Static detailed stats
   const lessonsStats = [
-    { name: "حقوق مدنی (عقود، تعهدات و ارث)", current: 55, previous: 25, progress: 30, count: 120 },
-    { name: "آیین دادرسی مدنی (صلاحیت و واخواهی)", current: 65, previous: 32, progress: 33, count: 145 },
-    { name: "حقوق تجارت (اسناد تجاری و ورشکستگی)", current: 72, previous: 41, progress: 31, count: 85 },
-    { name: "اصول فقه و متون فقه تخصصی", current: 85, previous: 72, progress: 13, count: 40 },
-    { name: "حقوق جزا و آیین دادرسی کیفری صریح", current: 92, previous: 80, progress: 12, count: 45 }
+    { name: "زیست‌شناسی (سلولی، گیاهی و ژنتیک)", current: 55, previous: 25, progress: 30, count: 120 },
+    { name: "شیمی تخصصی (مباحث محلول‌ها و آلی)", current: 65, previous: 32, progress: 33, count: 145 },
+    { name: "فیزیک و محاسبات (موج و الکتریسیته)", current: 72, previous: 41, progress: 31, count: 85 },
+    { name: "ریاضیات تخصصی (توابع و دنباله‌ها)", current: 85, previous: 72, progress: 13, count: 40 },
+    { name: "دروس عمومی (ادبیات و عربی)", current: 92, previous: 80, progress: 12, count: 45 }
   ];
 
   // Simulator Initial Sliders configuration & coefficients
@@ -505,13 +505,13 @@ export default function ProgressView() {
                     <strong className="text-3xl font-black font-mono text-indigo-100 block mt-1 tracking-wider">
                       {toPersianNum(simulatedTraz)}
                     </strong>
-                    <span className="text-[9px] text-slate-400 block mt-0.5">ثبت علمی ضریب وکالت وکلای قوه قضاییه</span>
+                    <span className="text-[9px] text-slate-400 block mt-0.5">محاسبه بر اساس آخرین ضرایب آزمون سراسری سازمان سنجش</span>
                   </div>
 
                   {/* Probability Meter Arc */}
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs font-bold items-center">
-                      <span className="text-indigo-200">شانس قبولی کانون وکلا:</span>
+                      <span className="text-indigo-200">شانس قبولی در رشته‌های برتر:</span>
                       <span className="text-amber-300 font-mono font-black">{toPersianNum(passProbability)}٪</span>
                     </div>
                     <div className="w-full bg-indigo-900/40 h-3 rounded-full overflow-hidden border border-indigo-500/10">
@@ -604,7 +604,7 @@ export default function ProgressView() {
           <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm text-right space-y-4">
             <h4 className="text-xs font-black text-slate-800 flex items-center gap-1.5">
               <Info size={14} className="text-blue-900" />
-              <span>جدول حد نصاب پذیرفته‌شدگان سال گذشته جهت مطابقت علمی کانون‌ها</span>
+              <span>جدول حد نصاب پذیرفته‌شدگان سال گذشته جهت مطابقت علمی رشته‌ها</span>
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 text-right space-y-1">

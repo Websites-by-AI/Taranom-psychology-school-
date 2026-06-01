@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { INSTITUTIONS, BRAND_CONFIG, setBrandById } from "./constants";
 import { 
   Plus, LogOut, LayoutDashboard, FileSpreadsheet, 
   Calendar, MessageSquare, LineChart, Users, BellRing, Sparkles, Layers, Shield, Target,
-  Palette
+  Palette, Building2, Menu, X, ChevronLeft, Pipette
 } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 import { Student } from "./types";
 import LoginView from "./components/LoginView";
 import DashboardView from "./components/DashboardView";
@@ -16,17 +18,64 @@ import ParentsView from "./components/ParentsView";
 import AdminView from "./components/AdminView";
 import TestTrapsView from "./components/TestTrapsView";
 import CustomQuizGenerator from "./components/CustomQuizGenerator";
-import { Brain } from "lucide-react";
+import AiPsychologyView from "./components/AiPsychologyView";
+import AssessmentView from "./components/AssessmentView";
+import ProfileSettingsView from "./components/ProfileSettingsView";
+import { Brain, Settings } from "lucide-react";
+import SmartNotifications from "./components/SmartNotifications";
+import FocusChallengeOverlay from "./components/FocusChallengeOverlay";
 
 export default function App() {
   const [student, setStudent] = useState<Student | null>(null);
   const [role, setRole] = useState<"student" | "parent" | "admin" | null>(null);
   const [view, setView] = useState<string>("dashboard");
   const [theme, setTheme] = useState<string>(() => {
-    return localStorage.getItem("taranom_app_theme") || "classic";
+    return localStorage.getItem("taranom_app_theme") || BRAND_CONFIG.theme || "classic";
   });
-  const [showThemeMenu, setShowThemeMenu] = useState(false);
+  const [activeBrandId, setActiveBrandId] = useState(BRAND_CONFIG.id);
 
+  const switchBrand = (id: string) => {
+    setBrandById(id);
+    setActiveBrandId(id);
+    setTheme(BRAND_CONFIG.theme || "classic");
+    localStorage.setItem("taranom_app_theme", BRAND_CONFIG.theme || "classic");
+    // Force a small refresh of states if needed, but since BRAND_CONFIG is mutated 
+    // and we trigger state update for activeBrandId, components using BRAND_CONFIG 
+    // will see the new values on next render.
+  };
+  const [showThemeMenu, setShowThemeMenu] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isFocusChallengeOpen, setIsFocusChallengeOpen] = useState(false);
+
+  const navigationItems = {
+    student: [
+      { id: "dashboard", label: "پرتال داوطلب کنکور", icon: LayoutDashboard },
+      { id: "manova", label: "داشبورد مانوا", icon: Sparkles, highlight: true },
+      { id: "report", label: "کارنامه ترازها", icon: FileSpreadsheet },
+      { id: "schedule", label: "برنامه‌ریزی و تقویم", icon: Calendar },
+      { id: "counselor", label: "مشاور هوشمند کنکور", icon: MessageSquare },
+      { id: "progress", label: "بهبود تراز", icon: LineChart },
+      { id: "traps", label: "بانک تله‌های تستی", icon: Target },
+      { id: "quiz", label: "آزمون سفارشی", icon: Brain },
+      { id: "psychology", label: "پایش روانی (AI)", icon: Brain },
+    ],
+    parent: [
+      { id: "parents", label: "نظارت آنلاین والدین", icon: Users },
+      { id: "manova", label: "داشبورد مانوا آکادمی", icon: Sparkles, highlight: true },
+      { id: "report", label: "کارنامه‌ها و گزارش‌ها", icon: FileSpreadsheet },
+      { id: "psychology", label: "پایش روحی داوطلب", icon: Brain },
+    ],
+    admin: [
+      { id: "admin", label: "نقشه راه SaaS", icon: Users },
+      { id: "manova", label: "داشبورد مدیریتی مانوا", icon: Sparkles, highlight: true },
+    ]
+  };
+
+  const handleUpdateStudent = (updatedStudent: Student) => {
+    setStudent(updatedStudent);
+    // In a real app we'd save to DB, here setStudent is enough for the session
+  };
   const handleThemeChange = (newTheme: string) => {
     setTheme(newTheme);
     localStorage.setItem("taranom_app_theme", newTheme);
@@ -116,12 +165,13 @@ export default function App() {
   if (!role || !student) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col justify-between" id="app-auth-wrapper">
+        {/* Parallel Font Loading Layer - Optimized via index.html Preconnect/Preload */}
         <style dangerouslySetInnerHTML={{ __html: getThemeCSS(theme) }} />
         <main className="flex-grow flex items-center justify-center py-10">
           <LoginView onLogin={handleLogin} />
         </main>
         <footer className="py-6 border-t border-slate-100 bg-white text-center text-xs text-slate-400">
-          <div>© آکادمی هوشمند ترنم مهر | سامانه هوشمند آموزشی و برنامه‌ریزی کنکور سراسری با هوش مصنوعی مرکزی</div>
+          <div>© {BRAND_CONFIG.fullName} | {BRAND_CONFIG.slogan} با هوش مصنوعی مرکزی</div>
         </footer>
       </div>
     );
@@ -152,148 +202,51 @@ export default function App() {
           <div className="flex justify-between h-16 items-center">
             {/* Left side: Logo & Branding */}
             <div className="flex items-center gap-3">
+              <button 
+                onClick={() => setIsMenuOpen(true)}
+                className="lg:hidden p-2 -mr-2 text-slate-500 hover:bg-slate-50 rounded-xl transition"
+                id="mobile-menu-trigger"
+              >
+                <Menu size={24} />
+              </button>
               <div className="w-10 h-10 bg-gradient-to-tr from-blue-900 via-slate-900 to-indigo-950 text-white rounded-xl shadow-md flex items-center justify-center">
                 <Layers size={22} className="text-amber-400" />
               </div>
-              <div className="text-right">
-                <span className="font-black text-slate-850 text-base block leading-none text-blue-950">آکادمی ترنم مهر</span>
+              <div className="text-right hidden sm:block">
+                <span className="font-black text-slate-850 text-base block leading-none text-blue-950">{BRAND_CONFIG.name}</span>
                 <span className="text-[10px] text-emerald-600 font-black block mt-1 flex items-center gap-0.5 justify-end">
                   <Sparkles size={8} />
-                  <span>سامانه هوشمند آموزشی و مشاوره‌ای کنکور</span>
+                  <span>{BRAND_CONFIG.slogan}</span>
                 </span>
               </div>
             </div>
 
             {/* Middle: Active Navigation tabs */}
             <nav className="hidden lg:flex gap-1" id="desktop-navbar">
-              {role === "student" && (
-                <>
+              {role && navigationItems[role].map((item) => {
+                const Icon = item.icon;
+                return (
                   <button
-                    onClick={() => setView("dashboard")}
+                    key={item.id}
+                    onClick={() => setView(item.id)}
                     className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl transition cursor-pointer ${
-                      view === "dashboard" ? "bg-slate-100 text-blue-900" : "text-slate-500 hover:text-slate-700 hover:bg-slate-50/50"
+                      view === item.id ? "bg-slate-100 text-blue-900" : "text-slate-500 hover:text-slate-700 hover:bg-slate-50/50"
                     }`}
                   >
-                    <LayoutDashboard size={14} />
-                    <span>🎓 پرتال داوطلب آکادمی کنکور ترنم مهر</span>
+                    <Icon size={14} className={item.highlight ? "text-amber-500" : ""} />
+                    <span>{item.label}</span>
                   </button>
-                  <button
-                    onClick={() => setView("manova")}
-                    className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl transition cursor-pointer ${
-                      view === "manova" ? "bg-slate-100 text-blue-900" : "text-slate-500 hover:text-slate-700 hover:bg-slate-50/50"
-                    }`}
-                    id="btn-nav-manova-desktop-student"
-                  >
-                    <Sparkles size={14} className="text-amber-500 fill-amber-100" />
-                    <span className="text-blue-950 font-black">📊 ماتریس و داشبورد مانوا آکادمی</span>
-                  </button>
-                  <button
-                    onClick={() => setView("report")}
-                    className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl transition cursor-pointer ${
-                      view === "report" ? "bg-slate-100 text-blue-900" : "text-slate-500 hover:text-slate-700 hover:bg-slate-50/50"
-                    }`}
-                  >
-                    <FileSpreadsheet size={14} />
-                    <span>📝 کارنامه و آزمون‌های آزمایشی</span>
-                  </button>
-                  <button
-                    onClick={() => setView("schedule")}
-                    className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl transition cursor-pointer ${
-                      view === "schedule" ? "bg-slate-100 text-blue-900" : "text-slate-500 hover:text-slate-700 hover:bg-slate-50/50"
-                    }`}
-                  >
-                    <Calendar size={14} />
-                    <span>📅 برنامه‌ریزی درس و تقویم داوطلب</span>
-                  </button>
-                  <button
-                    onClick={() => setView("counselor")}
-                    className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl transition cursor-pointer ${
-                      view === "counselor" ? "bg-slate-100 text-blue-900" : "text-slate-500 hover:text-slate-700 hover:bg-slate-50/50"
-                    }`}
-                  >
-                    <MessageSquare size={14} />
-                    <span>🤖 مشاور هوشمند کنکور (AI)</span>
-                  </button>
-                  <button
-                    onClick={() => setView("progress")}
-                    className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl transition cursor-pointer ${
-                      view === "progress" ? "bg-slate-100 text-blue-900" : "text-slate-500 hover:text-slate-700 hover:bg-slate-50/50"
-                    }`}
-                  >
-                    <LineChart size={14} />
-                    <span>📈 بهبود تراز</span>
-                  </button>
-                  <button
-                    onClick={() => setView("traps")}
-                    className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl transition cursor-pointer ${
-                      view === "traps" ? "bg-slate-100 text-blue-900" : "text-slate-500 hover:text-slate-700 hover:bg-slate-50/50"
-                    }`}
-                  >
-                    <Target size={14} className="text-rose-600" />
-                    <span>🎯 بانک تله‌های تستی</span>
-                  </button>
-                  <button
-                    onClick={() => setView("quiz")}
-                    className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl transition cursor-pointer ${
-                      view === "quiz" ? "bg-slate-100 text-blue-900" : "text-slate-500 hover:text-slate-700 hover:bg-slate-50/50"
-                    }`}
-                  >
-                    <Brain size={14} className="text-rose-600 animate-pulse" />
-                    <span>🎯 آزمون تستی سفارشی</span>
-                  </button>
-                </>
-              )}
-
-              {role === "parent" && (
-                <>
-                  <button
-                    onClick={() => setView("parents")}
-                    className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl transition cursor-pointer ${
-                      view === "parents" ? "bg-slate-100 text-blue-900" : "text-slate-500 hover:text-slate-700 hover:bg-slate-50/50"
-                    }`}
-                  >
-                    <BellRing size={14} />
-                    <span>👥 سامانه نظارت آنلاین والدین</span>
-                  </button>
-                  <button
-                    onClick={() => setView("manova")}
-                    className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl transition cursor-pointer ${
-                      view === "manova" ? "bg-slate-100 text-blue-900" : "text-slate-500 hover:text-slate-700 hover:bg-slate-50/50"
-                    }`}
-                    id="btn-nav-manova-desktop-parent"
-                  >
-                    <Sparkles size={14} className="text-amber-500 fill-amber-100" />
-                    <span className="text-blue-950 font-black">📊 ماتریس و داشبورد مانوا ترنم مهر</span>
-                  </button>
-                  <button
-                    onClick={() => setView("report")}
-                    className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl transition cursor-pointer ${
-                      view === "report" ? "bg-slate-100 text-blue-900" : "text-slate-500 hover:text-slate-700 hover:bg-slate-50/50"
-                    }`}
-                  >
-                    <FileSpreadsheet size={14} />
-                    <span>📊 ارزیابی و تحلیل پیشرفت داوطلب</span>
-                  </button>
-                </>
-              )}
-
-              {role === "admin" && (
-                <>
-                  <button
-                    onClick={() => setView("admin")}
-                    className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl transition cursor-pointer ${
-                      view === "admin" ? "bg-slate-100 text-blue-900" : "text-slate-500 hover:text-slate-700 hover:bg-slate-50/50"
-                    }`}
-                  >
-                    <Users size={14} />
-                    <span>📐 سند معماری و نقشه راه SaaS (ادمین)</span>
-                  </button>
-                </>
-              )}
+                );
+              })}
             </nav>
 
             {/* Right side: User Profile & Theme switcher & Logout */}
             <div className="flex items-center gap-4 relative">
+              <SmartNotifications onAction={(type) => {
+                if (type === "challenge") setIsFocusChallengeOpen(true);
+                if (type === "nudge") setView("assessment");
+              }} />
+              
               <div className="text-left hidden md:block">
                 <span className="font-bold text-slate-800 text-xs block text-right">{student.name}</span>
                 <span className="text-[10px] text-slate-400 font-bold block text-right mt-0.5">
@@ -307,11 +260,13 @@ export default function App() {
               <div className="relative" id="customizer-theme-switcher flex">
                 <button
                   onClick={() => setShowThemeMenu(!showThemeMenu)}
-                  className="p-2 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-blue-900 transition rounded-xl border border-slate-100 cursor-pointer flex items-center justify-center gap-1.5"
+                  className={`p-2.5 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-blue-900 transition rounded-xl border border-slate-100 cursor-pointer flex items-center justify-center gap-2 shadow-sm active:scale-95 ${
+                    theme !== "classic" ? "ring-2 ring-blue-500" : ""
+                  }`}
                   title="تغییر تم رنگی سامانه"
                   id="btn-nav-theme"
                 >
-                  <Palette size={18} className="text-amber-500" />
+                  <Pipette size={24} className="text-amber-500" />
                   <span className="hidden sm:inline text-xs font-bold text-slate-600">پوسته</span>
                 </button>
 
@@ -353,6 +308,39 @@ export default function App() {
                 )}
               </div>
 
+              {/* Institution Switcher (SaaS Feature) */}
+              {role === "student" && (
+                <button
+                  onClick={() => setIsProfileOpen(true)}
+                  className="p-2 bg-slate-50 hover:bg-indigo-50 text-slate-500 hover:text-indigo-600 transition rounded-xl border border-slate-100 cursor-pointer flex items-center justify-center gap-1.5"
+                  title="تنظیمات پروفایل هوشمند"
+                >
+                  <Settings size={18} />
+                  <span className="hidden sm:inline text-xs font-black">پروفایل</span>
+                </button>
+              )}
+
+              {role === "admin" && (
+                <div className="relative group">
+                  <button className="p-2 bg-slate-50 hover:bg-indigo-50 text-indigo-600 transition rounded-xl border border-slate-100 cursor-pointer flex items-center justify-center gap-1.5 shadow-sm">
+                    <Building2 size={18} />
+                    <span className="hidden sm:inline text-xs font-black">انتخاب موسسه</span>
+                  </button>
+                  <div className="absolute left-0 mt-2 w-48 bg-white rounded-2xl border border-slate-150 shadow-xl z-50 p-2 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition text-right">
+                    {INSTITUTIONS.map(inst => (
+                      <button
+                        key={inst.id}
+                        onClick={() => switchBrand(inst.id)}
+                        className={`w-full text-right p-2 rounded-xl text-[10px] font-black flex items-center justify-between hover:bg-slate-50 transition ${activeBrandId === inst.id ? "text-indigo-600 bg-indigo-50/50" : "text-slate-500"}`}
+                      >
+                        <span>{inst.fullName}</span>
+                        {activeBrandId === inst.id && <Shield size={10} />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <button
                 onClick={handleLogout}
                 className="p-2 bg-slate-50 hover:bg-red-50 text-slate-500 hover:text-red-700 transition rounded-xl border border-slate-100 hover:border-red-100 cursor-pointer"
@@ -364,121 +352,102 @@ export default function App() {
             </div>
           </div>
 
-          {/* Mobile Tab Navigation bar */}
-          <div className="flex lg:hidden overflow-x-auto pb-3 gap-1.5 scrollbar-none" id="mobile-navbar">
-            {role === "student" && (
+          {/* Mobile Navigation Drawer (WordPress Style) */}
+          <AnimatePresence>
+            {isMenuOpen && (
               <>
-                <button
-                  onClick={() => setView("dashboard")}
-                  className={`px-3.5 py-2 text-[11px] font-bold rounded-lg transition whitespace-nowrap cursor-pointer ${
-                    view === "dashboard" ? "bg-blue-900 text-white" : "text-slate-500 bg-slate-50"
-                  }`}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setIsMenuOpen(false)}
+                  className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] lg:hidden"
+                />
+                <motion.div
+                  initial={{ x: "100%" }}
+                  animate={{ x: 0 }}
+                  exit={{ x: "100%" }}
+                  transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                  className="fixed top-0 right-0 h-full w-4/5 max-w-sm bg-white shadow-2xl z-[101] lg:hidden overflow-y-auto flex flex-col"
+                  id="mobile-drawer"
                 >
-                  پرتال داوطلب کنکور
-                </button>
-                <button
-                  onClick={() => setView("manova")}
-                  className={`px-3.5 py-2 text-[11px] font-bold rounded-lg transition whitespace-nowrap cursor-pointer ${
-                    view === "manova" ? "bg-blue-900 text-white" : "text-slate-500 bg-slate-50"
-                  }`}
-                  id="btn-nav-manova-mobile-student"
-                >
-                  داشبورد مانوا
-                </button>
-                <button
-                  onClick={() => setView("report")}
-                  className={`px-3.5 py-2 text-[11px] font-bold rounded-lg transition whitespace-nowrap cursor-pointer ${
-                    view === "report" ? "bg-blue-900 text-white" : "text-slate-500 bg-slate-50"
-                  }`}
-                >
-                  کارنامه ترازها
-                </button>
-                <button
-                  onClick={() => setView("schedule")}
-                  className={`px-3.5 py-2 text-[11px] font-bold rounded-lg transition whitespace-nowrap cursor-pointer ${
-                    view === "schedule" ? "bg-blue-900 text-white" : "text-slate-500 bg-slate-50"
-                  }`}
-                >
-                  برنامه‌ریزی و تقویم درسی
-                </button>
-                <button
-                  onClick={() => setView("counselor")}
-                  className={`px-3.5 py-2 text-[11px] font-bold rounded-lg transition whitespace-nowrap cursor-pointer ${
-                    view === "counselor" ? "bg-blue-900 text-white" : "text-slate-500 bg-slate-50"
-                  }`}
-                >
-                  مشاور هوشمند کنکور
-                </button>
-                <button
-                  onClick={() => setView("progress")}
-                  className={`px-3.5 py-2 text-[11px] font-bold rounded-lg transition whitespace-nowrap cursor-pointer ${
-                    view === "progress" ? "bg-blue-900 text-white" : "text-slate-500 bg-slate-50"
-                  }`}
-                >
-                  بهبود تراز
-                </button>
-                <button
-                  onClick={() => setView("traps")}
-                  className={`px-3.5 py-2 text-[11px] font-bold rounded-lg transition whitespace-nowrap cursor-pointer ${
-                    view === "traps" ? "bg-blue-900 text-white" : "text-slate-500 bg-slate-50"
-                  }`}
-                >
-                  بانک تله‌های تستی
-                </button>
-                <button
-                  onClick={() => setView("quiz")}
-                  className={`px-3.5 py-2 text-[11px] font-bold rounded-lg transition whitespace-nowrap cursor-pointer ${
-                    view === "quiz" ? "bg-blue-900 text-white" : "text-slate-500 bg-slate-50"
-                  }`}
-                >
-                  آزمون سفارشی تله‌ها
-                </button>
-              </>
-            )}
+                  {/* Drawer Header */}
+                  <div className="p-6 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-blue-900 text-white rounded-lg flex items-center justify-center">
+                        <Layers size={18} />
+                      </div>
+                      <span className="font-black text-blue-950 text-sm">{BRAND_CONFIG.name}</span>
+                    </div>
+                    <button 
+                      onClick={() => setIsMenuOpen(false)}
+                      className="p-2 text-slate-400 hover:text-slate-600 transition"
+                    >
+                      <X size={20} />
+                    </button>
+                  </div>
 
-            {role === "parent" && (
-              <>
-                <button
-                  onClick={() => setView("parents")}
-                  className={`px-3.5 py-2 text-[11px] font-bold rounded-lg transition whitespace-nowrap cursor-pointer ${
-                    view === "parents" ? "bg-blue-900 text-white" : "text-slate-500 bg-slate-50"
-                  }`}
-                >
-                  نظارت آنلاین والدین
-                </button>
-                <button
-                  onClick={() => setView("manova")}
-                  className={`px-3.5 py-2 text-[11px] font-bold rounded-lg transition whitespace-nowrap cursor-pointer ${
-                    view === "manova" ? "bg-blue-900 text-white" : "text-slate-500 bg-slate-50"
-                  }`}
-                  id="btn-nav-manova-mobile-parent"
-                >
-                  داشبورد مانوا آکادمی
-                </button>
-                <button
-                  onClick={() => setView("report")}
-                  className={`px-3.5 py-2 text-[11px] font-bold rounded-lg transition whitespace-nowrap cursor-pointer ${
-                    view === "report" ? "bg-blue-900 text-white" : "text-slate-500 bg-slate-50"
-                  }`}
-                >
-                  کارنامه‌ها و گزارش‌ها
-                </button>
-              </>
-            )}
+                  {/* Navigation Links */}
+                  <div className="flex-grow p-4 space-y-1">
+                    <div className="px-3 mb-4">
+                      <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-right mb-2 opacity-60">منوی اصلی سامانه</div>
+                      <div className="h-[1px] bg-slate-100 w-full" />
+                    </div>
+                    {role && navigationItems[role].map((item) => {
+                      const Icon = item.icon;
+                      const isActive = view === item.id;
+                      return (
+                        <button
+                          key={item.id}
+                          onClick={() => {
+                            setView(item.id);
+                            setIsMenuOpen(false);
+                          }}
+                          className={`w-full flex items-center justify-between gap-3 px-4 py-3.5 rounded-2xl transition-all duration-200 group ${
+                            isActive 
+                              ? "bg-blue-50 text-blue-900 border-r-4 border-blue-900" 
+                              : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className={`p-2 rounded-xl transition-colors ${isActive ? "bg-blue-100 text-blue-900" : "bg-slate-100 text-slate-400 group-hover:bg-white group-hover:text-slate-600"}`}>
+                              <Icon size={18} className={item.highlight ? "text-amber-500" : ""} />
+                            </div>
+                            <span className={`text-xs font-black ${isActive ? "text-blue-900" : "text-slate-700"}`}>{item.label}</span>
+                          </div>
+                          {isActive ? (
+                            <ChevronLeft size={16} className="text-blue-900" />
+                          ) : (
+                            <div className="w-1.5 h-1.5 rounded-full bg-slate-200 group-hover:bg-slate-300" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
 
-            {role === "admin" && (
-              <>
-                <button
-                  onClick={() => setView("admin")}
-                  className={`px-3.5 py-2 text-[11px] font-bold rounded-lg transition whitespace-nowrap cursor-pointer ${
-                    view === "admin" ? "bg-blue-900 text-white" : "text-slate-500 bg-slate-50"
-                  }`}
-                >
-                  مدیریت ارشد آکادمی (SaaS)
-                </button>
+                  {/* Drawer Footer */}
+                  <div className="p-6 border-t border-slate-100 bg-slate-50 mt-auto">
+                    <div className="flex items-center gap-3 mb-4 text-right">
+                       <div className="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-slate-500 font-bold overflow-hidden border-2 border-white shadow-sm">
+                         {student.name.charAt(0)}
+                       </div>
+                       <div className="flex flex-col">
+                         <span className="text-xs font-black text-slate-900 leading-none mb-1">{student.name}</span>
+                         <span className="text-[10px] text-slate-400 font-bold">{student.grade} - {student.school}</span>
+                       </div>
+                    </div>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center justify-center gap-2 py-3 bg-white border border-slate-200 rounded-xl text-[10px] font-black text-red-600 hover:bg-red-50 hover:border-red-100 transition shadow-sm"
+                    >
+                      <LogOut size={14} />
+                      <span>خروج از پنل کاربری</span>
+                    </button>
+                  </div>
+                </motion.div>
               </>
             )}
-          </div>
+          </AnimatePresence>
         </div>
       </header>
 
@@ -487,34 +456,54 @@ export default function App() {
         {role === "student" && (
           <>
             {view === "dashboard" && <DashboardView student={student} onNavigate={(target) => setView(target)} />}
-            {view === "manova" && <ManovaDashboard student={student} />}
+            {view === "manova" && <ManovaDashboard student={student} onNavigate={(target) => setView(target)} />}
             {view === "report" && <ReportCardView student={student} onNavigate={(target) => setView(target)} />}
             {view === "schedule" && <StudyPlanView />}
             {view === "counselor" && <CounselorView student={student} onNavigate={(target) => setView(target)} />}
             {view === "progress" && <ProgressView />}
             {view === "traps" && <TestTrapsView student={student} />}
             {view === "quiz" && <CustomQuizGenerator student={student} />}
+            {view === "psychology" && <AssessmentView student={student} onNavigateChange={(target) => setView(target)} />}
           </>
         )}
 
         {role === "parent" && (
           <>
             {view === "parents" && <ParentsView student={student} />}
-            {view === "manova" && <ManovaDashboard student={student} />}
+            {view === "manova" && <ManovaDashboard student={student} onNavigate={(target) => setView(target)} />}
             {view === "report" && <ReportCardView student={student} />}
+            {view === "psychology" && <AssessmentView student={student} onNavigateChange={(target) => setView(target)} />}
           </>
         )}
 
         {role === "admin" && (
           <>
             {view === "admin" && <AdminView student={student} />}
+            {view === "manova" && <ManovaDashboard student={student} onNavigate={(target) => setView(target)} />}
           </>
         )}
+
+        {student && (
+          <ProfileSettingsView 
+            student={student} 
+            isOpen={isProfileOpen} 
+            onClose={() => setIsProfileOpen(false)} 
+            onUpdate={handleUpdateStudent}
+          />
+        )}
+
+        <FocusChallengeOverlay 
+          isActive={isFocusChallengeOpen} 
+          onClose={() => setIsFocusChallengeOpen(false)} 
+          onComplete={(score) => {
+             console.log("Challenge completed with score:", score);
+          }}
+        />
       </main>
 
       {/* Persistent Footer */}
       <footer className="bg-white border-t border-slate-100 py-6 text-center text-xs text-slate-400 mt-10">
-        <div>پلتفرم هوشمند آموزشی و برنامه‌ریزی درسی آکادمی ترنم مهر بر اساس مدل ارزیابی کنکور سراسری • کپی‌رایت ۱۴۰۵</div>
+        <div>پلتفرم هوشمند آموزشی و برنامه‌ریزی درسی {BRAND_CONFIG.fullName} بر اساس مدل ارزیابی کنکور سراسری • کپی‌رایت ۱۴۰۵</div>
       </footer>
     </div>
   );

@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { ChatMessage, Student } from "../types";
+import { BRAND_CONFIG } from "../constants";
 
 interface CounselingSession {
   id: string;
@@ -31,19 +32,20 @@ export default function CounselorView({ student, onNavigate }: CounselorViewProp
     {
       id: "1",
       role: "model",
-      content: `سلام ${student.name} گرامی! من دکتر رادان، مشاور علمی و برنامه‌ریز ارشد وکالت در موسسه چتر دانش هستم. کارنامه شبیه‌ساز، نقاط قوت و ضعف و پیش‌نویس مطالعه شما را بررسی کردم. امروز چطور می‌توانم در رفع تله‌های حقوق مدنی، روش خلاصه نویسی آیین دادرسی یا مهار اضطراب و خستگی دوران کنکور به شما کمک کنم؟`,
+      content: `سلام ${student.name} گرامی! من دکتر رادان، مشاور علمی و برنامه‌ریز ارشد کنکور در موسسه ترنم مهر هستم. کارنامه شبیه‌ساز، نقاط قوت و ضعف و پیش‌نویس مطالعه شما را بررسی کردم. امروز چطور می‌توانم در رفع تله‌های زیست‌شناسی، روش خلاصه نویسی فیزیک یا مهار اضطراب و خستگی دوران کنکور به شما کمک کنم؟`,
       timestamp: new Date().toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" })
     }
   ]);
   const [inputMessage, setInputMessage] = useState("");
   const [sending, setSending] = useState(false);
+  const [connectionError, setConnectionError] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const quickQuestions = [
-    "در تله‌های تستی حقوق مدنی و مبحث عقود مشکل دارم، راهکار چیست؟",
-    "آهنگ پیش‌روی برنامه‌ وبینارهای دادرسی کیفری چتر دانش خیلی سریع است.",
+    "در تله‌های تستی زیست‌شناسی و مبحث ژنتیک مشکل دارم، راهکار چیست؟",
+    "آهنگ پیش‌روی برنامه‌ وبینارهای شیمی آلی ترنم مهر خیلی سریع است.",
     "چگونه تراز مانیتورینگ خود را در آزمون‌های شبیه‌ساز بعدی بالاتر ببرم؟",
-    "بودجه‌بندی و تکنیک‌های موازنه تراز در مبحث اصول فقه چیست؟"
+    "بودجه‌بندی و تکنیک‌های موازنه تراز در مبحث حسابان و هندسه چیست؟"
   ];
 
   // --- SESSIONS LOG STATE ---
@@ -60,13 +62,13 @@ export default function CounselorView({ student, onNavigate }: CounselorViewProp
       {
         id: "session-1",
         type: "academic",
-        title: "تحلیل موشکافانه تله‌های تستی حقوق تجارت و قوانین ثبت",
-        date: "۱۴۰۵/۰۲/۱۵",
+        title: "تحلیل موشکافانه تله‌های تستی شیمی تخصصی و مباحث استوکیومتری",
+        date: "۱۴۰۶/۰۳/۰۹",
         counselorName: "دکترین مهدوی",
-        notes: "بررسی فرکانس پاسخ‌های منفی نشان می‌دهد به علت تست‌زنی سرعتی بدون تحلیل کتب شرح آزمونی، داوطلب در مبحث اسناد تجاری با افت تراز مواجه شده است. مقرر شد ساعت مطالعه تجارت به ۶ ساعت در هفته با تاکید بر کتب چتر دانش افزایش یابد.",
+        notes: "بررسی فرکانس پاسخ‌های منفی نشان می‌دهد به علت تست‌زنی سرعتی بدون تحلیل کتب شرح آزمونی، داوطلب در مباحث محاسباتی با افت تراز مواجه شده است. مقرر شد ساعت مطالعه شیمی تخصصی به ۶ ساعت در هفته با تاکید بر منابع ترنم مهر افزایش یابد.",
         actionSteps: [
-          { text: "تحلیل و خلاصه نویسی مبحث چک و سفته از روی شرح صریح", completed: true },
-          { text: "تست‌زنی جامع از آزمون‌های سال گذشته چتر دانش بدون مانیتورینگ وقت", completed: false }
+          { text: "تحلیل و خلاصه نویسی مباحث زیست و فیزیک از روی شرح صریح", completed: true },
+          { text: "تست‌زنی جامع از آزمون‌های سال گذشته ترنم مهر بدون مانیتورینگ وقت", completed: false }
         ],
         recommendedStudyHours: 48
       },
@@ -97,16 +99,16 @@ export default function CounselorView({ student, onNavigate }: CounselorViewProp
   const [newActionStepsList, setNewActionStepsList] = useState<string[]>([]);
   const [isAiGenerating, setIsAiGenerating] = useState(false);
 
+  const saveSessionsToLocal = (updated: CounselingSession[]) => {
+    setSessions(updated);
+    localStorage.setItem(`taranom_mehr_sessions_${student.id}`, JSON.stringify(updated));
+  };
+
   useEffect(() => {
     if (activeTab === "chat") {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, sending, activeTab]);
-
-  const saveSessionsToLocal = (updated: CounselingSession[]) => {
-    setSessions(updated);
-    localStorage.setItem(`taranom_mehr_sessions_${student.id}`, JSON.stringify(updated));
-  };
 
   const handleSendMessage = async (textToSend: string) => {
     if (!textToSend.trim() || sending) return;
@@ -121,59 +123,47 @@ export default function CounselorView({ student, onNavigate }: CounselorViewProp
     setMessages((prev) => [...prev, userMsg]);
     setInputMessage("");
     setSending(true);
-
-    const fetchWithRetry = async (url: string, options?: RequestInit, retries = 3, delay = 600): Promise<Response> => {
-      try {
-        const response = await fetch(url, options);
-        if (!response.ok && retries > 0 && [500, 502, 503, 504].includes(response.status)) {
-          await new Promise((resolve) => setTimeout(resolve, delay));
-          return fetchWithRetry(url, options, retries - 1, delay * 1.5);
-        }
-        return response;
-      } catch (err) {
-        if (retries > 0) {
-          await new Promise((resolve) => setTimeout(resolve, delay));
-          return fetchWithRetry(url, options, retries - 1, delay * 1.5);
-        }
-        throw err;
-      }
-    };
+    setConnectionError(false);
 
     try {
-      const chatHistory = messages.map(m => ({ role: m.role, content: m.content }));
-      const res = await fetchWithRetry("/api/chat", {
+      const chatHistory = messages.slice(-6).map(m => ({ role: m.role, content: m.content }));
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: textToSend, history: chatHistory })
       });
 
+      const data = await res.json();
+      
       if (res.ok) {
-        const data = await res.json();
         const modelMsg: ChatMessage = {
           id: (Date.now() + 1).toString(),
           role: "model",
-          content: data.reply || "پاسخ خالی است.",
+          content: data.reply,
           timestamp: new Date().toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" })
         };
         setMessages((prev) => [...prev, modelMsg]);
       } else {
-        throw new Error("API non-200");
+        // Professional error message from API
+        setMessages((prev) => [...prev, {
+          id: (Date.now() + 1).toString(),
+          role: "model",
+          content: data.reply || "متأسفانه خطایی در برقراری ارتباط با مشاور هوشمند رخ داد.",
+          timestamp: new Date().toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" }),
+          isError: true
+        }]);
+        setConnectionError(true);
       }
     } catch (err) {
-      console.error("Gemini AI API failed, loading local simulated logic", err);
-      let replyText = `موضوع مطالعاتی شما یعنی '${textToSend}' توسط مشاور ارشد چتر دانش بررسی شد. توصیه می‌کنیم در مباحث حقوق مدنی تله‌های مربوط به شروط ضمن عقد را ابتدا از مقالات آموزشی استخراج کرده و سپس به تست‌زنی بپردازید.`;
-      if (textToSend.includes("تله") || textToSend.includes("قانون")) {
-        replyText = "تحلیل اشتباهات تستی نشان می‌دهد ریشه مشکلات داوطلب عدم هم‌خوانی متن صریح ماده با فروض مسئله است. لطفاً روزانه ۲۰ دقیقه به خواندن متون قوانین خاص اختصاص داده و قوانین ملغی را مجزا کنید.";
-      } else if (textToSend.includes("تراز") || textToSend.includes("آزمون")) {
-        replyText = "افزایش تراز علمی شبیه‌سازها در چتر دانش به این وابسته است که پاسخ‌های غلط خود را در دفترچه عارضه‌یابی یادداشت کنید و آخر هر هفته مباحث با نمره زیر ۳۰٪ را مجدداً مرور نمایید.";
-      }
-      
+      console.error("Chat Error:", err);
       setMessages((prev) => [...prev, {
         id: (Date.now() + 1).toString(),
         role: "model",
-        content: `داوطلب گرامی؛ ${replyText} این مباحث مشاوره‌ای به صورت محلی در حافظه موقت مانیتورینگ شما ثبت شد.`,
-        timestamp: new Date().toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" })
+        content: "مشکل در اتصال به شبکه. لطفاً وضعیت اینترنت خود را بررسی کنید.",
+        timestamp: new Date().toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" }),
+        isError: true
       }]);
+      setConnectionError(true);
     } finally {
       setSending(false);
     }
@@ -198,17 +188,17 @@ export default function CounselorView({ student, onNavigate }: CounselorViewProp
     setIsAiGenerating(true);
     setTimeout(() => {
       if (newType === "academic") {
-        setNewTitle("برنامه مطالعه فشرده و رفع تله‌های عقود حقوق مدنی");
-        setNewNotes("توصیه مشاور علمی چتر دانش: مقرر گردید داوطلب ابتدا به بخش جزوات طلایی چتر دانش مراجعه کرده و کتب شرح آزمونی عقود معین را به مدت ۴ ساعت پیاپی پومودورو مرور کند، سپس ۲۵ تست شبیه‌ساز را تحلیل نماید.");
+        setNewTitle("برنامه مطالعه فشرده و رفع تله‌های مباحث ژنتیک زیست‌شناسی");
+        setNewNotes("توصیه مشاور علمی ترنم مهر: مقرر گردید داوطلب ابتدا به بخش جزوات طلایی ترنم مهر مراجعه کرده و کتب شرح آزمونی مباحث سلولی را به مدت ۴ ساعت پیاپی پومودورو مرور کند، سپس ۲۵ تست شبیه‌ساز را تحلیل نماید.");
         setNewActionStepsList([
-          "مرور متن صریح مواد عقود لازم و جایز",
-          "یادداشت تله‌های رایج آزمون سالیان گذشته کانون",
+          "مرور متن صریح مواد مباحث سلولی لازم و مهم",
+          "یادداشت تله‌های رایج آزمون سالیان گذشته کنکور",
           "ثبت تراز و درصد پاسخ‌های صحیح در پنل کایزن"
         ]);
         setNewHours(48);
       } else {
         setNewTitle("کاهش اضطراب و استرس مفرط ممیزی قبل از آزمون جامع");
-        setNewNotes("توصیه روانشناختی چتر دانش: موازنه ساعات مطالعه با زمان‌های ریکاوری ذهن. مقرر شد داوطلب فواصل هر پومودوروی درسی را با تمارین تفکر مثبت و تمرکز ذهن سپری کند و ساعات پایانی شب را به استراحت اختصاص دهد.");
+        setNewNotes("توصیه روانشناختی ترنم مهر: موازنه ساعات مطالعه با زمان‌های ریکاوری ذهن. مقرر شد داوطلب فواصل هر پومودوروی درسی را با تمارین تفکر مثبت و تمرکز ذهن سپری کند و ساعات پایانی شب را به استراحت اختصاص دهد.");
         setNewActionStepsList([
           "پیاده‌روی صبگاهی قبل از شروع فاز مطالعه",
           "ایجاد بستر بدون صدا و حذف محرک‌های بیرونی تمرکز",
@@ -269,14 +259,14 @@ export default function CounselorView({ student, onNavigate }: CounselorViewProp
         <div className="space-y-1">
           <div className="flex items-center gap-2 justify-start">
             <span className="px-2 py-0.5 bg-blue-50 text-blue-950 text-[10px] font-black rounded-lg border border-blue-100">
-              چتر دانش • پورتال مربیگری کایزن درسی
+              {BRAND_CONFIG.examProvider} • پورتال مربیگری کایزن درسی
             </span>
             <span className="text-slate-350 text-xs">•</span>
             <span className="text-[10px] text-slate-500 font-bold">پایش تحصیلی داوطلب کانون: {student.name}</span>
           </div>
           <h1 className="text-xl font-black text-slate-900 tracking-tight">پنل مشاوره ارشد و برنامه‌ریزی هدایت تحصیلی داوطلبان</h1>
           <p className="text-xs text-slate-500 leading-relaxed">
-            برنامه‌ریزی، عارضه‌یابی و تبادل نظر با مشاوران علمی چتر دانش جهت دستیابی به ترازهای برتر وکالت و قضاوت.
+            برنامه‌ریزی، عارضه‌یابی و تبادل نظر با مشاوران علمی {BRAND_CONFIG.examProvider} جهت دستیابی به رتبه‌های برتر کنکور و رشته‌های تاپ.
           </p>
         </div>
 
@@ -366,7 +356,7 @@ export default function CounselorView({ student, onNavigate }: CounselorViewProp
               <div className="p-4 bg-blue-50/50 rounded-2xl border border-blue-100 flex items-start gap-2.5">
                 <AlertCircle size={15} className="text-blue-900 flex-shrink-0 mt-0.5" />
                 <div className="text-[10px] text-blue-950 leading-relaxed font-semibold">
-                  مربی هوشمند چتر دانش به تراز کارنامه مانیتورینگ متصل بوده و برنامه‌های درسی کایزن را به روز می‌نماید.
+                  مربی هوشمند {BRAND_CONFIG.examProvider} به تراز کارنامه مانیتورینگ متصل بوده و برنامه‌های درسی کایزن را به روز می‌نماید.
                 </div>
               </div>
             </div>
@@ -382,8 +372,8 @@ export default function CounselorView({ student, onNavigate }: CounselorViewProp
                     <span className="absolute -bottom-0.5 -left-0.5 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></span>
                   </div>
                   <div>
-                    <span className="font-bold text-slate-800 text-sm block">دکتر رادان (مشاور علمی ارشد چتر دانش)</span>
-                    <span className="text-[10px] text-emerald-600 font-bold block">برخط ● آماده پاسخ‌گویی به ابهامات حقوقی</span>
+                    <span className="font-bold text-slate-800 text-sm block">دکتر رادان (مشاور علمی ارشد ترنم مهر)</span>
+                    <span className="text-[10px] text-emerald-600 font-bold block">برخط ● آماده پاسخ‌گویی به ابهامات علمی</span>
                   </div>
                 </div>
                 <span className="text-[10px] font-bold text-blue-950 bg-blue-50 border border-blue-100 px-2.5 py-1 rounded-full">داوطلب علمی: {student.name}</span>
@@ -396,36 +386,61 @@ export default function CounselorView({ student, onNavigate }: CounselorViewProp
                     key={msg.id}
                     className={`flex items-start gap-3 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}
                   >
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold flex-shrink-0 text-xs ${
-                      msg.role === "user" ? "bg-amber-500 text-white" : "bg-blue-950 text-white"
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold flex-shrink-0 text-xs shadow-sm ${
+                      msg.role === "user" 
+                        ? "bg-amber-500 text-white" 
+                        : msg.isError 
+                          ? "bg-rose-100 text-rose-600"
+                          : "bg-blue-950 text-white"
                     }`}>
-                      {msg.role === "user" ? <User size={13} /> : <Sparkles size={13} className="text-amber-300" />}
+                      {msg.role === "user" ? <User size={13} /> : <Sparkles size={13} className={msg.isError ? "text-rose-500" : "text-amber-300"} />}
                     </div>
-                    <div className="max-w-[75%] space-y-1">
-                      <div className={`p-3.5 rounded-2xl shadow-sm text-xs leading-relaxed ${
+                    <div className={`max-w-[85%] space-y-1 ${msg.role === "user" ? "text-left" : "text-right"}`}>
+                      <div className={`p-4 rounded-2xl shadow-sm text-xs leading-relaxed whitespace-pre-wrap ${
                         msg.role === "user"
                           ? "bg-amber-500 text-white rounded-tr-none"
-                          : "bg-white text-slate-850 border border-slate-105 rounded-tl-none font-sans"
+                          : msg.isError
+                            ? "bg-rose-50 text-rose-800 border border-rose-100 rounded-tl-none font-bold"
+                            : "bg-white text-slate-800 border border-slate-100 rounded-tl-none font-medium ring-1 ring-slate-50"
                       }`}>
                         {msg.content}
                       </div>
-                      <span className={`block text-[9.5px] text-slate-450 font-mono ${msg.role === "user" ? "text-left" : "text-right"}`}>
-                        {msg.timestamp}
-                      </span>
+                      <div className={`flex items-center gap-1.5 px-1 ${msg.role === "user" ? "justify-start" : "justify-end"}`}>
+                        <span className={`text-[9px] text-slate-400 font-mono`}>
+                          {msg.timestamp}
+                        </span>
+                        {msg.role === "model" && !msg.isError && (
+                          <div className="flex gap-0.5">
+                            {[1, 2, 3].map(i => <div key={i} className="w-0.5 h-0.5 bg-emerald-400 rounded-full" />)}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}
 
                 {sending && (
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-blue-950 text-white flex items-center justify-center">
-                      <Sparkles size={13} className="text-amber-300 animate-spin" />
+                  <div className="flex items-start gap-3 animate-in fade-in slide-in-from-right-2 duration-300">
+                    <div className="w-8 h-8 rounded-lg bg-blue-950 text-white flex items-center justify-center shadow-lg">
+                      <Sparkles size={13} className="text-amber-300 animate-pulse" />
                     </div>
-                    <div className="bg-white p-3 py-2.5 rounded-2xl border border-slate-100 rounded-tl-none shadow-sm flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></span>
-                      <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:0.15s]"></span>
-                      <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:0.3s]"></span>
+                    <div className="bg-white p-4 rounded-2xl border border-slate-100 rounded-tl-none shadow-md flex items-center gap-2">
+                       <div className="flex gap-1">
+                          <span className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                          <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                          <span className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce"></span>
+                       </div>
+                       <span className="text-[10px] text-slate-400 font-black">در حال بررسی سوابق و نگارش پاسخ تحصیلی...</span>
                     </div>
+                  </div>
+                )}
+                
+                {connectionError && (
+                  <div className="mx-auto max-w-sm p-3 bg-amber-50 border border-amber-100 rounded-xl text-center shadow-sm animate-in zoom-in duration-300">
+                    <p className="text-[10px] text-amber-800 font-black leading-relaxed">
+                      ⚠️ بروز اختلال موقت در اتصال به سرور هوش مصنوعی کنکور. 
+                      <br/>در حال تلاش برای برقراری مجدد ارتباط...
+                    </p>
                   </div>
                 )}
                 <div ref={messagesEndRef} />
@@ -444,7 +459,7 @@ export default function CounselorView({ student, onNavigate }: CounselorViewProp
                     type="text"
                     value={inputMessage}
                     onChange={(e) => setInputMessage(e.target.value)}
-                    placeholder="پرسش حقوقی، مبحث مورد نظر یا درصد تراز تستی خود را بنویسید..."
+                    placeholder="پرسش علمی، مبحث مورد نظر یا درصد تراز تستی خود را بنویسید..."
                     className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-blue-950 focus:bg-white text-slate-800 text-right"
                   />
                   <button
@@ -560,7 +575,7 @@ export default function CounselorView({ student, onNavigate }: CounselorViewProp
                     value={newNotes}
                     onChange={(e) => setNewNotes(e.target.value)}
                     rows={4}
-                    placeholder="نکات تعیین شده علمی، قوانین خاص مورد استناد، شیوه خلاصه نویسی مواد مدنی و..."
+                    placeholder="نکات تعیین شده علمی، مباحث اختصاصی مورد استناد، شیوه خلاصه نویسی زیست‌شناسی و..."
                     className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:ring-2 focus:ring-blue-950 rounded-xl px-3 py-2.5 text-xs font-semibold leading-relaxed text-slate-700 text-right font-sans"
                   />
                 </div>
@@ -584,7 +599,7 @@ export default function CounselorView({ student, onNavigate }: CounselorViewProp
                     <strong className="text-xl font-black text-indigo-950 font-mono">
                       {sessions.filter(s => s.type === "academic").length} مورد
                     </strong>
-                    <p className="text-[9px] text-slate-400">تحلیل تله‌های تستی قوانین خاص</p>
+                    <p className="text-[9px] text-slate-400">تحلیل تله‌های تستی مباحث کنکوری</p>
                   </div>
                 </div>
 
@@ -602,8 +617,8 @@ export default function CounselorView({ student, onNavigate }: CounselorViewProp
               {/* Saved Sessions Feed */}
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-black text-slate-700">تاریخچه ممیزی برنامه‌های درسی داوطلب چتر دانش ({sessions.length})</span>
-                  <span className="text-[9px] text-slate-400">سرور کایزن آموزشی چتر دانش</span>
+                  <span className="text-xs font-black text-slate-700">تاریخچه ممیزی برنامه‌های درسی داوطلب ترنم مهر ({sessions.length})</span>
+                  <span className="text-[9px] text-slate-400">سرور کایزن آموزشی ترنم مهر</span>
                 </div>
 
                 {sessions.map((session) => (

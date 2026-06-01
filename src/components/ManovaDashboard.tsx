@@ -4,7 +4,7 @@ import {
   Layers, Users, RefreshCw, FileSpreadsheet, Package, ShoppingCart, 
   Truck, ClipboardCheck, DollarSign, BarChart3, TrendingUp, AlertTriangle, 
   Plus, Search, Filter, Trash, Play, Pause, Download, Sliders, ChevronRight,
-  Navigation, CheckCircle, HelpCircle
+  Navigation, CheckCircle, HelpCircle, Calendar, Brain, ArrowRight, Send, Instagram, MessageCircle, Image, Target, Globe, Cpu
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { 
@@ -73,14 +73,381 @@ interface CrmAccount {
   status: "فعال" | "مسدود";
 }
 
-export default function ManovaDashboard({ student }: { student: Student }) {
+export default function ManovaDashboard({ student, onNavigate }: { student: Student, onNavigate?: (view: string) => void }) {
   const [activeTab, setActiveTab] = useState<number>(0); 
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedContent, setGeneratedContent] = useState<any>(null);
+  const [isAuditing, setIsAuditing] = useState(false);
+  const [auditFeedback, setAuditFeedback] = useState<any>(null);
+  const [isGeneratingTrap, setIsGeneratingTrap] = useState(false);
+  const [trapQuestion, setTrapQuestion] = useState<any>(null);
+
+  const handleAuditContent = (text: string) => {
+    if (!text.trim()) return;
+    setIsAuditing(true);
+    setTimeout(() => {
+      setAuditFeedback({
+        score: 85,
+        alignment: "انطباق بالا با سرفصل‌های دوازدهم",
+        issues: [
+          "نیاز به شفاف‌سازی در صورت سوال مبحث ژنتیک",
+          "عدم رعایت تنوع در گزینه‌های انحرافی"
+        ],
+        standards: "سازگار با استانداردهای سازمان سنجش و کنکور ۱۴۰۵"
+      });
+      setIsAuditing(false);
+    }, 2000);
+  };
+
+  const handleGenerateTrapQuestion = (subject: string) => {
+    setIsGeneratingTrap(true);
+    setTimeout(() => {
+      setTrapQuestion({
+        subject,
+        text: subject === "زیست" 
+          ? "در فرآیند رونویسی، آنزیم RNA پلی‌مراز به کدام بخش از ژن متصل می‌شود؟ (دقت کنید: تله در واژه راه‌انداز است)" 
+          : "در یک مدار الکتریکی، با افزایش مقاومت در ولتاژ ثابت، توان مصرفی چه تغییری می‌کند؟",
+        trapType: "تله مفهومی / واژگان مشابه",
+        explanation: "داوطلبان معمولاً بین راه‌انداز و اپراتور دچار اشتباه می‌شوند. این سوال دقیقاً بر روی این نقطه ضعف تمرکز دارد."
+      });
+      setIsGeneratingTrap(false);
+    }, 1800);
+  };
+
+  const TRENDS = [
+    { tag: "کنکور ۱۴۰۵", weight: "۹۸٪", trend: "up" },
+    { tag: "تله‌های تستی زیست", weight: "۸۵٪", trend: "up" },
+    { tag: "مشاوره کایزن", weight: "۷۲٪", trend: "stable" },
+    { tag: "برنامه‌ریزی هوشمند", weight: "۹۱٪", trend: "up" }
+  ];
+
+  const handleGenerateContent = (platform: string) => {
+    setIsGenerating(true);
+    // Simulate AI generation delay
+    setTimeout(() => {
+      setGeneratedContent({
+        platform,
+        title: platform === "telegram" ? "📢 خبر فوری: بودجه‌بندی جدید آزمون‌های جامع" : "✨ مدیریت زمان به سبک کایزن",
+        body: platform === "telegram" 
+          ? "داوطلبان عزیز، بر اساس آخرین تحلیل‌های ترند آموزشی، بودجه‌بندی جدید آزمون‌های شبیه‌ساز در پنل شما بارگذاری شد. همین حالا برای آنالیز دقیق اقدام کنید..." 
+          : "آیا می‌دونستید تمرکز ۵۰ دقیقه‌ای بازدهی شما رو ۳ برابر می‌کنه؟ در سیستم مربیگری هوشمند ما، این مسیر براتون شخصی‌سازی شده. #کنکور #موفقیت",
+        hashtags: platform === "telegram" ? "#خبر #بودجه_بندی #آزمون" : "#کایزن #موفقیت #کنکور_۱۴۰۵",
+        imagePrompt: platform === "instagram" 
+          ? "A futuristic classroom with holographic UI, warm ambient lighting, realistic educational technology, 8k resolution." 
+          : "Professional organizer workspace, minimal blue theme, focus-driven atmosphere."
+      });
+      setIsGenerating(false);
+    }, 1500);
+  };
+
+  const mockExams = useMemo(() => {
+    // Shared mock exams logic based on student field
+    if (student.field === "riazi") {
+      return [
+        { id: "1", dateLabel: "۱۵ فروردین", fullDate: "۱۴۰۵/۰۱/۱۵", title: "شبیه‌ساز ریاضی ۱", subjectFocus: "حسابان و هندسه ۱", color: "bg-blue-500" },
+        { id: "2", dateLabel: "۱۵ اردیبهشت", fullDate: "۱۴۰۵/۰۲/۱۵", title: "شبیه‌ساز ریاضی ۲", subjectFocus: "گسسته و جبر خطی", color: "bg-indigo-500" },
+        { id: "3", dateLabel: "۲۹ اردیبهشت", fullDate: "۱۴۰۵/۰۲/۲۹", title: "جامع ریاضی", subjectFocus: "کل بودجه‌بندی دوازدهم", color: "bg-purple-500" },
+        { id: "4", dateLabel: "۲۵ خرداد", fullDate: "۱۴۰۵/۰۳/۲۵", title: "جامع نهایی ریاضی", subjectFocus: "شبیه‌ساز نهایی کشوری", color: "bg-emerald-500" },
+      ];
+    } else if (student.field === "ensani") {
+      return [
+        { id: "1", dateLabel: "۱۵ فروردین", fullDate: "۱۴۰۵/۰۱/۱۵", title: "شبیه‌ساز انسانی ۱", subjectFocus: "اقتصاد و روانشناسی", color: "bg-blue-500" },
+        { id: "2", dateLabel: "۱۵ اردیبهشت", fullDate: "۱۴۰۵/۰۲/۱۵", title: "شبیه‌ساز انسانی ۲", subjectFocus: "فلسفه و منطق پایه", color: "bg-indigo-500" },
+        { id: "3", dateLabel: "۲۹ اردیبهشت", fullDate: "۱۴۰۵/۰۲/۲۹", title: "جامع انسانی", subjectFocus: "کل ممیزی دروس اختصاصی", color: "bg-purple-500" },
+        { id: "4", dateLabel: "۲۵ خرداد", fullDate: "۱۴۰۵/۰۳/۲۵", title: "جامع نهایی انسانی", subjectFocus: "پیش‌بینی نهایی نوبت دوم", color: "bg-emerald-500" },
+      ];
+    }
+    return [
+      { id: "1", dateLabel: "۱۵ فروردین", fullDate: "۱۴۰۵/۰۱/۱۵", title: "شبیه‌ساز تجربی ۱", subjectFocus: "زیست‌شناسی و زمین‌شناسی", color: "bg-blue-500" },
+      { id: "2", dateLabel: "۱۵ اردیبهشت", fullDate: "۱۴۰۵/۰۲/۱۵", title: "شبیه‌ساز تجربی ۲", subjectFocus: "شیمی آلی و پیشرفته", color: "bg-indigo-500" },
+      { id: "3", dateLabel: "۲۹ اردیبهشت", fullDate: "۱۴۰۵/۰۲/۲۹", title: "جامع تجربی", subjectFocus: "بودجه‌بندی کامل کنکور", color: "bg-purple-500" },
+      { id: "4", dateLabel: "۲۵ خرداد", fullDate: "۱۴۰۵/۰۳/۲۵", title: "جامع نهایی تجربی", subjectFocus: "سطح A+ نهایی کشوری", color: "bg-emerald-500" },
+    ];
+  }, [student.field]);
+
+  const MiniCalendar = () => {
+    const [hoveredExam, setHoveredExam] = useState<string | null>(null);
+
+    return (
+      <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-4" id="mini-exam-calendar-widget">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <Calendar size={16} className="text-blue-900" />
+            <h3 className="text-xs font-black text-slate-800">تقویم آزمون‌های پیش‌رو</h3>
+          </div>
+          <span className="text-[10px] font-black text-slate-400">۱۴۰۵ هجری شمسی</span>
+        </div>
+        
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 relative">
+          {mockExams.map((exam) => (
+            <div key={exam.id} className="relative">
+              <motion.button
+                onMouseEnter={() => setHoveredExam(exam.id)}
+                onMouseLeave={() => setHoveredExam(null)}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => onNavigate?.("report")}
+                className="w-full flex flex-col items-center p-3 rounded-2xl border border-slate-50 bg-slate-50/50 hover:bg-white hover:border-blue-900/20 hover:shadow-md transition-all group"
+              >
+                <div className={`w-2 h-2 rounded-full ${exam.color} mb-2`}></div>
+                <span className="text-[10px] font-black text-slate-900">{exam.dateLabel}</span>
+                <span className="text-[8px] text-slate-400 font-bold truncate w-full text-center">{exam.title}</span>
+                <div className="mt-2 text-[8px] font-black text-blue-900 opacity-0 group-hover:opacity-100 transition-opacity">
+                  مشاهده آنالیز
+                </div>
+              </motion.button>
+
+              <AnimatePresence>
+                {hoveredExam === exam.id && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 pointer-events-none"
+                  >
+                    <div className="bg-slate-900 text-white text-[9px] font-black px-3 py-2 rounded-xl border border-slate-800 shadow-2xl whitespace-nowrap flex items-center gap-2">
+                      <div className={`w-1.5 h-1.5 rounded-full ${exam.color} animate-pulse`}></div>
+                      <span>تمرکز مبحث: {exam.subjectFocus}</span>
+                    </div>
+                    {/* Tooltip Arrow */}
+                    <div className="w-2 h-2 bg-slate-900 rotate-45 absolute -bottom-1 left-1/2 -translate-x-1/2 border-r border-b border-slate-800"></div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
+        </div>
+        
+        <div className="pt-2 flex justify-end">
+           <p className="text-[9px] text-slate-400 font-medium italic">
+             * این تقویم بر اساس بودجه‌بندی استاندارد آموزشی تنظیم شده است.
+           </p>
+        </div>
+      </div>
+    );
+  };
 
   const formatNum = (num: number) => num.toLocaleString("fa-IR");
   
+  const nextExam = mockExams[0];
+  const daysRemaining = 4; // Simulated countdown to the next exam
+
+  const ExamCountdownTimeline = () => {
+    return (
+      <div className="bg-gradient-to-r from-blue-900 to-indigo-900 p-6 rounded-3xl text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative" id="manova-exam-timeline-countdown">
+        {/* Background glow effects */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-400/10 rounded-full translate-y-1/2 -translate-x-1/4 blur-2xl"></div>
+
+        <div className="flex flex-col md:flex-row items-center gap-6 z-10 w-full">
+          {/* Days Left Circle */}
+          <div className="relative shrink-0">
+            <svg className="w-24 h-24 transform -rotate-90">
+              <circle
+                cx="48"
+                cy="48"
+                r="44"
+                stroke="currentColor"
+                strokeWidth="4"
+                fill="transparent"
+                className="text-white/10"
+              />
+              <motion.circle
+                cx="48"
+                cy="48"
+                r="44"
+                stroke="currentColor"
+                strokeWidth="4"
+                fill="transparent"
+                strokeDasharray="276"
+                initial={{ strokeDashoffset: 276 }}
+                animate={{ strokeDashoffset: 276 * (1 - daysRemaining / 15) }}
+                transition={{ duration: 1.5, ease: "easeOut" }}
+                className="text-amber-400"
+              />
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <span className="text-2xl font-black">{toPersianNum(daysRemaining)}</span>
+              <span className="text-[8px] font-black uppercase tracking-widest text-white/60">روز مانده</span>
+            </div>
+          </div>
+
+          <div className="flex-1 space-y-3 text-center md:text-right w-full">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <div className="px-2 py-0.5 bg-amber-400/20 text-amber-400 rounded-md text-[8px] font-black border border-amber-400/30">
+                  آزمون هدف
+                </div>
+                <h3 className="text-sm font-black tracking-tight">{nextExam.title}</h3>
+              </div>
+              <div className="flex items-center gap-1.5 text-[9px] font-bold text-white/70">
+                <Clock size={12} className="text-amber-400" />
+                <span>زمان برگزاری: {nextExam.fullDate}</span>
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-[8px] font-black text-white/50">
+                <span>۱۰۰٪ تسلط بر بودجه‌بندی</span>
+                <span>آمادگی فعلی شما: ۷۸٪</span>
+              </div>
+              <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: "78%" }}
+                  className="h-full bg-gradient-to-r from-amber-400 to-orange-400 rounded-full"
+                ></motion.div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button 
+          onClick={() => onNavigate?.("schedule")}
+          className="shrink-0 bg-white text-blue-900 px-8 py-3 rounded-2xl font-black text-xs hover:bg-amber-400 hover:text-blue-950 transition-all shadow-lg shadow-black/20 flex items-center gap-2 z-10 group"
+        >
+          <span>شروع مرور نهایی و تست‌زنی</span>
+          <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform rotate-180" />
+        </button>
+      </div>
+    );
+  };
+
   const toPersianNum = (num: number | string) => {
     const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
     return num.toString().replace(/\d/g, (x) => persianDigits[parseInt(x)]);
+  };
+
+  const CampaignCenterView = () => {
+    return (
+      <div className="p-6 space-y-8 animate-in fade-in slide-in-from-bottom-4" id="manova-campaign-hub">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="space-y-1 text-right">
+            <h3 className="text-sm font-black text-slate-900 border-r-4 border-amber-500 pr-3">مرکز کمپین و تولید محتوای هوشمند (AI Marketing Hub)</h3>
+            <p className="text-[10px] text-slate-500 font-bold">تولید محتوا بر اساس ترندهای روز گوگل و بودجه‌بندی آموزشی مرکز شما</p>
+          </div>
+          <div className="flex items-center gap-2 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-100">
+             <TrendingUp size={14} className="text-amber-600" />
+             <span className="text-[9px] font-black text-amber-700">ترندهای آموزشی امروز: فعال</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Trend Analysis Side Card */}
+          <div className="space-y-4">
+            <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+               <h4 className="text-[11px] font-black text-slate-800 flex items-center gap-2">
+                 <Zap size={14} className="text-amber-500" />
+                 <span>واژگان کلیدی پربازدید (Google Trends)</span>
+               </h4>
+               <div className="space-y-2">
+                 {TRENDS.map((trend, i) => (
+                   <div key={i} className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+                     <span className="text-[10px] font-bold text-slate-700">{trend.tag}</span>
+                     <div className="flex items-center gap-1">
+                        <span className="text-[9px] font-black text-slate-500">{trend.weight}</span>
+                        {trend.trend === "up" ? <TrendingUp size={10} className="text-emerald-500" /> : <RefreshCw size={10} className="text-blue-500" />}
+                     </div>
+                   </div>
+                 ))}
+               </div>
+               <p className="text-[8px] text-slate-400 font-medium italic text-right">* داده‌ها هر ۶ ساعت بر اساس جستجوهای داوطلبان کنکور آپدیت می‌شوند.</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-indigo-900 to-slate-900 p-5 rounded-3xl text-white space-y-3">
+              <h4 className="text-[10px] font-black flex items-center gap-2">
+                <Sparkles size={14} className="text-amber-400" />
+                <span>پلن‌های انتشار پیشنهادی</span>
+              </h4>
+              <div className="space-y-2">
+                <div className="text-[9px] font-bold opacity-80 leading-relaxed text-right">بر اساس ترازهای اخیر دانش‌آموزان شما، محتوای 'رفع استرس آزمون' بالاترین تعامل را خواهد داشت.</div>
+                <button className="w-full py-2 bg-white/10 hover:bg-white/20 rounded-xl text-[9px] font-black transition">دریافت پروپوزال کامل</button>
+              </div>
+            </div>
+          </div>
+
+          {/* Generator Main Area */}
+          <div className="lg:col-span-3 space-y-6">
+            <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+              <div className="flex items-center gap-3">
+                 <div className="p-3 bg-blue-50 text-blue-600 rounded-2xl">
+                   <Brain size={20} />
+                 </div>
+                 <div className="text-right">
+                   <h4 className="text-xs font-black text-slate-900">ساخت محتوای هوشمند برای شبکه‌های اجتماعی</h4>
+                   <p className="text-[10px] text-slate-400 font-bold">پلتفرم هدف را انتخاب کنید تا محتوای اختصاصی با رعایت استانداردها تولید شود</p>
+                 </div>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { id: "telegram", name: "تلگرام", icon: <Send size={14} />, color: "hover:bg-blue-500 hover:text-white" },
+                  { id: "instagram", name: "اینستاگرام", icon: <Instagram size={14} />, color: "hover:bg-pink-500 hover:text-white" },
+                  { id: "facebook", name: "فیسبوک", icon: <Users size={14} />, color: "hover:bg-blue-700 hover:text-white" },
+                  { id: "whatsapp", name: "واتس‌اپ / بله", icon: <MessageCircle size={14} />, color: "hover:bg-emerald-500 hover:text-white" },
+                  { id: "blog", name: "وبلاگ موسسه", icon: <Globe size={14} />, color: "hover:bg-slate-800 hover:text-white" }
+                ].map((p) => (
+                  <button 
+                    key={p.id}
+                    onClick={() => handleGenerateContent(p.id)}
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl border border-slate-100 text-[10px] font-black transition-all ${p.color} bg-slate-50`}
+                  >
+                    {p.icon}
+                    <span>{p.name}</span>
+                  </button>
+                ))}
+              </div>
+
+              {isGenerating ? (
+                <div className="py-12 flex flex-col items-center justify-center space-y-4">
+                  <div className="w-12 h-12 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin"></div>
+                  <p className="text-xs font-black text-slate-500 animate-pulse">درحال تحلیل ترندهای روز و نگارش محتوا...</p>
+                </div>
+              ) : generatedContent ? (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }} 
+                  animate={{ opacity: 1, y: 0 }}
+                  className="space-y-4 pt-4 border-t border-slate-100"
+                >
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] font-black bg-blue-50 text-blue-700 px-3 py-1 rounded-lg">خروجی AI برای: {generatedContent.platform}</span>
+                    <button onClick={() => setGeneratedContent(null)} className="text-[10px] font-bold text-rose-500">پاکسازی</button>
+                  </div>
+                  
+                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-200 text-right space-y-4">
+                    <div className="space-y-2">
+                       <h5 className="text-[11px] font-black text-slate-800">{generatedContent.title}</h5>
+                       <p className="text-[10px] text-slate-600 leading-relaxed font-bold">{generatedContent.body}</p>
+                       <p className="text-[10px] text-blue-600 font-mono font-black">{generatedContent.hashtags}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="flex-1 py-2 bg-white border border-slate-200 rounded-xl text-[9px] font-black text-slate-700 hover:bg-slate-100 transition shadow-sm">کپی متن</button>
+                      <button className="flex-1 py-2 bg-blue-600 text-white rounded-xl text-[9px] font-black hover:bg-blue-700 transition shadow-md shadow-blue-200">انتشار در وب‌سایت</button>
+                    </div>
+                  </div>
+
+                  <div className="bg-amber-50 p-4 rounded-2xl border border-amber-100 space-y-3">
+                     <div className="flex items-center gap-2">
+                       <Image size={14} className="text-amber-600" />
+                       <span className="text-[10px] font-black text-amber-700">پیشنهاد تصویرسازی (Visual AI Prompt):</span>
+                     </div>
+                     <p className="text-[9px] text-slate-600 font-mono bg-white/50 p-3 rounded-lg border border-amber-200">{generatedContent.imagePrompt}</p>
+                     <div className="flex justify-end">
+                       <button className="text-[9px] font-black text-amber-800 hover:underline">ارسال به طراح / تولید خودکار تصویر</button>
+                     </div>
+                  </div>
+                </motion.div>
+              ) : (
+                <div className="py-20 flex flex-col items-center justify-center opacity-30">
+                   <Target size={48} className="text-slate-400 mb-3" />
+                   <p className="text-xs font-black text-slate-500">محتوایی ایجاد نشده است</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   // 1. CRM STATE & VARIABLES
@@ -93,7 +460,7 @@ export default function ManovaDashboard({ student }: { student: Student }) {
     { id: "L-102", name: "فاطمه معتمدآریا", field: "ریاضی", recentScore: 5800, satisfaction: 4, status: "آماده ثبت‌نام", acquisitionChannel: "وب‌سایت موسسه" },
     { id: "L-103", name: "علی دایی", field: "انسانی", recentScore: 4900, satisfaction: 2, status: "در حال پیگیری", acquisitionChannel: "اینستاگرام" },
     { id: "L-104", name: " سارا عباسی", field: "تجربی", recentScore: 6500, satisfaction: 4, status: "ثبت‌نام قطعی", acquisitionChannel: "تماس تلفنی" },
-    { id: "L-105", name: "محمدحسین مهدویان", field: "انسانی", recentScore: 8100, satisfaction: 5, status: "ثبت‌نام قطعی", acquisitionChannel: "همایش‌های ترنم مهر" },
+    { id: "L-105", name: "محمدحسین مهدویان", field: "انسانی", recentScore: 8100, satisfaction: 5, status: "ثبت‌نام قطعی", acquisitionChannel: "همایش‌های مرکز" },
     { id: "L-106", name: "زهرا حسینی", field: "ریاضی", recentScore: 4200, satisfaction: 3, status: "انصراف موقت", acquisitionChannel: "وب‌سایت موسسه" },
     { id: "L-107", name: "رامین رحیمی", field: "تجربی", recentScore: 7600, satisfaction: 5, status: "آماده ثبت‌نام", acquisitionChannel: "تبلیغات محیطی" },
     { id: "L-108", name: "مهناز افشار", field: "ریاضی", recentScore: 5100, satisfaction: 4, status: "در حال پیگیری", acquisitionChannel: "اینستاگرام" },
@@ -409,6 +776,12 @@ export default function ManovaDashboard({ student }: { student: Student }) {
         </div>
       </div>
 
+      {/* Mini Calendar Widget */}
+      <MiniCalendar />
+
+      {/* Exam Countdown Timeline */}
+      <ExamCountdownTimeline />
+
       {/* Module Selector tabs */}
       <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden text-right" id="manova-tabbed-navigator">
         <div className="flex border-b border-slate-100 overflow-x-auto p-2 bg-slate-50/50 gap-1.5 scrollbar-thin">
@@ -420,6 +793,8 @@ export default function ManovaDashboard({ student }: { student: Student }) {
             { label: "پیک و توزیع شهری", icon: Truck },
             { label: "ممیزی سوالات", icon: ClipboardCheck },
             { label: "مدیریت حساب‌ها", icon: Sliders },
+            { label: "کمپین و محتوای هوشمند (AI)", icon: Sparkles },
+            { label: "آزمایشگاه هوش مصنوعی (BETA)", icon: Cpu },
           ].map((tab, idx) => {
             const Icon = tab.icon;
             return (
@@ -1250,6 +1625,185 @@ export default function ManovaDashboard({ student }: { student: Student }) {
                          ))}
                        </tbody>
                      </table>
+                   </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* TAB 7 - AI MARKETING CAMPAIGN CENTER */}
+            {activeTab === 7 && (
+              <motion.div
+                key="tab-7"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+              >
+                <CampaignCenterView />
+              </motion.div>
+            )}
+
+            {/* TAB 8 - AI LAB (BETA) */}
+            {activeTab === 8 && (
+              <motion.div
+                key="tab-8"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                className="p-6 space-y-8"
+              >
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                  <div className="space-y-1 text-right">
+                    <h3 className="text-sm font-black text-slate-900 border-r-4 border-indigo-600 pr-3">آزمایشگاه هوش مصنوعی مانوا (AI Innovation Lab)</h3>
+                    <p className="text-[10px] text-slate-500 font-bold">تست و ارزیابی ماژول‌های فعال‌شده از نقشه‌راه توسعه</p>
+                  </div>
+                  <div className="flex items-center gap-2 bg-indigo-50 px-3 py-1.5 rounded-xl border border-indigo-100">
+                     <Zap size={14} className="text-indigo-600" />
+                     <span className="text-[9px] font-black text-indigo-700">وضعیت: تست عملیاتی فعال</span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Module 1: Educational Auditor */}
+                  <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-5">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl">
+                          <ClipboardCheck size={20} />
+                        </div>
+                        <div className="text-right">
+                          <h4 className="text-xs font-black text-slate-900">ممیز هوشمند استانداردهای آموزشی</h4>
+                          <span className="text-[9px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-lg border border-emerald-200">Roadmap Phase 3 (Active)</span>
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-[10px] text-slate-500 font-bold text-right leading-relaxed">
+                      متن سوالات یا محتوای آموزشی خود را وارد کنید تا بر اساس بودجه‌بندی ملی و استانداردهای سازمان سنجش تحلیل شود.
+                    </p>
+                    <textarea 
+                      placeholder="متن سوال یا مبحث آموزشی را اینجا وارد کنید..."
+                      className="w-full h-24 bg-slate-50 border border-slate-100 rounded-2xl p-4 text-[10px] font-bold text-slate-700 outline-none focus:ring-2 focus:ring-emerald-500/20 text-right"
+                    />
+                    <button 
+                      onClick={() => handleAuditContent("test content")}
+                      className="w-full py-3 bg-emerald-600 text-white rounded-2xl text-[10px] font-black hover:bg-emerald-700 transition"
+                      disabled={isAuditing}
+                    >
+                      {isAuditing ? "درحال تحلیل ساختاری..." : "ارزیابی انطباق با استانداردهای آموزشی"}
+                    </button>
+
+                    <AnimatePresence>
+                      {auditFeedback && (
+                        <motion.div 
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3 text-right"
+                        >
+                          <div className="flex justify-between items-center">
+                             <span className="text-[10px] font-black text-emerald-700">نتیجه ممیزی AI:</span>
+                             <span className="text-[12px] font-black text-slate-800">ترازا: {auditFeedback.score}٪</span>
+                          </div>
+                          <div className="space-y-2">
+                             <div className="text-[10px] font-bold text-slate-700">• {auditFeedback.alignment}</div>
+                             <div className="flex flex-wrap gap-1">
+                                {auditFeedback.issues.map((issue: string, i: number) => (
+                                  <span key={i} className="text-[9px] bg-rose-50 text-rose-600 px-2 py-1 rounded-md border border-rose-100 font-bold">{issue}</span>
+                                ))}
+                             </div>
+                             <div className="pt-2 text-[9px] text-slate-400 font-bold border-t border-slate-200">{auditFeedback.standards}</div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  {/* Module 2: Test Trap Generator */}
+                  <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-5">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl">
+                          <Target size={20} />
+                        </div>
+                        <div className="text-right">
+                          <h4 className="text-xs font-black text-slate-900">بانک تله‌ساز هوشمند (Test Trap AI)</h4>
+                          <span className="text-[9px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-lg border border-indigo-200">Roadmap Phase 3 (Active)</span>
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-[10px] text-slate-500 font-bold text-right leading-relaxed">
+                      این ماژول با استفاده از گراف معنایی کنکور، سوالاتی با تله‌های آموزشی خاص برای به چالش کشیدن داوطلبان برتر تولید می‌کند.
+                    </p>
+                    <div className="flex gap-2">
+                       {["زیست", "شیمی", "فیزیک", "ریاضی"].map(subject => (
+                         <button 
+                            key={subject}
+                            onClick={() => handleGenerateTrapQuestion(subject)}
+                            className="flex-1 py-2 bg-slate-50 hover:bg-indigo-50 border border-slate-100 rounded-xl text-[9px] font-black transition-colors"
+                         >
+                           {subject}
+                         </button>
+                       ))}
+                    </div>
+
+                    <AnimatePresence>
+                      {isGeneratingTrap && (
+                         <div className="py-10 flex flex-col items-center justify-center space-y-3">
+                           <div className="w-8 h-8 border-3 border-indigo-100 border-t-indigo-600 rounded-full animate-spin"></div>
+                           <p className="text-[10px] font-black text-slate-400">درحال استخراج تله‌های مفهومی از دیتابیس...</p>
+                         </div>
+                      )}
+                      
+                      {trapQuestion && !isGeneratingTrap && (
+                        <motion.div 
+                          initial={{ opacity: 0, scale: 0.95 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          className="p-5 bg-indigo-900 text-white rounded-2xl space-y-4 text-right shadow-xl relative overflow-hidden"
+                        >
+                          <div className="absolute top-0 left-0 w-2 h-full bg-amber-400" />
+                          <div className="flex justify-between items-center opacity-70">
+                             <span className="text-[9px] font-black uppercase">Trap Focus: {trapQuestion.trapType}</span>
+                             <span className="text-[9px] font-black">{trapQuestion.subject}</span>
+                          </div>
+                          <p className="text-[10px] font-bold leading-relaxed">{trapQuestion.text}</p>
+                          <div className="pt-3 border-t border-white/10">
+                             <p className="text-[9px] font-black text-amber-300 flex items-center gap-2">
+                               <HelpCircle size={12} />
+                               <span>تحلیل تله طراح:</span>
+                             </p>
+                             <p className="text-[9px] opacity-80 mt-1 font-bold">{trapQuestion.explanation}</p>
+                          </div>
+                          <button className="w-full py-2 bg-white/10 hover:bg-white/20 rounded-xl text-[9px] font-black transition">افزودن به بانک سوالات موسسه</button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    {!trapQuestion && !isGeneratingTrap && (
+                      <div className="py-12 flex flex-col items-center justify-center opacity-20">
+                        <Cpu size={40} className="text-slate-400" />
+                        <p className="text-[10px] font-black mt-2">یک درس را انتخاب کنید</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="bg-slate-900 p-6 rounded-3xl text-white space-y-4">
+                   <div className="flex items-center gap-3">
+                      <Sparkles size={20} className="text-amber-400" />
+                      <div className="text-right">
+                        <h4 className="text-xs font-black">ماژول‌های در صف انتظار (Roadmap Phase 4 Preview)</h4>
+                        <p className="text-[9px] opacity-60 font-bold">این قابلیت‌ها در لایه استقرار آلفا هستند</p>
+                      </div>
+                   </div>
+                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {[
+                        { name: "شبیه‌ساز صوتی کنکور", status: "آماده‌سازی مدل", color: "bg-blue-500/20" },
+                        { name: "پردازشگر تصویر جزوه", status: "درحال اسکن", color: "bg-purple-500/20" },
+                        { name: "هدایت تحصیلی هوشمند", status: "تایید استاندارد", color: "bg-emerald-500/20" }
+                      ].map((mod, i) => (
+                        <div key={i} className={`${mod.color} p-3 rounded-2xl border border-white/5 space-y-1`}>
+                           <div className="text-[10px] font-black">{mod.name}</div>
+                           <div className="text-[8px] opacity-50 font-bold">{mod.status}</div>
+                        </div>
+                      ))}
                    </div>
                 </div>
               </motion.div>

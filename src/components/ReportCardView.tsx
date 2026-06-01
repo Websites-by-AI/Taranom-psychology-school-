@@ -3,6 +3,7 @@ import { Table, Brain, Smile, CalendarCheck, ShieldCheck, Download, Sparkles, Al
 import { motion, AnimatePresence } from "motion/react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from "recharts";
 import { Student, Exam, Weakness, PsychologicalAnalysis, DailyPlan } from "../types";
+import { BRAND_CONFIG } from "../constants";
 import { getTestTraps, saveTestTrap } from "../lib/traps";
 import { addSystemLog } from "../lib/syslogs";
 
@@ -369,7 +370,8 @@ export default function ReportCardView({ student, onNavigate }: ReportCardViewPr
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           lessons: examToAnalyze.lessons,
-          field: student.field
+          field: student.field,
+          student: student
         })
       });
       if (!res.ok) {
@@ -459,8 +461,8 @@ export default function ReportCardView({ student, onNavigate }: ReportCardViewPr
           questions = 35;
           severity = sub.percentage < 40 ? "critical" : "warning";
         } else if (sub.lessonName.includes("جامعه") || sub.lessonName.includes("جزا") || sub.lessonName.includes("حقوق")) {
-          topic = "قواعد عمومی جرم و مسئولیت کیفری و عقود معین";
-          rec = "تمرکز روی موانع مسئولیت کیفری، تعلیق انشا و سقوط تعهدات؛ بررسی ۴۰ تست کنکوری کایزن.";
+          topic = "فرمول‌های مشتق و انتگرال و مباحث ترکیبی";
+          rec = "تمرکز روی مباحث پر تکرار و بودجه‌بندی سنجش؛ بررسی ۴۰ تست کنکوری کایزن.";
           questions = 40;
           severity = sub.percentage < 40 ? "critical" : "warning";
         }
@@ -1037,7 +1039,7 @@ export default function ReportCardView({ student, onNavigate }: ReportCardViewPr
                         <span className="p-2 bg-purple-700 text-white rounded-xl"><Sparkles size={18} /></span>
                         <div>
                           <p className="text-purple-950 font-bold text-sm">بروشور طلایی عارضه‌یابی و مهار گلوگاه‌های آزمون صادر گردید!</p>
-                          <p className="text-purple-700 text-xs mt-0.5">شامل تحلیل شروط عقود و فرآیندهای نوین دادرسی کیفری چتر دانش به عنوان مربی هوشمند علمی در جیب شما.</p>
+                          <p className="text-purple-700 text-xs mt-0.5">شامل تحلیل مباحث تست‌خیز زیست‌شناسی، فیزیک و شیمی {BRAND_CONFIG.examProvider} به عنوان مربی هوشمند علمی در جیب شما.</p>
                         </div>
                       </div>
                       <button 
@@ -1088,7 +1090,7 @@ export default function ReportCardView({ student, onNavigate }: ReportCardViewPr
                     {isAlertVisible && (
                       <div className="p-4 bg-blue-50 text-blue-800 rounded-xl border border-blue-200 text-xs flex items-center gap-2">
                         <AlertCircle className="animate-spin" size={16} />
-                        <span>در پیشبرد تقاضای به خدمت‌گیری هوش مصنوعی چتر دانش جهت دانلود اسناد...</span>
+                        <span>در پیشبرد تقاضای به خدمت‌گیری هوش مصنوعی {BRAND_CONFIG.examProvider} جهت دانلود اسناد...</span>
                       </div>
                     )}
                   </div>

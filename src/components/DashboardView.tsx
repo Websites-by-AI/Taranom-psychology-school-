@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { 
   Sparkles, Calendar, TrendingUp, AlertTriangle, CheckSquare, Target, 
   Quote, ChevronLeft, Zap, Smile, HeartPulse, Brain, Compass, BookOpen, Clock, Check, Layers, Users, ShieldAlert,
-  RefreshCw, X
+  RefreshCw, X, Timer, MousePointer2
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { Student, Weakness, DailyPlan, TestTrap } from "../types";
+import { BRAND_CONFIG } from "../constants";
 import GoalTracker from "./GoalTracker";
 import { addSystemLog } from "../lib/syslogs";
 import { getTestTraps } from "../lib/traps";
@@ -85,6 +86,7 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
   const [optimizationStep, setOptimizationStep] = useState<number>(0);
   const [optimizationLogs, setOptimizationLogs] = useState<string[]>([]);
   const [showCelebration, setShowCelebration] = useState<boolean>(false);
+  const [isMetricsCondensed, setIsMetricsCondensed] = useState<boolean>(false);
 
   const toPersianNum = (num: number | string) => {
     const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
@@ -330,10 +332,12 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
           </p>
         </div>
         
-        <div className="relative z-10 font-mono text-left bg-slate-50 border border-slate-100 p-3 rounded-2xl flex items-center gap-3">
-          <div className="text-right">
-            <span className="text-[10px] text-slate-400 block font-sans font-bold">شماره داوطلبی</span>
-            <span className="text-xs font-black text-indigo-950">{toPersianNum(student.code)}</span>
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="font-mono text-left bg-slate-50 border border-slate-100 p-3 rounded-2xl flex items-center gap-3">
+            <div className="text-right">
+              <span className="text-[10px] text-slate-400 block font-sans font-bold">شماره داوطلبی</span>
+              <span className="text-xs font-black text-indigo-950">{toPersianNum(student.code)}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -604,19 +608,19 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
                         <div className="space-y-1">
                           <strong className="text-xs font-bold text-slate-800 block">تنظیم فرکانس مرورهای هفتگی</strong>
                           <p className="text-[11px] text-slate-600 leading-relaxed">
-                            خلاصه‌نویسی مباحث عقود معین کانون را در زمان‌های خستگی (ساعات پایانی شب) بازخوانی نمایید تا پایداری شناختی حفظ شود.
+                            خلاصه‌نویسی مباحث زیست‌شناسی و شیمی را در زمان‌های خستگی (ساعات پایانی شب) بازخوانی نمایید تا پایداری شناختی حفظ شود.
                           </p>
                         </div>
                       </div>
 
-                      <div className="flex items-start gap-3.5" id="step-2">
+                     <div className="flex items-start gap-3.5" id="step-2">
                         <span className="w-6 h-6 shrink-0 rounded-full bg-amber-500 text-white font-black text-xs flex items-center justify-center font-mono">
                           ۲
                         </span>
                         <div className="space-y-1">
                           <strong className="text-xs font-bold text-slate-800 block">رفع نقص حین تست‌های تالیفی</strong>
                           <p className="text-[11px] text-slate-600 leading-relaxed">
-                            اشتباهات تست‌های تالیفی چتر دانش را سریعاً در دفترچه پاسخ تشریحی پیگیری کنید تا در آزمون کانون تکرار نگردند.
+                            اشتباهات تست‌های تالیفی {BRAND_CONFIG.examProvider} را سریعاً در دفترچه پاسخ تشریحی پیگیری کنید تا در آزمون کانون تکرار نگردند.
                           </p>
                         </div>
                       </div>
@@ -628,7 +632,7 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
                         <div className="space-y-1">
                           <strong className="text-xs font-bold text-slate-800 block">سنکرون‌سازی مطالعه با مربی ناظر</strong>
                           <p className="text-[11px] text-slate-600 leading-relaxed">
-                            تقویم مربیگری را با اهداف آزمون‌های آزمایشی چتر دانش هماهنگ کنید تا انحرافی در آمارهای پیشرفت بصری رخ ندهد.
+                            تقویم مربیگری را با اهداف {BRAND_CONFIG.examProvider} هماهنگ کنید تا انحرافی در آمارهای پیشرفت بصری رخ ندهد.
                           </p>
                         </div>
                       </div>
@@ -655,7 +659,7 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
                     className="px-4 py-2 bg-blue-50 text-blue-900 border border-blue-200 hover:bg-blue-100 rounded-xl text-xs font-bold transition-all cursor-pointer"
                     id="qei-troubleshooting-modal-counselor-btn"
                   >
-                    مراجعه به مشاور علمی چتر دانش (AI)
+                    مراجعه به مشاور علمی (AI)
                   </button>
                   <button
                     onClick={() => {
@@ -693,7 +697,7 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
             <div className="flex items-center gap-2">
               <span className="p-1 px-2.5 bg-amber-400/10 text-amber-300 border border-amber-400/20 rounded-lg text-[9px] font-black tracking-wider flex items-center gap-1 uppercase">
                 <Sparkles size={11} className="text-amber-400 animate-spin-slow" />
-                <span>رهنمود مدیریتی و مربیگری علمی چتر دانش</span>
+                <span>رهنمود مدیریتی و مربیگری علمی {BRAND_CONFIG.examProvider}</span>
               </span>
             </div>
             
@@ -705,7 +709,7 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
               )}
             </h2>
             
-            <p className="text-[11px] text-indigo-250">صادر شده توسط هوش تجمیعی مشاور ارشد چتر دانش (دستیار علمی آزمون‌های حقوقی)</p>
+            <p className="text-[11px] text-indigo-250">صادر شده توسط هوش تجمیعی مشاور ارشد {BRAND_CONFIG.name} (دستیار علمی آزمون‌های سراسری)</p>
           </div>
 
           <div className="flex-shrink-0 bg-white/5 border border-white/10 rounded-2xl p-4 w-full lg:w-85 backdrop-blur-sm space-y-3">
@@ -1047,150 +1051,193 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
       </div>
 
       {/* Metrics Cards Grid - Ultra Slick Redesigned */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="metrics-grid">
-        
-        {/* Traz Score Metric Card */}
-        <div 
-          className={`rounded-3xl p-5 border shadow-sm hover:shadow-md transition-all group flex flex-col justify-between h-[124px] ${
-            qeiValue < 5000 
-              ? "bg-red-50/70 border-red-300 ring-2 ring-red-500/25 animate-pulse text-red-950" 
-              : qeiValue < 5200
-                ? "bg-amber-50/70 border-amber-300 ring-2 ring-amber-500/25 animate-pulse text-amber-950"
-                : "bg-white border-slate-100 text-slate-800"
-          }`} 
-          id="metric-traz"
-        >
-          <div className="flex items-start justify-between">
-            <div className="space-y-1">
-              <span className={`text-[10px] font-bold block pb-0.5 ${
+      <div className="space-y-4" id="metrics-section-container">
+        <div className="flex items-center justify-between px-2">
+          <div className="flex items-center gap-2">
+            <div className={`w-2 h-2 rounded-full ${qeiValue < 5200 ? "bg-rose-500 animate-pulse" : "bg-emerald-500"}`}></div>
+            <span className="text-[10px] font-black text-slate-500 uppercase tracking-tighter">Live Performance Indices</span>
+          </div>
+          <button 
+            onClick={() => setIsMetricsCondensed(!isMetricsCondensed)}
+            className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-[10px] font-bold transition-all cursor-pointer"
+          >
+            {isMetricsCondensed ? <RefreshCw size={12} /> : <Layers size={12} />}
+            <span>{isMetricsCondensed ? "نمایش کامل جزییات" : "حالت فشرده (تاشو)"}</span>
+          </button>
+        </div>
+
+        <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 transition-all duration-500 ${isMetricsCondensed ? "opacity-95" : ""}`} id="metrics-grid">
+          
+          {/* Traz Score Metric Card */}
+          <div 
+            className={`rounded-3xl border shadow-sm hover:shadow-md transition-all group relative overflow-hidden flex flex-col justify-between ${
+              isMetricsCondensed ? "p-4 h-[80px]" : "p-5 h-[124px]"
+            } ${
+              qeiValue < 5000 
+                ? "bg-red-50/70 border-red-300 ring-2 ring-red-500/25 text-red-950" 
+                : qeiValue < 5200
+                  ? "bg-amber-50/70 border-amber-300 ring-2 ring-amber-500/25 text-amber-950"
+                  : "bg-white border-slate-100 text-slate-800"
+            }`} 
+            id="metric-traz"
+          >
+            {qeiValue < 5200 && (
+              <div className="absolute inset-0 bg-red-500/5 animate-pulse pointer-events-none z-0" />
+            )}
+            
+            <div className="flex items-start justify-between relative z-10">
+              <div className="space-y-1 text-right">
+                <span className={`text-[10px] font-black block pb-0.5 ${
+                  qeiValue < 5000 
+                    ? "text-red-700" 
+                    : qeiValue < 5200 
+                      ? "text-amber-700" 
+                      : "text-slate-400"
+                }`}>
+                  تراز و موقعیت رقبا
+                </span>
+                {!isMetricsCondensed && <p className="text-xs font-black">تراز تجمعی آزمون کل (QEI)</p>}
+              </div>
+              <div className={`${isMetricsCondensed ? "w-8 h-8" : "w-10 h-10"} rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 ${
                 qeiValue < 5000 
-                  ? "text-red-700" 
+                  ? "bg-red-100 text-red-650" 
                   : qeiValue < 5200 
-                    ? "text-amber-700" 
-                    : "text-slate-400"
+                    ? "bg-amber-100 text-amber-600" 
+                    : "bg-blue-50 text-blue-600"
               }`}>
-                تراز و موقعیت رقبای کنکور
-              </span>
-              <p className="text-xs font-black">تراز تجمعی آزمون کل (QEI)</p>
+                {qeiValue < 5200 ? <ShieldAlert size={isMetricsCondensed ? 16 : 20} className={qeiValue < 5000 ? "animate-bounce" : "animate-pulse"} /> : <TrendingUp size={isMetricsCondensed ? 16 : 20} />}
+              </div>
             </div>
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 ${
+
+            <div className={`flex items-center justify-between relative z-10 ${isMetricsCondensed ? "mt-1" : "mt-3 pt-2 border-t"} ${
               qeiValue < 5000 
-                ? "bg-red-100 text-red-650" 
+                ? "border-red-200" 
                 : qeiValue < 5200 
-                  ? "bg-amber-100 text-amber-600" 
-                  : "bg-blue-50 text-blue-600"
+                  ? "border-amber-200" 
+                  : "border-slate-50"
             }`}>
-              {qeiValue < 5200 ? <ShieldAlert size={20} className={qeiValue < 5000 ? "animate-bounce" : "animate-pulse"} /> : <TrendingUp size={20} />}
+              <div className="flex items-baseline gap-1.5">
+                <span className={`${isMetricsCondensed ? "text-xl" : "text-2xl"} font-black font-mono`}>{toPersianNum(qeiValue.toLocaleString())}</span>
+                <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-md border ${
+                  qeiValue < 5000 
+                    ? "bg-red-600 text-white border-red-500 shadow-sm shadow-red-200"
+                    : qeiValue < 5200
+                      ? "bg-amber-500 text-white border-amber-400"
+                      : qeiValue > 5575 
+                        ? "bg-emerald-50 text-emerald-600 border-emerald-100" 
+                        : "bg-slate-50 text-slate-400 border-slate-100"
+                }`}>
+                  {qeiValue < 5000 
+                    ? "بحرانی" 
+                    : qeiValue < 5200
+                      ? "هشدار تراز"
+                      : qeiValue > 5575 
+                        ? `▲ ${toPersianNum(qeiValue - 5575)}+` 
+                        : "تراز پایه"
+                  }
+                </span>
+              </div>
+              {!isMetricsCondensed && (
+                <span className={`text-[9px] ${
+                  qeiValue < 5000 
+                    ? "text-red-700 font-black animate-pulse" 
+                    : qeiValue < 5200
+                      ? "text-amber-700 font-black animate-pulse"
+                      : "text-slate-400"
+                }`}>
+                  {qeiValue < 5000 
+                    ? "⚠️ افت شدید تراز" 
+                    : qeiValue < 5200
+                      ? "⚠️ روند نزولی ممیزی"
+                      : `پایش برخط ${BRAND_CONFIG.name}`
+                  }
+                </span>
+              )}
             </div>
           </div>
-          <div className={`flex items-center justify-between mt-3 pt-2 border-t ${
-            qeiValue < 5000 
-              ? "border-red-200" 
-              : qeiValue < 5200 
-                ? "border-amber-200" 
-                : "border-slate-50"
-          }`}>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-2xl font-black font-mono">{toPersianNum(qeiValue.toLocaleString())}</span>
-              <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-md border ${
-                qeiValue < 5000 
-                  ? "bg-red-600 text-white border-red-500"
-                  : qeiValue < 5200
-                    ? "bg-amber-500 text-white border-amber-400"
-                    : qeiValue > 5575 
-                      ? "bg-emerald-50 text-emerald-600 border-emerald-100" 
-                      : "bg-slate-50 text-slate-400 border-slate-100"
-              }`}>
-                {qeiValue < 5000 
-                  ? "بحرانی" 
-                  : qeiValue < 5200
-                    ? "هشدار تراز"
-                    : qeiValue > 5575 
-                      ? `▲ ${toPersianNum(qeiValue - 5575)}+` 
-                      : "تراز پایه"
-                }
-              </span>
-            </div>
-            <span className={`text-[9px] ${
-              qeiValue < 5000 
-                ? "text-red-700 font-black animate-pulse" 
-                : qeiValue < 5200
-                  ? "text-amber-700 font-black animate-pulse"
-                  : "text-slate-400"
-            }`}>
-              {qeiValue < 5000 
-                ? "⚠️ افت شدید تراز" 
-                : qeiValue < 5200
-                  ? "⚠️ روند نزولی ممیزی"
-                  : "پایش برخط چتر دانش"
-              }
-            </span>
-          </div>
-        </div>
 
-        {/* Avg Correct Percentage Card */}
-        <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between h-[124px]" id="metric-percentage">
-          <div className="flex items-start justify-between">
-            <div className="space-y-1">
-              <span className="text-[10px] font-bold text-slate-400 block pb-0.5">درصد پاسخگویی و کالباره کانون</span>
-              <p className="text-xs font-black text-slate-600">نرخ پاسخگویی صحیح (سالم)</p>
+          {/* Avg Correct Percentage Card */}
+          <div 
+            className={`bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between ${
+              isMetricsCondensed ? "p-4 h-[80px]" : "p-5 h-[124px]"
+            }`} 
+            id="metric-percentage"
+          >
+            <div className="flex items-start justify-between">
+              <div className="space-y-1 text-right">
+                <span className="text-[10px] font-bold text-slate-400 block pb-0.5">درصد پاسخگویی کانون</span>
+                {!isMetricsCondensed && <p className="text-xs font-black text-slate-600">نرخ پاسخگویی صحیح</p>}
+              </div>
+              <div className={`${isMetricsCondensed ? "w-8 h-8" : "w-10 h-10"} rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center transition-transform group-hover:scale-110`}>
+                <Target size={isMetricsCondensed ? 16 : 20} />
+              </div>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center transition-transform group-hover:scale-110">
-              <Target size={20} />
+            <div className={`flex items-center justify-between ${isMetricsCondensed ? "mt-1" : "mt-3 pt-2 border-t border-slate-50"}`}>
+              <div className="flex items-baseline gap-1.5">
+                <span className={`${isMetricsCondensed ? "text-xl" : "text-2xl"} font-black text-slate-800 font-mono`}>{toPersianNum(successRate)}٪</span>
+                {!isMetricsCondensed && <span className="text-[9px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-100">هدف: ۸۵٪</span>}
+              </div>
+              {!isMetricsCondensed && (
+                <span className="text-[9px] text-slate-400 text-left">
+                  {successRate >= 85 ? "پیش‌بینی رتبه عالی" : `فاصله ${toPersianNum(85 - successRate)}٪`}
+                </span>
+              )}
             </div>
           </div>
-          <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-50">
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-2xl font-black text-slate-800 font-mono">{toPersianNum(successRate)}٪</span>
-              <span className="text-[9px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-100">سقف مطلوب: ۸۵٪</span>
-            </div>
-            <span className="text-[9px] text-slate-400 text-left">
-              {successRate >= 85 ? "پیش‌بینی رتبه ۲ رقمی کانون" : `فاصله ${toPersianNum(85 - successRate)} پله‌ای`}
-            </span>
-          </div>
-        </div>
 
-        {/* Severe Weakness Count Card */}
-        <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between h-[124px]" id="metric-weaknesses">
-          <div className="flex items-start justify-between">
-            <div className="space-y-1">
-              <span className="text-[10px] font-bold text-slate-400 block pb-0.5">آنالیز اشتباهات تصحیح کارنامه</span>
-              <p className="text-xs font-black text-slate-655">تعداد دروس نمره منفی بحرانی</p>
+          {/* Severe Weakness Count Card */}
+          <div 
+            className={`bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between ${
+              isMetricsCondensed ? "p-4 h-[80px]" : "p-5 h-[124px]"
+            }`} 
+            id="metric-weaknesses"
+          >
+            <div className="flex items-start justify-between">
+              <div className="space-y-1 text-right">
+                <span className="text-[10px] font-bold text-slate-400 block pb-0.5">آنالیز کارنامه فنی</span>
+                {!isMetricsCondensed && <p className="text-xs font-black text-slate-655">تعداد دروس بحرانی</p>}
+              </div>
+              <div className={`${isMetricsCondensed ? "w-8 h-8" : "w-10 h-10"} rounded-xl bg-red-50 text-red-600 flex items-center justify-center transition-transform group-hover:scale-110`}>
+                <AlertTriangle size={isMetricsCondensed ? 16 : 20} className={bottleneckCount > 0 ? "animate-pulse" : ""} />
+              </div>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center transition-transform group-hover:scale-110">
-              <AlertTriangle size={20} className={bottleneckCount > 0 ? "animate-pulse" : ""} />
+            <div className={`flex items-center justify-between ${isMetricsCondensed ? "mt-1" : "mt-3 pt-2 border-t border-slate-50"}`}>
+              <div className="flex items-baseline gap-1">
+                <span className={`${isMetricsCondensed ? "text-xl" : "text-2xl"} font-black text-red-600 font-mono`}>{toPersianNum(bottleneckCount)}</span>
+                <span className="text-[10px] text-slate-500 font-bold">درس</span>
+              </div>
+              {!isMetricsCondensed && (
+                <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-bold border ${
+                  bottleneckCount > 0 ? "bg-red-50 text-red-600 border-red-100" : "bg-emerald-50 text-emerald-600 border-emerald-100"
+                }`}>
+                  {bottleneckCount > 0 ? "نیاز به تست" : "آماده کامل"}
+                </span>
+              )}
             </div>
           </div>
-          <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-50">
-            <div className="flex items-baseline gap-1">
-              <span className="text-2xl font-black text-red-600 font-mono">{toPersianNum(bottleneckCount)}</span>
-              <span className="text-[10px] text-slate-500 font-bold">مبحث درسی ضعیف</span>
-            </div>
-            <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-bold border ${
-              bottleneckCount > 0 ? "bg-red-50 text-red-600 border-red-100" : "bg-emerald-50 text-emerald-600 border-emerald-100"
-            }`}>
-              {bottleneckCount > 0 ? "نیاز مبرم به تست" : "تراز آمادگی کامل"}
-            </span>
-          </div>
-        </div>
 
-        {/* Study Streak Card */}
-        <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between h-[124px]" id="metric-streak">
-          <div className="flex items-start justify-between">
-            <div className="space-y-1">
-              <span className="text-[10px] font-bold text-slate-400 block pb-0.5">پیوستگی مطالعه روزانه داوطلب</span>
-              <p className="text-xs font-black text-slate-600">پیوستگی مطالعه (روز)</p>
+          {/* Study Streak Card */}
+          <div 
+            className={`bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between ${
+              isMetricsCondensed ? "p-4 h-[80px]" : "p-5 h-[124px]"
+            }`} 
+            id="metric-streak"
+          >
+            <div className="flex items-start justify-between">
+              <div className="space-y-1 text-right">
+                <span className="text-[10px] font-bold text-slate-400 block pb-0.5">پیوستگی مطالعه</span>
+                {!isMetricsCondensed && <p className="text-xs font-black text-slate-600">پیوستگی (روزانه)</p>}
+              </div>
+              <div className={`${isMetricsCondensed ? "w-8 h-8" : "w-10 h-10"} rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center transition-transform group-hover:scale-110`}>
+                <Zap size={isMetricsCondensed ? 16 : 20} className="text-emerald-600 fill-emerald-100" />
+              </div>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center transition-transform group-hover:scale-110">
-              <Zap size={20} className="text-emerald-600 fill-emerald-100" />
+            <div className={`flex items-center justify-between ${isMetricsCondensed ? "mt-1" : "mt-3 pt-2 border-t border-slate-50"}`}>
+              <div className="flex items-baseline gap-2">
+                <span className={`${isMetricsCondensed ? "text-xl" : "text-2xl"} font-black text-emerald-800 font-mono`}>{toPersianNum(streakDays)} روز</span>
+              </div>
+              {!isMetricsCondensed && <span className="text-[9px] text-slate-400 font-bold">بدون خلاء</span>}
             </div>
-          </div>
-          <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-50">
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-black text-emerald-800 font-mono">{toPersianNum(streakDays)} روز</span>
-              <span className="text-[9px] font-black px-1.5 py-0.5 bg-emerald-50 text-emerald-700 rounded-md border border-emerald-100">انگیزه مطالعاتی پایدار 🔥</span>
-            </div>
-            <span className="text-[9px] text-slate-400 font-bold">بدون خلاء برنامه‌ریزی</span>
           </div>
         </div>
       </div>
@@ -1198,7 +1245,7 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
       {/* Goal Tracking Core Section */}
       <div className="relative">
         <div className="absolute top-0 left-0 bg-blue-100/30 text-blue-900 border border-blue-200/50 py-1 px-3.5 rounded-bl-3xl rounded-tr-3xl text-[9px] font-extrabold z-10 pointer-events-none">
-          پروژه مانیتورینگ عملکرد و برنامه‌ریزی تراز داوطلبان چتر دانش
+          پروژه مانیتورینگ عملکرد و برنامه‌ریزی تراز داوطلبان {BRAND_CONFIG.name}
         </div>
         <GoalTracker 
           key={`${student.id}_${qeiValue}_${successRate}`} 
@@ -1290,7 +1337,7 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
             onClick={() => onNavigate("schedule")}
             className="w-full bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-705 py-3 rounded-2xl text-[11px] font-bold transition flex items-center justify-center gap-1.5 cursor-pointer mt-4 hover:text-slate-950 font-sans"
           >
-            <span>مشاهده سیستم برنامه‌ریزی هفتگی و مربیگری ناظر چتر دانش</span>
+            <span>مشاهده سیستم برنامه‌ریزی هفتگی و مربیگری ناظر {BRAND_CONFIG.name}</span>
             <ChevronLeft size={14} />
           </button>
         </div>
@@ -1498,7 +1545,6 @@ export default function DashboardView({ student, onNavigate }: DashboardViewProp
           </div>
         </div>
       </div>
-
     </div>
   );
 }

@@ -1,23 +1,38 @@
 import React, { useState } from "react";
 import { 
-  Users, BarChart, UploadCloud, Film, Activity, Search, Filter, ShieldCheck, HeartPulse, Check,
+  Users, BarChart, UploadCloud, Film, Activity, Search, Filter, ShieldCheck, HeartPulse, Check, Shield,
   Terminal, Lock, Key, Copy, Layers, Server, Globe, Cpu, AlertCircle, FileCode, CheckSquare, Database, TrendingUp, Sparkles,
-  ChevronRight, ArrowRight, Play, BookOpen, Clock, Zap, List, RefreshCw, Target, Plus
+  ChevronRight, ArrowRight, Play, BookOpen, Clock, Zap, List, RefreshCw, Target, Plus, Brain, Percent, UserPlus, ChevronDown, MapPin, Home, GraduationCap, DollarSign, Wallet, CreditCard, Link, HelpCircle, FileText
 } from "lucide-react";
 import { getSystemLogs, addSystemLog } from "../lib/syslogs";
 import { Student } from "../types";
 
+import InvestmentView from "./InvestmentView";
+import ContentAuditModule from "./ContentAuditModule";
+
+import SaaSContractView from "./SaaSContractView";
+
 export default function AdminView({ student }: { student: Student }) {
-  const [activeTab, setActiveTab] = useState<"students" | "analytics" | "uploads" | "content"| "sysdocs" | "roadmap" | "architecture" | "mockexam" | "syslogs" | "integrations">("roadmap");
+  const [activeTab, setActiveTab] = useState<"students" | "analytics" | "uploads" | "content"| "sysdocs" | "roadmap" | "architecture" | "mockexam" | "syslogs" | "integrations" | "investment" | "audit" | "zarinpal" | "diagnostics" | "contract">("roadmap");
   const [searchTerm, setSearchTerm] = useState("");
   const [filterField, setFilterField] = useState("all");
   const [selectedScenario, setSelectedScenario] = useState<"mvp" | "stable" | "enterprise">("stable");
   const [concurrentStudents, setConcurrentStudents] = useState<number>(12000); // Slider scale (1,000 to 100,000)
+  const [activeSchemaTab, setActiveSchemaTab] = useState(0);
+  
+  // Derived architecture calculations
+  const calcDbConns = Math.ceil(concurrentStudents * 0.08); 
+  const calcRedisRam = Math.ceil(concurrentStudents * 0.005);
+  const calcRabbitQueue = Math.ceil(concurrentStudents * 0.15);
+  const calcKubernetesPods = Math.ceil(concurrentStudents / 800);
+  const calcAIWorkers = Math.ceil(concurrentStudents / 400);
+  const calcNetworkUplink = (concurrentStudents * 0.25).toFixed(1);
+
   const [isUploading, setIsUploading] = useState(false);
   
   // --- INTEGRATIONS STATE ---
   const [geminiKey, setGeminiKey] = useState("");
-  const [geminiEndpoint, setGeminiEndpoint] = useState("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent");
+  const [geminiEndpoint, setGeminiEndpoint] = useState("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent");
   const [dbApiKey, setDbApiKey] = useState("");
   const [dbEndpoint, setDbEndpoint] = useState("https://firestore.googleapis.com/v1/projects/taranom-mehr-app/databases/(default)/documents");
   
@@ -89,13 +104,13 @@ export default function AdminView({ student }: { student: Student }) {
       title: "معماری چندمستأجری و اکوسیستم هوشمند مشاوران (SaaS)",
       englishTitle: "Multi-Tenancy, Advanced SaaS & Analytics Dashboard",
       period: "سه ماهه اول تا سوم ۱۴۰۴",
-      status: "in-progress",
-      percentage: 82,
+      status: "completed",
+      percentage: 100,
       description: "تبدیل پلتفرم آکادمی به یک پرتال ابری پیشرفته (SaaS) جهت سرویس‌دهی به مراکز آموزشی سراسر کشور، پایش آنی و عارضه‌یابی عملکرد داوطلبان توسط مشاوران تراز اول ترنم مهر.",
       tasks: [
         { id: "2-1", text: "مبنای ماژولار توزیع داده مراکز (SaaS Multi-Tenancy Partitioning)", completed: true },
         { id: "2-2", text: "داشبورد اختصاصی مشاوران آموزشی جهت پایش عیوب کارنامه", completed: true },
-        { id: "2-3", text: "سیستم بلادرنگ همگام‌سازی تله‌های داوطلب برای ارائه مشاوره صوتی", completed: false },
+        { id: "2-3", text: "سیستم بلادرنگ همگام‌سازی تله‌های داوطلب برای ارائه مشاوره صوتی", completed: true },
         { id: "2-4", text: "کاهش زمان پاسخ فرآیندهای محاسباتی با پایش بهینه پایگاه داده", completed: true }
       ],
       tags: ["SaaS Multi-Tenancy", "Advanced CRM Integration", "Auto-Scaling Ready"],
@@ -106,13 +121,13 @@ export default function AdminView({ student }: { student: Student }) {
       title: "اطلس آموزشی، بانک تله تستی سراسری و موتور معنایی RAG",
       englishTitle: "Education Knowledge Graph & Predictive AI (Test Traps)",
       period: "سه ماهه چهارم ۱۴۰۴ تا دوم ۱۴۰۵",
-      status: "planned",
-      percentage: 25,
+      status: "in-progress",
+      percentage: 65,
       description: "استقرار موتور استنتاج معنایی بر روی کتب درسی و بودجه‌بندی آموزش و پرورش، انطباق با تغییرات سرفصل‌ها و یکپارچه‌سازی اطلس تله‌های آزمون کنکور جهت حدس تله‌های محتمل در طراح هوشمند سوال.",
       tasks: [
-        { id: "3-1", text: "توسعه گراف معنایی بر پایه کتب درسی رشته‌های انسانی، تجربی و ریاضی", completed: false },
+        { id: "3-1", text: "توسعه گراف معنایی بر پایه کتب درسی رشته‌های انسانی، تجربی و ریاضی", completed: true },
         { id: "3-2", text: "اتصال پایگاه داده وکتوری Pinecone به موتور تحلیل عارضه ترنم مهر", completed: true },
-        { id: "3-3", text: "سیستم هوشمند انطباق سرفصل‌ها با سوالات تستی تولید شده توسط هوش مصنوعی", completed: false },
+        { id: "3-3", text: "سیستم هوشمند انطباق سرفصل‌ها با سوالات تستی تولید شده توسط هوش مصنوعی (فعال جهت تست)", completed: true },
         { id: "3-4", text: "دستیار صوتی مشاور مجهز به سنتز سخن آموزشی جهت راهنمایی داوطلب", completed: false }
       ],
       tags: ["Vector Embeddings", "Semantic Academic Search", "RAG Pipeline"],
@@ -406,13 +421,67 @@ export default function AdminView({ student }: { student: Student }) {
     setGeneratedQuestion(randomQ);
   };
 
-  const mockStudents = [
+  const [studentsList, setStudentsList] = useState([
     { id: "1", name: "مریم حسینی", code: "9812405", field: "کنکور انسانی", traz: 8200, status: "فعال", advisor: "استاد رحیمی" },
     { id: "2", name: "علیرضا رضایی", code: "9786431", field: "کنکور تجربی", traz: 7450, status: "فعال", advisor: "دکتر سمیعی" },
     { id: "3", name: "امیرمحمد اکبری", code: "9921477", field: "کنکور ریاضی", traz: 6980, status: "فعال", advisor: "مهندس علوی" },
     { id: "4", name: "الناز کریمی", code: "9823521", field: "کنکور انسانی", traz: 8550, status: "فعال", advisor: "استاد رحیمی" },
     { id: "5", name: "امیرعباس سمیعی", code: "9912004", field: "کنکور تجربی", traz: 5120, status: "غیرفعال", advisor: "دکتر سمیعی" }
-  ];
+  ]);
+
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [newStudent, setNewStudent] = useState<Partial<Student>>({
+    name: "",
+    code: "",
+    field: "tajrobi",
+    grade: "",
+    city: "",
+    age: 18,
+    parentalContext: {
+      fatherAlive: true,
+      motherAlive: true,
+      childrenCount: 1,
+      fatherEducation: "دیپلم",
+      motherEducation: "دیپلم",
+      householdIncome: "mid",
+      familySupportLevel: "medium"
+    },
+    academicProfile: {
+      studyHoursPerDay: 8,
+      educationLevel: "پایه دوازدهم",
+      currentGpa: 18,
+      targetGpa: 19.5,
+      currentTraz: 6500,
+      targetTraz: 8000
+    },
+    goals: {
+      studentVision: "",
+      familyExpectation: ""
+    }
+  });
+
+  const handleRegisterStudent = () => {
+    if (!newStudent.name || !newStudent.code) return;
+    const studentToAdd = {
+      ...newStudent,
+      id: Date.now().toString(),
+      status: "فعال",
+      advisor: "تعیین نشده",
+      traz: newStudent.academicProfile?.currentTraz || 0,
+      field: newStudent.field === "tajrobi" ? "کنکور تجربی" : newStudent.field === "riazi" ? "کنکور ریاضی" : "کنکور انسانی"
+    } as any;
+
+    setStudentsList([studentToAdd, ...studentsList]);
+    setIsRegistering(false);
+    addSystemLog("ثبت نام داوطلب جدید", "مدیریت ارشد", `داوطلب ${newStudent.name} با کد ${newStudent.code} در سامانه ثبت شد.`);
+    // Reset form
+    setNewStudent({
+      name: "", code: "", field: "tajrobi", grade: "", city: "", age: 18,
+      parentalContext: { fatherAlive: true, motherAlive: true, childrenCount: 1, fatherEducation: "دیپلم", motherEducation: "دیپلم", householdIncome: "mid", familySupportLevel: "medium" },
+      academicProfile: { studyHoursPerDay: 8, educationLevel: "پایه دوازدهم", currentGpa: 18, targetGpa: 19.5, currentTraz: 6500, targetTraz: 8000 },
+      goals: { studentVision: "", familyExpectation: "" }
+    });
+  };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -428,7 +497,7 @@ export default function AdminView({ student }: { student: Student }) {
     }, 1500);
   };
 
-  const filteredStudents = mockStudents.filter((st) => {
+  const filteredStudents = studentsList.filter((st) => {
     const matchSearch = st.name.includes(searchTerm) || st.code.includes(searchTerm);
     const matchField = filterField === "all" || st.field === filterField;
     return matchSearch && matchField;
@@ -491,435 +560,274 @@ export default function AdminView({ student }: { student: Student }) {
     }
   ];
 
-  const [activeSchemaTab, setActiveSchemaTab] = useState<number>(0);
-
-  // Auto-scaling live calculation values based on concurrentStudents slider
-  const calcDbConns = Math.ceil(concurrentStudents * 0.08);
-  const calcRedisRam = Math.ceil((concurrentStudents * 125.3) / 1000) + 400; // MB
-  const calcRabbitQueue = concurrentStudents * 3.5; // writes/s
-  const calcKubernetesPods = Math.ceil(concurrentStudents / 6000);
-  const calcAIWorkers = Math.max(1, Math.ceil(concurrentStudents / 6000));
-  const calcNetworkUplink = concurrentStudents < 10000 
-    ? "استاندارد (1G Shared)" 
-    : concurrentStudents < 30000 
-    ? "متراکم (10G Dedicated)" 
-    : "فراملی (40G Multi-Route Uplink)";
+  const sidebarItems = [
+    { id: "roadmap", label: "🏁 نقشه راه توسعه (Roadmap)", icon: TrendingUp, color: "text-blue-700", status: "تست بتای AI فعال" },
+    { id: "architecture", label: "📐 سند معماری SaaS ادمین", icon: Layers, color: "text-indigo-600" },
+    { id: "mockexam", label: "📝 طراح هوشمند سوال و شبیه‌ساز", icon: Sparkles, color: "text-emerald-600" },
+    { id: "contract", label: "📜 قرارداد و لایسنس SaaS", icon: FileText, color: "text-blue-900" },
+    { id: "students", label: "👥 مدیریت شناسنامه داوطلبان", icon: Users, color: "text-slate-600" },
+    { id: "analytics", label: "📊 داشبورد تحلیلی تجمعی", icon: BarChart, color: "text-slate-600" },
+    { id: "uploads", label: "📤 آپلود دسته‌جمعی کارنامه‌ها", icon: UploadCloud, color: "text-slate-600" },
+    { id: "content", label: "📚 کتابخانه فایلها و منابع", icon: Film, color: "text-slate-600" },
+    { id: "sysdocs", label: "🛡️ مستندات استقرار و DevOps", icon: Terminal, color: "text-rose-600" },
+    { id: "syslogs", label: "📜 لاگ تغییرات سیستمی", icon: List, color: "text-amber-600" },
+    { id: "integrations", label: "🔌 تنظیمات اتصال و AI", icon: Globe, color: "text-indigo-600" },
+    { id: "diagnostics", label: "🔎 خطایابی و پایش ماژول‌ها", icon: Zap, color: "text-rose-600" },
+    { id: "zarinpal", label: "💳 تنظیمات درگاه زرین‌پال", icon: Wallet, color: "text-yellow-600" },
+    { id: "audit", label: "🛡️ پایش امنیتی محتوا", icon: Shield, color: "text-rose-600" },
+    { id: "investment", label: "💎 مشارکت و سرمایه‌گذاری", icon: TrendingUp, color: "text-emerald-600" },
+  ];
 
   return (
-    <div className="space-y-6" id="admin-view-container">
-      {/* Top Welcome Title */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-3xl border border-slate-100 shadow-sm bg-gradient-to-tr from-indigo-50/5 via-white to-transparent text-right">
-        <div>
-          <span className="text-[10px] bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-full border border-indigo-150 font-black inline-block mb-1 flex items-center gap-1 w-fit">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span>سامانه ابری و میکروسرویسی ترنم مهر فعال است</span>
-          </span>
-          <h2 className="text-xl font-black text-slate-900">مدیریت و آپلودر ترنم مهر</h2>
-          <span className="text-xs text-rose-600 font-extrabold block mt-0.5">دسترسی امن ادمین</span>
-          <p className="text-slate-500 text-xs mt-1 font-bold">
-            پنل مدیریت آکادمی هوشمند آموزشی ترنم مهر • مدیریت پرونده و تراز داوطلبان آزمونهای سراسری مجهز به ابزار آپلود کارنامهها و نظارت بر مدلهای AI
-          </p>
-        </div>
-        <div className="bg-emerald-50 text-emerald-700 px-4 py-3 rounded-2xl border border-emerald-100 flex items-center gap-2 font-bold shrink-0">
-          <ShieldCheck size={20} />
-          <span className="text-xs">پروتکل امنیتی ادمین متصل است ✓</span>
-        </div>
-      </div>
-
-      {/* Grid Tabs switching */}
-      <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden text-right" id="admin-operation-panels">
-        <div className="flex border-b border-slate-100 bg-slate-50/50 p-2 gap-1 overflow-x-auto scrollbar-none">
-          <button
-            onClick={() => setActiveTab("architecture")}
-            className={`flex items-center gap-2 py-3 px-4 text-xs font-bold rounded-xl whitespace-nowrap transition cursor-pointer ${
-              activeTab === "architecture" ? "bg-white text-blue-950 shadow-sm border border-slate-100" : "text-slate-500 hover:text-slate-800"
-            }`}
-          >
-            <Layers size={16} className="text-indigo-600" />
-            <span className="font-black">📐 سند معماری SaaS ادمین</span>
-          </button>
-          <button
-            onClick={() => setActiveTab("roadmap")}
-            className={`flex items-center gap-2 py-3 px-4 text-xs font-bold rounded-xl whitespace-nowrap transition cursor-pointer ${
-              activeTab === "roadmap" ? "bg-white text-blue-950 shadow-sm border border-slate-100" : "text-slate-500 hover:text-slate-800"
-            }`}
-          >
-            <TrendingUp size={16} className="text-blue-700" />
-            <span className="font-black">🏁 نقشه راه توسعه (Roadmap)</span>
-          </button>
-          <button
-            onClick={() => setActiveTab("mockexam")}
-            className={`flex items-center gap-2 py-3 px-4 text-xs font-bold rounded-xl whitespace-nowrap transition cursor-pointer ${
-              activeTab === "mockexam" ? "bg-white text-blue-950 shadow-sm border border-slate-100" : "text-slate-500 hover:text-slate-800"
-            }`}
-          >
-            <Sparkles size={16} className="text-emerald-600" />
-            <span className="font-extrabold text-slate-800">📝 طراح هوشمند سوال و شبیه‌ساز آزمون</span>
-          </button>
-          <button
-            onClick={() => setActiveTab("students")}
-            className={`flex items-center gap-2 py-3 px-4 text-xs font-bold rounded-xl whitespace-nowrap transition cursor-pointer ${
-              activeTab === "students" ? "bg-white text-blue-950 shadow-sm border border-slate-100" : "text-slate-500 hover:text-slate-800"
-            }`}
-          >
-            <Users size={16} />
-            <span>👥 مدیریت شناسنامه داوطلبان کنکور</span>
-          </button>
-          <button
-            onClick={() => setActiveTab("analytics")}
-            className={`flex items-center gap-2 py-3 px-4 text-xs font-bold rounded-xl whitespace-nowrap transition cursor-pointer ${
-              activeTab === "analytics" ? "bg-white text-blue-950 shadow-sm border border-slate-100" : "text-slate-500 hover:text-slate-800"
-            }`}
-          >
-            <BarChart size={16} />
-            <span>📊 داشبورد تحلیلی تجمعی موسسه</span>
-          </button>
-          <button
-            onClick={() => setActiveTab("uploads")}
-            className={`flex items-center gap-2 py-3 px-4 text-xs font-bold rounded-xl whitespace-nowrap transition cursor-pointer ${
-              activeTab === "uploads" ? "bg-white text-blue-950 shadow-sm border border-slate-100" : "text-slate-500 hover:text-slate-800"
-            }`}
-          >
-            <UploadCloud size={16} />
-            <span>📤 آپلود دسته‌جمعی کارنامه‌های داوطلبان</span>
-          </button>
-          <button
-            onClick={() => setActiveTab("content")}
-            className={`flex items-center gap-2 py-3 px-4 text-xs font-bold rounded-xl whitespace-nowrap transition cursor-pointer ${
-              activeTab === "content" ? "bg-white text-blue-950 shadow-sm border border-slate-100" : "text-slate-500 hover:text-slate-800"
-            }`}
-          >
-            <Film size={16} />
-            <span>📚 مدیریت فایلها و منابع ترنم مهر</span>
-          </button>
-          <button
-            onClick={() => setActiveTab("sysdocs")}
-            className={`flex items-center gap-2 py-3 px-4 text-xs font-bold rounded-xl whitespace-nowrap transition cursor-pointer ${
-              activeTab === "sysdocs" ? "bg-white text-blue-950 shadow-sm border border-slate-100" : "text-slate-500 hover:text-slate-800"
-            }`}
-          >
-            <Terminal size={15} className="text-rose-600" />
-            <span className="text-rose-700 font-extrabold">🛡️ مستندات استقرار و DevOps</span>
-          </button>
-          <button
-            onClick={() => setActiveTab("syslogs")}
-            className={`flex items-center gap-2 py-3 px-4 text-xs font-bold rounded-xl whitespace-nowrap transition cursor-pointer ${
-              activeTab === "syslogs" ? "bg-white text-blue-900 shadow-sm border border-slate-100" : "text-slate-500 hover:text-slate-800"
-            }`}
-          >
-            <List size={16} className="text-amber-600" />
-            <span className="font-black">📜 لاگ تغییرات سیستمی</span>
-          </button>
-          <button
-            onClick={() => setActiveTab("integrations")}
-            className={`flex items-center gap-2 py-3 px-4 text-xs font-bold rounded-xl whitespace-nowrap transition cursor-pointer ${
-              activeTab === "integrations" ? "bg-white text-indigo-900 shadow-sm border border-slate-100" : "text-slate-500 hover:text-slate-800"
-            }`}
-          >
-            <Globe size={16} className="text-indigo-600" />
-            <span className="font-black">🔌 تنظیمات اتصال و AI</span>
-          </button>
-        </div>
-
-        <div className="p-6">
-          {/* TAB: INTEGRATIONS & AI (Added based on user request) */}
-          {activeTab === "integrations" && (
-            <div className="space-y-8 animate-fade-in" id="admin-tab-integrations" style={{ direction: "rtl" }}>
-              <div className="bg-slate-50 p-5 rounded-3xl border border-slate-150 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div className="space-y-1">
-                  <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
-                    <Globe size={18} className="text-indigo-600" />
-                    <span>اتصالات و کلیدهای دسترسی (Gateways & API Keys)</span>
-                  </h3>
-                  <p className="text-[10px] text-slate-500 font-bold">مدیریت متمرکز نقاط اتصال هوش مصنوعی گوگل و پایگاه داده‌های ابری</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full font-black border border-emerald-200 flex items-center gap-1">
-                    <ShieldCheck size={12} />
-                    <span>لایه امنیتی TLS 1.3 فعال است</span>
-                  </span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 text-right">
-                {/* Google Gemini API Column */}
-                <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-6 relative overflow-hidden">
-                  <div className="absolute top-0 left-0 w-1 h-full bg-indigo-500" />
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl">
-                      <Cpu size={24} />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-black text-slate-900 leading-none">تنظیمات هوش مصنوعی Google Gemini</h4>
-                      <span className="text-[10px] text-slate-400 font-bold">مدل‌های LLM جهت تحلیل تله‌های تستی و تولید سوال</span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div className="space-y-1.5">
-                      <label className="text-[11px] font-black text-slate-700 flex items-center gap-1.5">
-                        <Globe size={14} className="text-slate-400" />
-                        <span>لینک Endpoint (API URL)</span>
-                      </label>
-                      <input 
-                        type="text" 
-                        value={geminiEndpoint}
-                        onChange={(e) => setGeminiEndpoint(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-3 text-xs font-mono text-slate-600 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
-                        style={{ direction: 'ltr' }}
-                      />
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <label className="text-[11px] font-black text-slate-700 flex items-center gap-1.5">
-                        <Key size={14} className="text-slate-400" />
-                        <span>کلید دسترسی (Gemini API Key)</span>
-                      </label>
-                      <div className="relative">
-                        <input 
-                          type="password" 
-                          value={geminiKey}
-                          onChange={(e) => setGeminiKey(e.target.value)}
-                          placeholder="AIzaSy... (محرمانه)"
-                          className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-3 text-xs font-mono text-slate-600 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
-                          style={{ direction: 'ltr' }}
-                        />
-                        <button className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 hover:text-indigo-600 transition">
-                          <Copy size={14} />
-                        </button>
-                      </div>
-                    </div>
-
-                    <button 
-                      onClick={() => testConnection("gemini")}
-                      className={`w-full py-3 rounded-2xl text-xs font-black flex items-center justify-center gap-2 transition-all ${
-                        testStatus.gemini === "loading" ? "bg-slate-100 text-slate-400 cursor-wait" :
-                        testStatus.gemini === "success" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" :
-                        testStatus.gemini === "error" ? "bg-rose-50 text-rose-700 border border-rose-100" :
-                        "bg-indigo-600 text-white hover:bg-indigo-700 shadow-md shadow-indigo-100"
-                      }`}
-                    >
-                      {testStatus.gemini === "loading" ? (
-                        <>
-                          <RefreshCw size={14} className="animate-spin" />
-                          <span>در حال پینگ کردن سرور...</span>
-                        </>
-                      ) : testStatus.gemini === "success" ? (
-                        <>
-                          <Check size={14} />
-                          <span>اتصال برقرار شد (Ping: 42ms)</span>
-                        </>
-                      ) : testStatus.gemini === "error" ? (
-                        <>
-                          <AlertCircle size={14} />
-                          <span>خطا در احراز هویت (401 Unauthorized)</span>
-                        </>
-                      ) : (
-                        <>
-                          <Activity size={14} />
-                          <span>تست اتصال به هوش مصنوعی</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Database Connection Column */}
-                <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-6 relative overflow-hidden">
-                  <div className="absolute top-0 left-0 w-1 h-full bg-amber-500" />
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 bg-amber-50 text-amber-600 rounded-2xl">
-                      <Database size={24} />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-black text-slate-900 leading-none">مدیریت دیتابیس ابری (Cloud Database)</h4>
-                      <span className="text-[10px] text-slate-400 font-bold">اتصال به سیستم ذخیره‌سازی داده‌های داوطلبان</span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div className="space-y-1.5">
-                      <label className="text-[11px] font-black text-slate-700 flex items-center gap-1.5">
-                        <Globe size={14} className="text-slate-400" />
-                        <span>لینک دیتابیس (Database URI)</span>
-                      </label>
-                      <input 
-                        type="text" 
-                        value={dbEndpoint}
-                        onChange={(e) => setDbEndpoint(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-3 text-xs font-mono text-slate-600 outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
-                        style={{ direction: 'ltr' }}
-                      />
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <label className="text-[11px] font-black text-slate-700 flex items-center gap-1.5">
-                        <Lock size={14} className="text-slate-400" />
-                        <span>کلید امنیتی دیتابیس (Secret API Key)</span>
-                      </label>
-                      <div className="relative">
-                        <input 
-                          type="password" 
-                          value={dbApiKey}
-                          onChange={(e) => setDbApiKey(e.target.value)}
-                          placeholder="FB_SECRET_..."
-                          className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-3 text-xs font-mono text-slate-600 outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
-                          style={{ direction: 'ltr' }}
-                        />
-                        <button className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 hover:text-amber-600 transition">
-                          <Copy size={14} />
-                        </button>
-                      </div>
-                    </div>
-
-                    <button 
-                      onClick={() => testConnection("database")}
-                      className={`w-full py-3 rounded-2xl text-xs font-black flex items-center justify-center gap-2 transition-all ${
-                        testStatus.database === "loading" ? "bg-slate-100 text-slate-400 cursor-wait" :
-                        testStatus.database === "success" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" :
-                        testStatus.database === "error" ? "bg-rose-50 text-rose-700 border border-rose-100" :
-                        "bg-amber-500 text-white hover:bg-amber-600 shadow-md shadow-amber-100"
-                      }`}
-                    >
-                      {testStatus.database === "loading" ? (
-                        <>
-                          <RefreshCw size={14} className="animate-spin" />
-                          <span>در حال تست کوئری...</span>
-                        </>
-                      ) : testStatus.database === "success" ? (
-                        <>
-                          <Check size={14} />
-                          <span>دیتابیس متصل و پایدار است</span>
-                        </>
-                      ) : testStatus.database === "error" ? (
-                        <>
-                          <AlertCircle size={14} />
-                          <span>خطای دسترسی (Forbidden 403)</span>
-                        </>
-                      ) : (
-                        <>
-                          <Server size={14} />
-                          <span>تست اتصال به دیتابیس</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Advanced AI Config Row */}
-              <div className="bg-gradient-to-l from-indigo-900 to-slate-900 p-8 rounded-3xl text-white space-y-6 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
-                <div className="flex items-center gap-4 relative z-10">
-                  <div className="p-3 bg-white/10 backdrop-blur-md rounded-2xl border border-white/10">
-                    <Sparkles size={28} className="text-amber-400" />
-                  </div>
-                  <div>
-                    <h4 className="text-base font-black">پارامترهای پیشرفته تولید محتوای AI</h4>
-                    <p className="text-[10px] text-indigo-200 font-bold">تنظیم دمای خلاقیت و توکن‌های خروجی برای دستیار آموزشی ترنم مهر</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-[10px] font-black text-indigo-200">خلاقیت مدل (Temperature)</span>
-                      <span className="text-xs font-mono font-black text-amber-400">0.7</span>
-                    </div>
-                    <div className="h-1 bg-white/10 rounded-full overflow-hidden">
-                      <div className="h-full w-[70%] bg-amber-400" />
-                    </div>
-                  </div>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-[10px] font-black text-indigo-200">حداکثر توکن خروجی</span>
-                      <span className="text-xs font-mono font-black text-amber-400">2048</span>
-                    </div>
-                    <div className="h-1 bg-white/10 rounded-full overflow-hidden">
-                      <div className="h-full w-[40%] bg-indigo-400" />
-                    </div>
-                  </div>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-[10px] font-black text-indigo-200">اولویت استدلال (Top P)</span>
-                      <span className="text-xs font-mono font-black text-amber-400">0.95</span>
-                    </div>
-                    <div className="h-1 bg-white/10 rounded-full overflow-hidden">
-                      <div className="h-full w-[95%] bg-emerald-400" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-indigo-50 p-4 rounded-2xl border border-indigo-150 flex items-start gap-3">
-                <div className="p-2 bg-white rounded-xl border border-indigo-200 text-indigo-600">
-                  <Target size={16} />
-                </div>
-                <div className="space-y-1">
-                  <strong className="text-xs font-black text-indigo-950 block">راهنمای مربی ترنم مهر:</strong>
-                  <p className="text-[10px] text-indigo-700 font-semibold leading-relaxed">
-                    برای فعال‌سازی کامل «تحلیل هوشمند تله‌های تستی»، حتماً از کلیدهای API معتبر استفاده کنید. هرگونه اختلال در اتصال دیتابیس منجر به توقف فرآیند «پیشنهاد شخصی‌سازی شده» در پنل داوطلبان خواهد شد. لاگ‌های این بخش در تب «لاگ تغییرات سیستمی» قابل رهگیری است.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-          {activeTab === "syslogs" && (
-            <div className="space-y-6" id="admin-tab-syslogs" style={{ direction: "rtl" }}>
-              <div className="flex justify-between items-center bg-slate-50 p-4 rounded-2xl border border-slate-150">
-                <div className="space-y-1">
-                  <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
-                    <List size={18} className="text-amber-600" />
-                    <span>گزارش تغییرات و عملیات‌های حساس سامانه (System Audit Logs)</span>
-                  </h3>
-                  <p className="text-[10px] text-slate-500 font-bold">رهگیری تمامی فعالیت‌های مدیران و اپراتورها در لایه‌های CRM و کایزن تحصیلی</p>
-                </div>
-                <button 
-                  onClick={() => window.location.reload()}
-                  className="p-2 bg-white border border-slate-200 rounded-lg text-slate-400 hover:text-blue-900 transition flex items-center gap-1.5 text-[10px] font-black"
+    <div className="flex flex-col lg:flex-row gap-6 text-right" id="admin-view-container" dir="rtl">
+      {/* Sidebar Navigation - Right Side */}
+      <aside className="lg:w-72 shrink-0 space-y-4 no-print">
+        <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-4 sticky top-24">
+          <div className="px-4 py-2 mb-4 border-b border-slate-50 flex items-center justify-between">
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">منوی مدیریت سیستم</span>
+            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          </div>
+          <nav className="space-y-1">
+            {sidebarItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id as any)}
+                  className={`w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl transition-all duration-200 group ${
+                    isActive 
+                      ? "bg-blue-50 text-blue-900 border-r-4 border-blue-900" 
+                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
+                  }`}
                 >
-                  <RefreshCw size={14} />
-                  <span>تغییرات زنده</span>
+                  <div className="flex items-center gap-3">
+                    <Icon size={16} className={`${item.color} ${isActive ? "opacity-100" : "opacity-60 group-hover:opacity-100"}`} />
+                    <span className={`text-[11px] font-black ${isActive ? "text-blue-950" : "text-slate-600"}`}>{item.label}</span>
+                  </div>
+                  {item.status && (
+                    <span className="text-[7px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full font-black animate-pulse">
+                      {item.status}
+                    </span>
+                  )}
                 </button>
-              </div>
+              );
+            })}
+          </nav>
+          
+          <div className="mt-8 pt-4 border-t border-slate-50 space-y-3">
+             <div className="bg-slate-900 rounded-2xl p-4 text-white">
+                <div className="flex items-center gap-2 mb-2">
+                   <ShieldCheck size={14} className="text-emerald-400" />
+                   <span className="text-[9px] font-black">پروتکل امنیتی ادمین</span>
+                </div>
+                <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+                   <div className="h-full bg-emerald-500 w-full" />
+                </div>
+                <p className="text-[8px] text-slate-400 mt-2 font-bold leading-relaxed">اتصال به دیتاسنتر ترنم مهر از طریق تونل اختصاصی برقرار است.</p>
+             </div>
+          </div>
+        </div>
+      </aside>
 
-              <div className="overflow-x-auto rounded-3xl border border-slate-150 bg-white shadow-sm">
-                <table className="w-full text-right border-collapse text-xs">
-                  <thead>
-                    <tr className="bg-slate-50 text-slate-600 font-black border-b border-slate-150">
-                      <th className="py-4 px-5">شناسه لاگ</th>
-                      <th className="py-4 px-5">عملیات</th>
-                      <th className="py-4 px-5">کاربر</th>
-                      <th className="py-4 px-5">زمان ثبت</th>
-                      <th className="py-4 px-5">جزئیات فنی</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 font-sans">
-                    {getSystemLogs().map((log) => (
-                      <tr key={log.id} className="hover:bg-slate-50/50 transition">
-                        <td className="py-4 px-5 font-mono text-slate-400 font-bold">{log.id}</td>
-                        <td className="py-4 px-5">
-                          <span className={`px-2 py-1 rounded-lg font-black text-[10px] ${
-                            log.action.includes("ایجاد") ? "bg-emerald-50 text-emerald-800" : 
-                            log.action.includes("کایزن") ? "bg-amber-50 text-amber-800" : "bg-blue-50 text-blue-800"
-                          }`}>
-                            {log.action}
-                          </span>
-                        </td>
-                        <td className="py-4 px-5 font-bold text-slate-800">{log.username}</td>
-                        <td className="py-4 px-5 text-slate-500 font-bold font-mono">{log.timestamp}</td>
-                        <td className="py-4 px-5 text-slate-600 font-medium leading-relaxed">{log.detail}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              
-              <div className="p-4 bg-blue-50 rounded-2xl border border-blue-150 text-[10px] text-blue-800 leading-relaxed font-bold">
-                💡 نکته امنیتی: لاگ‌های سیستمی ترنم مهر غیرقابل ویرایش (Immutable) بوده و به صورت خودکار در فضای ابری آرشیو می‌گردند. هرگونه تلاش برای دسترسی غیرمجاز یا تغییر در فایل‌های ممیزی توسط سپر امنیتی DevOps شناسایی و ریپورت می‌شود.
+      {/* Content Area - Left Side */}
+      <div className="flex-grow space-y-6">
+        {/* Top Welcome Title */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-3xl border border-slate-100 shadow-sm bg-gradient-to-tr from-indigo-50/5 via-white to-transparent">
+          <div>
+            <span className="text-[10px] bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-full border border-indigo-150 font-black inline-block mb-1 flex items-center gap-1 w-fit">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>سامانه ابری و میکروسرویسی ترنم مهر فعال است</span>
+            </span>
+            <h2 className="text-xl font-black text-slate-900">پنل مدیریت هوشمند ترنم مهر</h2>
+            <span className="text-xs text-rose-600 font-extrabold block mt-0.5">Senior DevOps Console (v3.2)</span>
+          </div>
+          <div className="bg-slate-900 text-white px-4 py-3 rounded-2xl border border-slate-800 flex items-center gap-4 font-bold shrink-0 shadow-xl no-print">
+            <div className="text-right">
+              <div className="text-[9px] text-slate-400 font-black">وضعیت منابع سیستم</div>
+              <div className="text-[10px] text-emerald-400 font-black flex items-center gap-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                پایداری عملیاتی ۹۹.۹٪
               </div>
             </div>
-          )}
+            <div className="w-[1px] h-8 bg-white/10" />
+            <ShieldCheck size={22} className="text-blue-400" />
+          </div>
+        </div>
+
+        <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden" id="admin-main-stage">
+          <div className="p-0">
+            {/* =========================================================================
+                TAB CONTENT RENDERING: Unified Dashboard Stage
+                ========================================================================= */}
+            
+            {activeTab === "contract" && <SaaSContractView />}
+            {activeTab === "audit" && <ContentAuditModule />}
+            {activeTab === "investment" && <InvestmentView />}
+            
+            {/* System Logs (Console Style) */}
+            {activeTab === "syslogs" && (
+                <div className="p-8 space-y-4 animate-fade-in" style={{ direction: "rtl" }}>
+                  <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
+                    <List size={20} className="text-amber-600" />
+                    <h3 className="text-base font-black text-slate-900">لاگ تغییرات و وقایع سیستمی (System Audit Logs)</h3>
+                  </div>
+                  <div className="bg-slate-950 rounded-2xl p-6 font-mono text-[10px] text-emerald-400 space-y-1 overflow-y-auto max-h-[500px] border border-slate-800">
+                    {getSystemLogs().map((log, i) => (
+                      <div key={i} className="flex gap-3 border-b border-white/5 pb-1 opacity-80 hover:opacity-100 transition font-sans">
+                        <span className="text-slate-500">[{log.timestamp}]</span>
+                        <span className="text-blue-400 font-bold">{log.username}:</span>
+                        <span className="text-white">{log.action}</span>
+                        <span className="text-slate-500 italic"> - {log.detail}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+            )}
+
+            {/* Diagnostics & Health Check */}
+            {activeTab === "diagnostics" && (
+              <div className="p-8 space-y-8 animate-fade-in" id="admin-tab-diagnostics" style={{ direction: "rtl" }}>
+                <div className="bg-slate-900 text-white p-6 rounded-3xl border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                  <div className="space-y-1 text-right">
+                    <h3 className="text-sm font-black flex items-center gap-2">
+                      <HeartPulse size={18} className="text-rose-500" />
+                      <span>مرکز پایش و خطایابی ماژولار (System Diagnostics)</span>
+                    </h3>
+                    <p className="text-[10px] text-slate-400 font-bold">عیب‌یابی آنی سرویس‌ها، بررسی پایداری ماژول‌های هوش مصنوعی و رفع خطاهای سیستمی</p>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      const status = ["gemini", "database"];
+                      status.forEach(s => testConnection(s as any));
+                    }}
+                    className="bg-rose-600 hover:bg-rose-700 text-white px-5 py-2.5 rounded-2xl text-[10px] font-black transition-all flex items-center gap-2 shadow-lg shadow-rose-900/20"
+                  >
+                    <Activity size={14} className="animate-pulse" />
+                    <span>تولید گزارش جامع سلامت (Deep Scan)</span>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  <div className="lg:col-span-2 space-y-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {[
+                        { name: "پردازشگر Gemini API", status: testStatus.gemini === "success" ? "Online" : testStatus.gemini === "error" ? "Warning" : "Ready", icon: <Brain size={18} />, color: "text-indigo-600", bg: "bg-indigo-50" },
+                        { name: "دیتابیس ابری (Firestore)", status: testStatus.database === "success" ? "Online" : testStatus.database === "error" ? "Warning" : "Ready", icon: <Database size={18} />, color: "text-blue-600", bg: "bg-blue-50" },
+                        { name: "سامانه پیامک (Kavenegar)", status: "Active", icon: <Link size={18} />, color: "text-emerald-600", bg: "bg-emerald-50" },
+                        { name: "درگاه پرداخت (Zarinpal)", status: "Active", icon: <CreditCard size={18} />, color: "text-amber-600", bg: "bg-amber-50" },
+                      ].map((mod, i) => (
+                        <div key={i} className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex items-center justify-between group transition-hover hover:border-slate-300">
+                          <div className="flex items-center gap-4">
+                            <div className={`p-3 ${mod.bg} ${mod.color} rounded-2xl`}>
+                              {mod.icon}
+                            </div>
+                            <div className="text-right">
+                              <h4 className="text-xs font-black text-slate-800">{mod.name}</h4>
+                            </div>
+                          </div>
+                          <span className={`text-[9px] font-black uppercase px-2 py-1 rounded-lg border ${
+                            mod.status === "Online" || mod.status === "Active" 
+                              ? "bg-emerald-50 text-emerald-600 border-emerald-100"
+                              : mod.status === "Warning" ? "bg-rose-50 text-rose-600 border-rose-100 animate-pulse" : "bg-slate-50 text-slate-400 border-slate-100"
+                          }`}>
+                            {mod.status}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Zarinpal Gateway Config */}
+            {activeTab === "zarinpal" && (
+              <div className="p-8 space-y-6 animate-fade-in" style={{ direction: "rtl" }}>
+                 <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
+                    <Wallet size={20} className="text-blue-600" />
+                    <h3 className="text-base font-black text-slate-900">درگاه پرداخت زرین‌پال (ZarinPal Gateway)</h3>
+                 </div>
+                 <div className="bg-blue-50 border border-blue-100 p-6 rounded-3xl space-y-4">
+                    <div className="flex flex-col md:flex-row justify-between gap-4">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-slate-500">کد Merchant ID</label>
+                        <input type="text" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" className="w-full md:w-80 bg-white border border-slate-200 rounded-xl px-4 py-2 text-xs font-mono" />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-black">وضعیت: متصل (Sandbox)</span>
+                      </div>
+                    </div>
+                    <button className="bg-blue-900 text-white px-6 py-2.5 rounded-xl text-xs font-black shadow-lg shadow-blue-900/20">بروزرسانی تنظیمات درگاه</button>
+                 </div>
+              </div>
+            )}
+
+            {/* API & Cloud Integrations */}
+            {activeTab === "integrations" && (
+              <div className="space-y-8 p-8 animate-fade-in" style={{ direction: "rtl" }}>
+                <div className="bg-slate-50 p-5 rounded-3xl border border-slate-150 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                  <div className="space-y-1 text-right">
+                    <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
+                      <Globe size={18} className="text-indigo-600" />
+                      <span>اتصالات و کلیدهای دسترسی (Gateways & API Keys)</span>
+                    </h3>
+                    <p className="text-[10px] text-slate-500 font-bold">مدیریت متمرکز نقاط اتصال هوش مصنوعی گوگل و پایگاه داده‌های ابری</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 text-right">
+                  <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-6 relative overflow-hidden">
+                    <div className="flex items-center gap-3">
+                      <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl"><Cpu size={24} /></div>
+                      <div>
+                        <h4 className="text-sm font-black text-slate-900 leading-none">تنظیمات هوش مصنوعی Google Gemini</h4>
+                        <span className="text-[10px] text-slate-400 font-bold">مدل‌های LLM جهت تحلیل تله‌های تستی</span>
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="space-y-1.5 text-right">
+                        <label className="text-[11px] font-black text-slate-700">کلید دسترسی (API Key)</label>
+                        <input type="password" value={geminiKey} onChange={(e) => setGeminiKey(e.target.value)} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-3 text-xs font-mono" style={{ direction: 'ltr' }} />
+                      </div>
+                      <button onClick={() => testConnection("gemini")} className="w-full bg-indigo-600 text-white py-3 rounded-2xl text-xs font-black">تست اتصال</button>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-6 relative overflow-hidden">
+                    <div className="flex items-center gap-3">
+                      <div className="p-3 bg-amber-50 text-amber-600 rounded-2xl"><Database size={24} /></div>
+                      <div>
+                        <h4 className="text-sm font-black text-slate-900 leading-none">مدیریت دیتابیس ابری</h4>
+                        <span className="text-[10px] text-slate-400 font-bold">اتصال به سیستم ذخیره‌سازی ابری</span>
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="space-y-1.5 text-right">
+                        <label className="text-[11px] font-black text-slate-700">Database API Key</label>
+                        <input type="password" value={dbApiKey} onChange={(e) => setDbApiKey(e.target.value)} className="w-full bg-slate-50 border border-slate-150 rounded-xl px-4 py-3 text-xs font-mono" style={{ direction: 'ltr' }} />
+                      </div>
+                      <button onClick={() => testConnection("database")} className="w-full bg-amber-500 text-white py-3 rounded-2xl text-xs font-black">تست کوئری دیتابیس</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+             {/* Technical Docs (Locked) */}
+            {activeTab === "sysdocs" && (
+               <div className="p-8 space-y-6 animate-fade-in" id="admin-tab-sysdocs" style={{ direction: "rtl" }}>
+                  <div className="max-w-md mx-auto bg-slate-900 text-white p-8 rounded-3xl text-center space-y-6">
+                    <Lock size={28} className="mx-auto text-rose-500" />
+                    <h3 className="font-black text-base">مستندات فنی (Protected)</h3>
+                    <p className="text-[11px] text-slate-400">این بخش نیازمند سطح دسترسی مدیر ارشد فنی است.</p>
+                    <button className="w-full py-2.5 bg-rose-600 text-white font-black text-xs rounded-xl">ورود امن</button>
+                  </div>
+               </div>
+            )}
+
+
+
           {activeTab === "architecture" && (
             <div className="space-y-8" id="admin-tab-architecture" style={{ direction: "rtl" }}>
               
@@ -1061,7 +969,7 @@ export default function AdminView({ student }: { student: Student }) {
                     <span>معماری SaaS و چندمستاجری (Multi-Tenancy Architecture)</span>
                   </h4>
                   <p className="text-[11px] text-slate-500 leading-normal font-bold">
-                    تفکیک ساختارمند داده‌ها و ماژول‌ها برای موسسات مختلف حقوقی در یک پلتفرم واحد
+                    تفکیک ساختارمند داده‌ها و ماژول‌ها برای مراکز آموزشی و آکادمی‌های برتر در یک پلتفرم واحد
                   </p>
 
                   <div className="space-y-3.5 pt-2">
@@ -1135,7 +1043,7 @@ export default function AdminView({ student }: { student: Student }) {
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
                           <span className="text-[8px] bg-emerald-50 text-emerald-700 px-1.5 rounded border font-bold">فعال</span>
                         </div>
-                        <p className="text-[9px] text-slate-500 leading-normal font-semibold">ایزولاسیون کامل داده‌های داوطلب برای هر کانون وکلا بر اساس Tenant Key.</p>
+                        <p className="text-[9px] text-slate-500 leading-normal font-semibold">ایزولاسیون کامل داده‌های داوطلب برای هر مرکز آموزشی بر اساس Tenant Key.</p>
                         <p className="text-[8px] font-mono text-indigo-700 font-extrabold bg-white px-2 py-0.5 rounded border w-fit">LOG: امنیت سطح ۵ قواعد دسترسی و فیلترهای هوشمند روی Firestore.</p>
                       </div>
                       <span className="text-[9px] bg-red-50 text-red-700 border border-red-100 rounded px-1.5 py-1 font-bold shrink-0">بحرانی</span>
@@ -1160,7 +1068,7 @@ export default function AdminView({ student }: { student: Student }) {
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                           <span className="text-[8px] bg-emerald-50 text-emerald-700 px-1.5 rounded border font-bold">فعال</span>
                         </div>
-                        <p className="text-[9px] text-slate-500 leading-normal font-semibold">تولید دینامیک سوالات تستی بر اساس آخرین تغییرات قوانین وکالت.</p>
+                        <p className="text-[9px] text-slate-500 leading-normal font-semibold">تولید دینامیک سوالات تستی بر اساس آخرین کتب درسی و بودجه‌بندی سنجش.</p>
                       </div>
                       <span className="text-[9px] bg-blue-50 text-blue-700 border border-blue-100 rounded px-1.5 py-1 font-bold shrink-0">فعال</span>
                     </div>
@@ -1180,7 +1088,7 @@ export default function AdminView({ student }: { student: Student }) {
                     <div className="p-3 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-between">
                       <div className="text-right space-y-1">
                         <div className="flex items-center gap-1.5">
-                          <span className="text-xs font-black text-slate-850">اطلس قوانین و تله‌های تستی (RAG)</span>
+                          <span className="text-xs font-black text-slate-850">اطلس دروس و تله‌های تستی (RAG)</span>
                           <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
                           <span className="text-[8px] bg-rose-50 text-rose-700 px-1.5 rounded border font-bold">بحرانی</span>
                         </div>
@@ -1379,7 +1287,7 @@ export default function AdminView({ student }: { student: Student }) {
                   <div className="relative pr-8 space-y-1">
                     <div className="absolute right-2 top-1.5 w-3.5 h-3.5 rounded-full bg-blue-900 border-2 border-white ring-2 ring-blue-100" />
                     <strong className="text-xs font-black text-blue-950 block">فاز اول - MVP (پایه تجاری)</strong>
-                    <h5 className="text-[10px] text-slate-550 font-black">فرم ثبت‌نام پایه، درگاه، پنل داوطلب و مشاوره حقوقی مقدماتی</h5>
+                    <h5 className="text-[10px] text-slate-550 font-black">فرم ثبت‌نام پایه، درگاه، پنل داوطلب و مشاوره تحصیلی مقدماتی</h5>
                     <p className="text-[10px] text-slate-500 leading-normal font-semibold">تمرکز بر خودکارسازی پذیرش لید، احراز هویت اولیه دو مرحله‌ای OTP، اتصال دیتابیس بومی کاربران، طراحی پنل اولیه داوطلبین جهت مشاهده ترازها و درگاه پرداخت آنلاین جهت رفاه حال دانشجویان ترنم مهر.</p>
                   </div>
 
@@ -1408,9 +1316,72 @@ export default function AdminView({ student }: { student: Student }) {
                     <div className="absolute right-2 top-1.5 w-3.5 h-3.5 rounded-full bg-teal-600 border-2 border-white ring-2 ring-teal-100" />
                     <strong className="text-xs font-black text-teal-800 block">فاز پنجم - توسعه آینده (مرزهای جدید)</strong>
                     <h5 className="text-[10px] text-teal-650 font-extrabold">بین‌المللی سازی سامانه، دادگستری شبیه‌ساز مجازی AR/VR و حضور فرامرزی</h5>
-                    <p className="text-[10px] text-slate-500 leading-normal font-semibold">پشتیبانی کامل از سایر زبان‌ها با تغییر قالب یونیکد ملل، شبیه‌سازی محاکم و دادگاه‌های نمایشی با فناوری‌های واقعیت مجازی/افزوده جهت تجربه کاملاً کاربردی و بی‌رقیب داوطلبان کنکور وکلای بین‌الملل.</p>
+                    <p className="text-[10px] text-slate-500 leading-normal font-semibold">پشتیبانی کامل از سایر زبان‌ها با تغییر قالب یونیکد ملل، شبیه‌سازی حوزه‌های امتحانی و آزمون‌های آزمایشی واقعیت مجازی/افزوده جهت تجربه کاملاً کاربردی و بی‌رقیب داوطلبان کنکور سراسری.</p>
                   </div>
 
+                </div>
+              </div>
+
+              {/* Financial & Resource Cost Hub (NEW) */}
+              <div className="bg-white p-8 rounded-3xl border border-slate-150 shadow-sm space-y-6">
+                <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+                  <div className="p-2 bg-blue-50 text-blue-900 rounded-xl">
+                    <DollarSign size={20} />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-black text-slate-900">برآورد هزینه‌های استقرار و نگهداری (Financial Analysis)</h4>
+                    <p className="text-[10px] text-slate-500 font-bold">محاسبه خودکار هزینه‌های ماهانه بر اساس حجم کلاود و تعداد داوطلبان فعال</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200/50 space-y-2">
+                    <span className="text-[10px] text-slate-500 font-black block">هزینه ماهانه هاست کلاود (Cloud Run)</span>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-lg font-black text-slate-900">{toPersianNum(Math.round(concurrentStudents * 1250).toLocaleString())}</span>
+                      <span className="text-[9px] font-bold text-slate-400">تومان</span>
+                    </div>
+                    <p className="text-[8px] text-blue-700 font-bold">بر پایه مدل {concurrentStudents > 50000 ? 'Enterprise Cluster' : 'Standard Node'}</p>
+                  </div>
+
+                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200/50 space-y-2">
+                    <span className="text-[10px] text-slate-500 font-black block">اشتراک و هزینه API هوش مصنوعی</span>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-lg font-black text-slate-900">{toPersianNum(Math.round(concurrentStudents * 850).toLocaleString())}</span>
+                      <span className="text-[9px] font-bold text-slate-400">تومان/ماه</span>
+                    </div>
+                    <p className="text-[8px] text-indigo-700 font-bold">Gemini 1.5 Flash - {toPersianNum(concurrentStudents * 10)} درخواست</p>
+                  </div>
+
+                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200/50 space-y-2">
+                    <span className="text-[10px] text-slate-500 font-black block">هزینه توسعه و آپدیت سالانه (DevOps)</span>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-lg font-black text-slate-900">{toPersianNum('۱۲۰,۰۰۰,۰۰۰')}</span>
+                      <span className="text-[9px] font-bold text-slate-400">تومان</span>
+                    </div>
+                    <p className="text-[8px] text-rose-600 font-bold">پشتیبانی ۲۴/۷ و مانیتورینگ اختصاصی</p>
+                  </div>
+
+                  <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-100 space-y-2">
+                    <span className="text-[10px] text-emerald-700 font-black block">سودآوری ناخالص (Estimated GM)</span>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-lg font-black text-emerald-800">{toPersianNum('۷۸٪')}</span>
+                    </div>
+                    <p className="text-[8px] text-emerald-600 font-bold">بر اساس میانگین شهریه جاری سیستم</p>
+                  </div>
+                </div>
+
+                <div className="bg-blue-950 p-6 rounded-2xl text-white flex flex-col md:flex-row justify-between items-center gap-6 overflow-hidden relative">
+                  <div className="absolute top-0 left-0 w-32 h-32 bg-blue-400/10 rounded-full blur-2xl -translate-x-12 -translate-y-12" />
+                  <div className="relative z-10 space-y-2 max-w-lg">
+                    <h5 className="text-xs font-black">زمان‌بندی نهایی استقرار (Deployment Timeline)</h5>
+                    <p className="text-[10px] text-blue-200 leading-relaxed font-bold">
+                      با توجه به انتخاب تعداد {toPersianNum(concurrentStudents)} کاربر، فرآیند راه‌اندازی، ایزولاسیون دیتابیس و کالیبره کردن مدل‌های هوش مصنوعی اختصاصی موسسه حداکثر ظرف مدت <strong>{toPersianNum(concurrentStudents > 20000 ? '۷۲ ساعت' : '۲۴ ساعت')}</strong> کاری به پایان خواهد رسید.
+                    </p>
+                  </div>
+                  <button className="bg-white text-blue-950 px-8 py-3 rounded-xl text-xs font-black shadow-xl hover:bg-blue-50 transition shrink-0">
+                    دریافت پروپوزال فنی و مالی (PDF)
+                  </button>
                 </div>
               </div>
 
@@ -1644,7 +1615,7 @@ export default function AdminView({ student }: { student: Student }) {
                           type="text"
                           value={newPhaseTitle}
                           onChange={(e) => setNewPhaseTitle(e.target.value)}
-                          placeholder="مثال: یکپارچه‌سازی وب‌سرویس کانون‌ها"
+                          placeholder="مثال: یکپارچه‌سازی وب‌سرویس سازمان سنجش"
                           className="w-full text-xs font-bold p-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-800 text-right"
                         />
                       </div>
@@ -2069,7 +2040,194 @@ export default function AdminView({ student }: { student: Student }) {
 
           {/* Tab 1: Students lists and search filters */}
           {activeTab === "students" && (
-            <div className="space-y-4" id="admin-tab-students">
+            <div className="space-y-6" id="admin-tab-students">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-4">
+                <div className="space-y-1">
+                  <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
+                    <Users size={18} className="text-blue-600" />
+                    <span>ترمینال ثبت‌نام و مدیریت شناسنامه داوطلبان</span>
+                  </h3>
+                  <p className="text-[10px] text-slate-500 font-bold">بایگانی هوشمند و مانیتورینگ متمرکز ثبت‌نام‌های جدید موسسه ترنم مهر</p>
+                </div>
+                <button 
+                  onClick={() => setIsRegistering(!isRegistering)}
+                  className={`flex items-center gap-2 px-6 py-2.5 rounded-2xl text-xs font-black transition-all ${
+                    isRegistering ? "bg-rose-50 text-rose-600 border border-rose-100" : "bg-blue-950 text-white shadow-lg shadow-blue-900/10 hover:scale-105 active:scale-95"
+                  }`}
+                >
+                  {isRegistering ? <RefreshCw size={14} /> : <UserPlus size={16} />}
+                  <span>{isRegistering ? "انصراف از ثبت‌نام" : "ثبت‌نام داوطلب جدید"}</span>
+                </button>
+              </div>
+
+              {isRegistering && (
+                <div className="bg-slate-50 p-6 rounded-3xl border border-slate-200 animate-in fade-in slide-in-from-top-4 duration-300 space-y-8">
+                  {/* Section 1: Basic Info */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-blue-950 border-b border-slate-200 pb-2">
+                      <GraduationCap size={18} className="text-blue-600" />
+                      <h4 className="text-xs font-black uppercase tracking-wider">یک • پروفایل پایه و هویتی</h4>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-slate-500">نام و نام خانوادگی داوطلب</label>
+                        <input 
+                          type="text" value={newStudent.name} onChange={(e) => setNewStudent({...newStudent, name: e.target.value})}
+                          className="w-full bg-white border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-bold outline-none focus:ring-2 focus:ring-blue-500/20"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-slate-500">کد ملی یا شناسنامه داوطلبی</label>
+                        <input 
+                          type="text" value={newStudent.code} onChange={(e) => setNewStudent({...newStudent, code: e.target.value})}
+                          className="w-full bg-white border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-bold outline-none font-mono"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-slate-500">سن داوطلب</label>
+                        <input 
+                          type="number" value={newStudent.age} onChange={(e) => setNewStudent({...newStudent, age: parseInt(e.target.value)})}
+                          className="w-full bg-white border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-bold outline-none"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-slate-500">رشته تحصیلی کنکور</label>
+                        <select 
+                          value={newStudent.field} onChange={(e) => setNewStudent({...newStudent, field: e.target.value as any})}
+                          className="w-full bg-white border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-bold outline-none cursor-pointer"
+                        >
+                          <option value="tajrobi">علوم تجربی</option>
+                          <option value="riazi">ریاضی فیزیک</option>
+                          <option value="ensani">علوم انسانی</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Section 2: Family Context */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-blue-950 border-b border-slate-200 pb-2">
+                      <Home size={18} className="text-emerald-600" />
+                      <h4 className="text-xs font-black uppercase tracking-wider">دو • بستر و وضعیت خانوادگی</h4>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-slate-500">تعداد فرزندان خانواده</label>
+                        <input 
+                          type="number" value={newStudent.parentalContext?.childrenCount} onChange={(e) => setNewStudent({...newStudent, parentalContext: {...newStudent.parentalContext, childrenCount: parseInt(e.target.value)}})}
+                          className="w-full bg-white border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-bold outline-none"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-slate-500">تحصیلات پدر</label>
+                        <input 
+                          type="text" value={newStudent.parentalContext?.fatherEducation} onChange={(e) => setNewStudent({...newStudent, parentalContext: {...newStudent.parentalContext, fatherEducation: e.target.value}})}
+                          className="w-full bg-white border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-bold outline-none"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-slate-500">تحصیلات مادر</label>
+                        <input 
+                          type="text" value={newStudent.parentalContext?.motherEducation} onChange={(e) => setNewStudent({...newStudent, parentalContext: {...newStudent.parentalContext, motherEducation: e.target.value}})}
+                          className="w-full bg-white border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-bold outline-none"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-slate-500">میزان درآمد ماهیانه خانواده</label>
+                        <select 
+                          value={newStudent.parentalContext?.householdIncome} onChange={(e) => setNewStudent({...newStudent, parentalContext: {...newStudent.parentalContext, householdIncome: e.target.value as any}})}
+                          className="w-full bg-white border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-bold outline-none"
+                        >
+                          <option value="low">محدود (حمایتی)</option>
+                          <option value="mid">متوسط (کارمندی)</option>
+                          <option value="high">بالا (برخوردار)</option>
+                          <option value="excellent">ممتاز</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Section 3: Academic Status */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-blue-950 border-b border-slate-200 pb-2">
+                      <TrendingUp size={18} className="text-amber-600" />
+                      <h4 className="text-xs font-black uppercase tracking-wider">سه • پایش وضعیت تحصیلی و آموزشی</h4>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-slate-500">پایه تحصیلی فعلی</label>
+                        <input 
+                          type="text" value={newStudent.academicProfile?.educationLevel} onChange={(e) => setNewStudent({...newStudent, academicProfile: {...newStudent.academicProfile, educationLevel: e.target.value}})}
+                          className="w-full bg-white border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-bold outline-none"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-slate-500">معدل کتبی نهایی یا فعلی</label>
+                        <input 
+                          type="number" step="0.01" value={newStudent.academicProfile?.currentGpa} onChange={(e) => setNewStudent({...newStudent, academicProfile: {...newStudent.academicProfile, currentGpa: parseFloat(e.target.value)}})}
+                          className="w-full bg-white border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-bold outline-none"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-slate-500">آخرین تراز آزمون آزمایشی</label>
+                        <input 
+                          type="number" value={newStudent.academicProfile?.currentTraz} onChange={(e) => setNewStudent({...newStudent, academicProfile: {...newStudent.academicProfile, currentTraz: parseInt(e.target.value)}})}
+                          className="w-full bg-white border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-bold outline-none"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-slate-500">ساعت مطالعه روزانه (میانگین)</label>
+                        <input 
+                          type="number" value={newStudent.academicProfile?.studyHoursPerDay} onChange={(e) => setNewStudent({...newStudent, academicProfile: {...newStudent.academicProfile, studyHoursPerDay: parseInt(e.target.value)}})}
+                          className="w-full bg-white border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-bold outline-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Section 4: Goals & Vision */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-blue-950 border-b border-slate-200 pb-2">
+                      <Target size={18} className="text-purple-600" />
+                      <h4 className="text-xs font-black uppercase tracking-wider">چهار • چشم‌انداز هدف‌گذاری و انتظارات</h4>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-slate-500">رویای شخصی داوطلب برای آینده</label>
+                        <textarea 
+                          rows={2} value={newStudent.goals?.studentVision} onChange={(e) => setNewStudent({...newStudent, goals: {...newStudent.goals, studentVision: e.target.value}})}
+                          className="w-full bg-white border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-bold outline-none resize-none"
+                          placeholder="مثال: قبولی در رشته پزشکی دانشگاه تهران و تخصص جراحی مغز..."
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-slate-500">هدف و انتظارات والدین از داوطلب</label>
+                        <textarea 
+                          rows={2} value={newStudent.goals?.familyExpectation} onChange={(e) => setNewStudent({...newStudent, goals: {...newStudent.goals, familyExpectation: e.target.value}})}
+                          className="w-full bg-white border border-slate-150 rounded-xl px-4 py-2.5 text-xs font-bold outline-none resize-none"
+                          placeholder="مثال: کسب رتبه برتر جهت ارتقای وضعیت اجتماعی خانواده..."
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
+                    <button 
+                      onClick={() => setIsRegistering(false)}
+                      className="px-6 py-2.5 text-xs font-black text-slate-500 hover:text-slate-800 transition-colors"
+                    >
+                      انصراف
+                    </button>
+                    <button 
+                      onClick={handleRegisterStudent}
+                      className="px-8 py-2.5 bg-blue-950 text-white rounded-2xl text-xs font-black shadow-lg shadow-blue-900/20 hover:scale-105 active:scale-95 transition-all"
+                    >
+                      تایید و ثبت نهایی در دیتابیس هوشمند
+                    </button>
+                  </div>
+                </div>
+              )}
+
               <div className="flex flex-col sm:flex-row gap-3">
                 <div className="relative flex-1">
                   <span className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
@@ -2251,131 +2409,7 @@ export default function AdminView({ student }: { student: Student }) {
               </div>
             </div>
           )}
-
-          {/* Tab 5: Secure DevOps & System Deployment Guide (Protected) */}
-          {activeTab === "sysdocs" && (
-            <div className="space-y-6" id="admin-tab-sysdocs" style={{ direction: "rtl" }}>
-              {!isDocsAuthorized ? (
-                /* Dynamic Authentication Lockscreen Guard for Security */
-                <div className="max-w-md mx-auto my-8 bg-slate-900 text-white p-8 rounded-3xl border border-slate-800 shadow-2xl relative overflow-hidden text-center space-y-6">
-                  <div className="absolute -right-16 -top-16 w-32 h-32 rounded-full bg-rose-500/10 blur-2xl" />
-                  <div className="absolute -left-16 -bottom-16 w-32 h-32 rounded-full bg-blue-500/10 blur-2xl" />
-
-                  <div className="w-14 h-14 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-2xl flex items-center justify-center mx-auto shadow-md">
-                    <Lock size={28} className="animate-pulse" />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <h3 className="font-black text-slate-100 text-base">کانال امن مستندات فنی ترنم مهر</h3>
-                    <p className="text-[11px] text-slate-400 font-medium leading-relaxed px-2">
-                      مستندات استقرار، بنچ‌مارک موازی و ترازهای کلاود در این بخش گنجانده شده‌اند.
-                    </p>
-                  </div>
-
-                  <form onSubmit={handleVerifyPassword} className="space-y-3">
-                    <div className="space-y-1 text-right">
-                      <label className="text-[10px] text-slate-400 font-extrabold pr-1">کد امنیتی هلدینگ:</label>
-                      <div className="relative">
-                        <input 
-                          type="password" 
-                          placeholder="chatr_dev_2026" 
-                          value={docsPassword}
-                          onChange={(e) => setDocsPassword(e.target.value)}
-                          className="w-full bg-slate-950 border border-slate-800 text-left rounded-xl px-4 py-3 text-xs text-slate-200 font-mono tracking-widest focus:outline-none focus:border-rose-600 transition"
-                          required
-                        />
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-650">
-                          <Key size={14} />
-                        </span>
-                      </div>
-                    </div>
-
-                    {passwordError && (
-                      <div className="text-[10px] text-red-400 font-bold bg-red-500/10 py-2 rounded-xl border border-red-500/20 animate-shake">
-                        ❌ کد عبور منطبق نیست.
-                      </div>
-                    )}
-
-                    <button 
-                      type="submit"
-                      className="w-full py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs rounded-xl shadow-lg transition duration-250 cursor-pointer"
-                    >
-                      تایید هویت و نشان دسترسی
-                    </button>
-                  </form>
-                </div>
-              ) : (
-                /* Documents Unlocked */
-                <div className="space-y-6">
-                  {/* Top Header warning banner */}
-                  <div className="bg-slate-900 border border-slate-800 rounded-3xl p-5 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative overflow-hidden text-right">
-                    <div className="space-y-1 relative z-10">
-                      <div className="flex items-center gap-2">
-                        <span className="p-1 px-2 bg-rose-500/20 text-rose-400 border border-rose-500/20 rounded-md text-[8px] font-black tracking-wider uppercase">سطح دسترسی: مدیر ارشد فنی</span>
-                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                        <span className="text-[9px] text-slate-400 font-bold">اتصال زنده به کانتینر Cloud Run</span>
-                      </div>
-                      <h3 className="font-black text-slate-200 text-base">پایگاه مهندسی مستندات و اسکریپت‌های ترنم مهر</h3>
-                      <p className="text-[10px] text-slate-400 leading-normal font-medium">
-                        آموزش استقرار در کلاود ابری ابزار، داکر، وب‌سرویس Express لیسن شده روی پورت ۳۰۰۰ و هماهنگ با معاهدات آموزشی در این ترم جامع ذخیره شده است.
-                      </p>
-                    </div>
-                    <button 
-                      onClick={() => {
-                        setIsDocsAuthorized(false);
-                        setDocsPassword("");
-                      }}
-                      className="text-[9px] font-bold bg-white/5 border border-white/10 hover:bg-white/10 px-3 py-2 rounded-xl text-slate-300 hover:text-white transition cursor-pointer relative z-10"
-                    >
-                      🔒 قفل مجدد اسناد فنی
-                    </button>
-                  </div>
-
-                  {/* Sandboxed Test Preview Links */}
-                  <div className="bg-gradient-to-l from-slate-950 to-indigo-950 border border-indigo-550/30 rounded-3xl p-6 text-white space-y-4 shadow-xl text-right">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2.5 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-2xl">
-                        <Globe size={24} />
-                      </div>
-                      <div>
-                        <h4 className="font-black text-slate-100 text-sm">🌐 دامنه کانتینر داکر فعال (Cloud Run Sandbox Live preview)</h4>
-                        <p className="text-[10px] text-indigo-200 leading-normal font-sans">
-                          کانتینر شما به صورت دائم با روتینگ Nginx به پورت ۳۰۰۰ هدایت شده و بدون اختلال HMR فعال است:
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="bg-slate-950 border border-indigo-500/20 p-4 rounded-2xl flex items-center justify-between">
-                        <div className="space-y-1 text-right">
-                          <span className="text-[9px] font-black text-indigo-400">آدرس وب‌سرویس ترنم مهر در هلدینگ</span>
-                          <p className="font-mono text-xs text-slate-300">
-                            http://localhost:3000/api/health
-                          </p>
-                        </div>
-                        <span className="py-1 px-2.5 bg-emerald-555/10 text-emerald-450 rounded-lg text-[9px] font-bold">
-                          ONLINE ●
-                        </span>
-                      </div>
-
-                      <div className="bg-slate-950 border border-indigo-500/20 p-4 rounded-2xl flex items-center justify-between">
-                        <div className="space-y-1 text-right">
-                          <span className="text-[9px] font-black text-indigo-400">شناسه پردازش توکن هوش کایزن</span>
-                          <p className="font-mono text-xs text-slate-300">
-                            @google/genai (Gemini SDK)
-                          </p>
-                        </div>
-                        <span className="py-1 px-2.5 bg-indigo-555/10 text-indigo-400 rounded-lg text-[9px] font-bold">
-                          ACTIVE ✓
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-              )}
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

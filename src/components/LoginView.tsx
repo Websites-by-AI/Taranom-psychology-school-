@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Sparkles, Phone, Lock, Hash, ShieldCheck, UserCheck, Layers, BookOpen, Activity } from "lucide-react";
+import { Sparkles, Phone, Lock, Hash, ShieldCheck, UserCheck, Layers, BookOpen, Activity, Wallet, CreditCard } from "lucide-react";
 import { motion } from "motion/react";
 import { Student } from "../types";
 
@@ -14,6 +14,9 @@ export default function LoginView({ onLogin }: LoginViewProps) {
   const [kanoonCode, setKanoonCode] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [regName, setRegName] = useState("");
+  const [isOrg, setIsOrg] = useState(false);
 
   // داوطلبان و لاین‌های فعال در ترنم مهر
   const mockStudents: Student[] = [
@@ -21,6 +24,52 @@ export default function LoginView({ onLogin }: LoginViewProps) {
     { id: "2", name: "علیرضا رضایی (رشته ریاضی فیزیک - هدف مهندسی کامپیوتر شریف)", code: "9786431", field: "riazi", grade: "رتبه فرضی ۲۴ کشوری - تراز ۱۰/۱۲۰" },
     { id: "3", name: "امیرمحمد اکبری (رشته علوم انسانی - هدف حقوق دانشگاه تهران)", code: "9921477", field: "ensani", grade: "رتبه فرضی ۱۲ کشوری - تراز ۹/۹۵۰" }
   ];
+
+  const handlePaymentAndRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!mobileNumber.startsWith("09") || mobileNumber.length !== 11) {
+      alert("لطفاً شماره موبایل معتبر وارد کنید.");
+      return;
+    }
+    setLoading(true);
+    
+    const amount = isOrg ? 10000000 : 450000;
+    const description = isOrg 
+      ? `درخواست پنل اختصاصی برای موسسه ${regName}` 
+      : `ثبت‌نام داوطلب ${regName} در سیستم هوشمند ترنم مهر`;
+
+    try {
+      const response = await fetch("/api/payment/request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount, 
+          description,
+          mobile: mobileNumber
+        })
+      });
+      
+      const data = await response.json();
+      if (data.url) {
+        // In a real app, we would redirect. In this preview, we'll simulate the successful return.
+        if (confirm("درخواست پرداخت به زرین‌پال ارسال شد. آیا می‌خواهید پرداخت شبیه‌سازی شده موفق را تایید کنید؟")) {
+          // Success simulation
+          onLogin({
+            id: Date.now().toString(),
+            name: regName,
+            code: "NEW_" + Math.floor(Math.random() * 1000),
+            field: "tajrobi",
+            grade: "داوطلب جدید - در انتظار تعیین سطح"
+          }, "student");
+        }
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+      alert("خطا در برقراری ارتباط با درگاه پرداخت.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSendOtp = (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,7 +111,7 @@ export default function LoginView({ onLogin }: LoginViewProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100"
+        className="w-full max-w-md bg-white rounded-[2rem] shadow-2xl shadow-indigo-900/10 overflow-hidden border border-slate-200"
         id="login-card-container"
       >
         <div className="bg-gradient-to-tr from-blue-950 via-slate-900 to-indigo-950 p-8 text-center text-white relative">
@@ -101,7 +150,202 @@ export default function LoginView({ onLogin }: LoginViewProps) {
         </div>
 
         <div className="p-8">
-          {!otpSent ? (
+          <div className="flex bg-slate-50 p-1.5 rounded-2xl mb-6 border border-slate-150 shadow-inner">
+            <button 
+              onClick={() => setIsRegistering(false)}
+              className={`flex-1 py-2.5 text-[11px] font-black rounded-xl transition-all ${!isRegistering ? 'bg-white text-blue-900 shadow-sm border border-slate-100' : 'text-slate-400'}`}
+            >
+              ورود داوطلبان قبلی
+            </button>
+            <button 
+              onClick={() => setIsRegistering(true)}
+              className={`flex-1 py-2.5 text-[11px] font-black rounded-xl transition-all ${isRegistering ? 'bg-white text-blue-900 shadow-sm border border-slate-100' : 'text-slate-400'}`}
+            >
+              ثبت‌نام جدید و پرداخت
+            </button>
+          </div>
+
+          {isRegistering ? (
+            <div className="space-y-6 animate-fade-in" id="registration-plans-container">
+              <div className="text-center mb-6">
+                <h3 className="text-sm font-black text-slate-800">انتخاب پکیج هوشمند اشتراک ترنم مهر</h3>
+                <p className="text-[10px] text-slate-500 font-bold mt-1">تخمین هزینه و فعال‌سازی خدمات بر اساس نقش کاربری</p>
+              </div>
+
+              <div className="space-y-4">
+                {/* Student Plan */}
+                <div className="p-5 bg-white border border-slate-200 rounded-3xl shadow-sm hover:border-indigo-400 transition-all group">
+                  <div className="flex justify-between items-start mb-3">
+                    <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
+                      <BookOpen size={20} />
+                    </div>
+                    <div className="text-left">
+                      <span className="text-[10px] font-black text-slate-400 block">پکیج پایه</span>
+                      <span className="text-sm font-black text-slate-900">ویژه داوطلب</span>
+                    </div>
+                  </div>
+                  <p className="text-[9px] text-slate-500 leading-relaxed text-right mb-4">دسترسی کامل به ماژول پومودورو، تحلیل تراز AI و بانک تله‌های تستی. مناسب برای مطالعه خودمحور.</p>
+                  <div className="flex justify-between items-center pt-3 border-t border-slate-50">
+                    <div className="text-right">
+                      <span className="text-xs font-black text-indigo-700">۴۵۰,۰۰۰ تومان</span>
+                      <span className="text-[8px] text-slate-400 block">اشتراک سالیانه</span>
+                    </div>
+                    <button 
+                      onClick={() => setRegName("داوطلب پایه")} 
+                      className="px-4 py-2 bg-indigo-600 text-white text-[10px] font-black rounded-xl hover:bg-indigo-700 transition"
+                    >
+                      انتخاب و ثبت‌نام
+                    </button>
+                  </div>
+                </div>
+
+                {/* Parent + Student Plan */}
+                <div className="p-5 bg-indigo-50 border border-indigo-200 rounded-3xl shadow-sm relative overflow-hidden group">
+                  <div className="absolute -top-2 -left-2 bg-amber-400 text-white text-[8px] font-black px-4 py-2 rotate-[-12deg] shadow-sm z-10">پیشنهادی</div>
+                  <div className="flex justify-between items-start mb-3">
+                    <div className="p-2 bg-white text-indigo-600 rounded-xl shadow-sm">
+                      <UserCheck size={20} />
+                    </div>
+                    <div className="text-left">
+                      <span className="text-[10px] font-black text-indigo-400 block">پکیج مربیگری</span>
+                      <span className="text-sm font-black text-indigo-900">داوطلب + والدین</span>
+                    </div>
+                  </div>
+                  <p className="text-[9px] text-indigo-700 leading-relaxed text-right mb-4">شامل اپلیکیشن اختصاصی والدین برای مانیتورینگ لحظه‌ای، گزارش‌های هفتگی پیامکی و تحلیل مقایسه‌ای عملکرد.</p>
+                  <div className="flex justify-between items-center pt-3 border-t border-indigo-100">
+                    <div className="text-right">
+                      <span className="text-xs font-black text-indigo-900">۸۵۰,۰۰۰ تومان</span>
+                      <span className="text-[8px] text-indigo-400 block">شامل ۲ دسترسی مجزا</span>
+                    </div>
+                    <button 
+                      onClick={() => setRegName("اشتراک خانوادگی")} 
+                      className="px-4 py-2 bg-indigo-900 text-white text-[10px] font-black rounded-xl hover:bg-slate-900 transition shadow-lg shadow-indigo-900/20"
+                    >
+                      انتخاب و فعال‌سازی
+                    </button>
+                  </div>
+                </div>
+
+                {/* Institutional Plan */}
+                <div className="p-5 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl group">
+                  <div className="flex justify-between items-start mb-3">
+                    <div className="p-2 bg-slate-800 text-amber-400 rounded-xl">
+                      <Layers size={20} />
+                    </div>
+                    <div className="text-left">
+                      <span className="text-[10px] font-black text-slate-500 block">SaaS سازمان</span>
+                      <span className="text-sm font-black text-white">پکیج موسسات و مدارس</span>
+                    </div>
+                  </div>
+                  <p className="text-[9px] text-slate-400 leading-relaxed text-right mb-4">پنل مدیریت یکپارچه برای مشاوران و مدارس، دیتابیس اختصاصی و برندینگ سفارشی برای مجموعه شما.</p>
+                  
+                  <div className="space-y-2 mb-4">
+                    <span className="text-[8px] font-black text-slate-500 block text-right mb-1">مشاهده نمونه دمو موسسات همکار:</span>
+                    <div className="flex gap-2">
+                       <button onClick={() => { setRegName("آکادمی نخبگان البرز"); setIsOrg(true); }} className="flex-1 py-1.5 px-2 bg-slate-800 rounded-lg text-[8px] font-black text-slate-300 hover:bg-slate-700 border border-slate-700 transition">آکادمی نخبگان</button>
+                       <button onClick={() => { setRegName("دبیرستان هوشمند آتیه"); setIsOrg(true); }} className="flex-1 py-1.5 px-2 bg-slate-800 rounded-lg text-[8px] font-black text-slate-300 hover:bg-slate-700 border border-slate-700 transition">دبیرستان آتیه</button>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between items-center pt-3 border-t border-slate-800">
+                    <div className="text-right">
+                      <div className="flex items-center gap-1">
+                        <span className="text-xs font-black text-amber-400">۱۰,۰۰۰,۰۰۰</span>
+                        <span className="text-[8px] text-slate-500">تومان</span>
+                      </div>
+                    </div>
+                    <button 
+                      onClick={() => { setRegName("ثبت‌نام موسسه جدید"); setIsOrg(true); }} 
+                      className="px-4 py-2 bg-amber-500 text-slate-900 text-[10px] font-black rounded-xl hover:bg-amber-400 transition"
+                    >
+                      درخواست پنل اختصاصی
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {regName && (
+                <form onSubmit={handlePaymentAndRegister} className="space-y-4 pt-4 border-t border-slate-100 animate-in fade-in slide-in-from-bottom-2">
+                  <div className="flex items-center gap-2 mb-2 p-3 bg-slate-50 rounded-2xl border border-slate-150">
+                    <Activity size={16} className="text-indigo-600" />
+                    <span className="text-[10px] font-black text-slate-700">{isOrg ? "نام موسسه/سازمان:" : "درحال ثبت‌نام برای:"} <span className="text-indigo-900 underline">{regName}</span></span>
+                    <button onClick={() => { setRegName(""); setIsOrg(false); }} className="mr-auto text-[10px] text-rose-500 font-bold">تغییر پلن</button>
+                  </div>
+                  
+                  {isOrg ? (
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-[10px] font-black text-slate-600 mb-1">نام نهایی موسسه / برند آموزشی</label>
+                        <input 
+                          type="text" 
+                          value={regName === "ثبت‌نام موسسه جدید" ? "" : regName}
+                          onChange={(e) => setRegName(e.target.value)}
+                          placeholder="نام مجموعه خود را وارد کنید" 
+                          className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-right text-xs focus:ring-2 focus:ring-amber-500 outline-none" 
+                          required 
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-black text-slate-600 mb-1">نام مدیر/مسئول فنی</label>
+                        <input type="text" placeholder="مثال: دکتر علوی" className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-right text-xs focus:ring-2 focus:ring-amber-500 outline-none" required />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-black text-slate-600 mb-1">تعداد حدودی دانش‌آموزان</label>
+                        <select className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-right text-xs focus:ring-2 focus:ring-amber-500 outline-none">
+                          <option>تا ۵۰ نفر</option>
+                          <option>۵۰ تا ۲۰۰ نفر</option>
+                          <option>بیش از ۲۰۰ نفر (سازمانی)</option>
+                        </select>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-2">نام و نام خانوادگی داوطلب</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="نام کامل خود را وارد کنید"
+                        onChange={(e) => setRegName(e.target.value)}
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-right focus:outline-none focus:ring-2 focus:ring-blue-900 focus:bg-white text-sm transition duration-150"
+                      />
+                    </div>
+                  )}
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-2">شماره همراه مسئول/رابط</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+                        <Phone size={18} />
+                      </div>
+                      <input
+                        type="tel"
+                        required
+                        maxLength={11}
+                        placeholder="09..."
+                        value={mobileNumber}
+                        onChange={(e) => setMobileNumber(e.target.value.replace(/[^0-9]/g, ""))}
+                        className="w-full pl-3 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl text-left focus:outline-none focus:ring-2 focus:ring-blue-900 focus:bg-white font-mono tracking-widest text-slate-800 text-sm transition duration-150"
+                      />
+                    </div>
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-blue-950 text-white py-3.5 rounded-xl font-bold hover:bg-slate-900 transition duration-150 shadow-md flex items-center justify-center gap-2 text-sm cursor-pointer"
+                  >
+                    {loading ? (
+                      <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                    ) : (
+                      <>
+                        <Wallet size={18} />
+                        <span>تایید و هدایت به درگاه پرداخت</span>
+                      </>
+                    )}
+                  </button>
+                </form>
+              )}
+            </div>
+          ) : !otpSent ? (
             <form onSubmit={handleSendOtp} className="space-y-5" id="send-otp-form">
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-2">شماره تلفن همراه پرسنلی</label>
