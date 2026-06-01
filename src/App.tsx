@@ -3,7 +3,7 @@ import { INSTITUTIONS, BRAND_CONFIG, setBrandById } from "./constants";
 import { 
   Plus, LogOut, LayoutDashboard, FileSpreadsheet, 
   Calendar, MessageSquare, LineChart, Users, BellRing, Sparkles, Layers, Shield, Target,
-  Palette, Building2, Menu, X, ChevronLeft, Pipette
+  Palette, Building2, Menu, X, ChevronLeft, Pipette, GraduationCap
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { Student } from "./types";
@@ -20,6 +20,8 @@ import TestTrapsView from "./components/TestTrapsView";
 import CustomQuizGenerator from "./components/CustomQuizGenerator";
 import AiPsychologyView from "./components/AiPsychologyView";
 import AssessmentView from "./components/AssessmentView";
+import MetacognitionLabView from "./components/MetacognitionLabView";
+import CounselingAdvisorView from "./components/CounselingAdvisorView";
 import ProfileSettingsView from "./components/ProfileSettingsView";
 import { Brain, Settings } from "lucide-react";
 import SmartNotifications from "./components/SmartNotifications";
@@ -58,13 +60,16 @@ export default function App() {
       { id: "progress", label: "بهبود تراز", icon: LineChart },
       { id: "traps", label: "بانک تله‌های تستی", icon: Target },
       { id: "quiz", label: "آزمون سفارشی", icon: Brain },
-      { id: "psychology", label: "پایش روانی (AI)", icon: Brain },
+      { id: "psychology", label: "پایش آمادگی ذهنی", icon: Brain },
+      { id: "metacognition", label: "آزمایشگاه فراشناخت", icon: Sparkles, highlight: true },
+      { id: "counseling", label: "انتخاب رشته هوشمند", icon: GraduationCap },
     ],
     parent: [
       { id: "parents", label: "نظارت آنلاین والدین", icon: Users },
-      { id: "manova", label: "داشبورد مانوا آکادمی", icon: Sparkles, highlight: true },
+      { id: "manova", label: "داشبورد هوشمند والدین", icon: Sparkles, highlight: true },
       { id: "report", label: "کارنامه‌ها و گزارش‌ها", icon: FileSpreadsheet },
-      { id: "psychology", label: "پایش روحی داوطلب", icon: Brain },
+      { id: "psychology", label: "پایش عملکرد ذهنی داوطلب", icon: Brain },
+      { id: "counseling", label: "تخمین قبولی فرزند", icon: GraduationCap },
     ],
     admin: [
       { id: "admin", label: "نقشه راه SaaS", icon: Users },
@@ -368,31 +373,41 @@ export default function App() {
                   animate={{ x: 0 }}
                   exit={{ x: "100%" }}
                   transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                  className="fixed top-0 right-0 h-full w-4/5 max-w-sm bg-white shadow-2xl z-[101] lg:hidden overflow-y-auto flex flex-col"
+                  className="fixed top-0 right-0 h-full w-4/5 max-w-sm bg-slate-900/98 backdrop-blur-2xl border-l border-white/5 shadow-2xl z-[101] lg:hidden overflow-y-auto flex flex-col"
                   id="mobile-drawer"
                 >
-                  {/* Drawer Header */}
-                  <div className="p-6 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                  {/* Drawer Header with Glass effect */}
+                  <div className="p-6 bg-white/[0.02] flex justify-between items-center backdrop-blur-md relative">
+                    <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent" />
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-blue-900 text-white rounded-lg flex items-center justify-center">
-                        <Layers size={18} />
+                      <div className="w-9 h-9 bg-gradient-to-tr from-indigo-600 to-blue-500 text-white rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                        <Layers size={20} />
                       </div>
-                      <span className="font-black text-blue-950 text-sm">{BRAND_CONFIG.name}</span>
+                      <div className="flex flex-col">
+                        <span className="font-black text-white text-sm leading-tight">{BRAND_CONFIG.name}</span>
+                        <span className="text-[9px] text-indigo-300 font-bold tracking-wider uppercase">{BRAND_CONFIG.slogan}</span>
+                      </div>
                     </div>
                     <button 
                       onClick={() => setIsMenuOpen(false)}
-                      className="p-2 text-slate-400 hover:text-slate-600 transition"
+                      className="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-xl transition-all"
                     >
                       <X size={20} />
                     </button>
                   </div>
 
                   {/* Navigation Links */}
-                  <div className="flex-grow p-4 space-y-1">
-                    <div className="px-3 mb-4">
-                      <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-right mb-2 opacity-60">منوی اصلی سامانه</div>
-                      <div className="h-[1px] bg-slate-100 w-full" />
+                  <div className="flex-grow p-5 space-y-1.5">
+                    {/* Section Separator with Blur Effect */}
+                    <div className="relative py-6 px-2">
+                       <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                         <div className="w-full h-px bg-gradient-to-r from-transparent via-indigo-500/15 to-transparent"></div>
+                       </div>
+                       <div className="relative flex justify-center">
+                         <span className="bg-slate-900 px-4 text-[9px] font-black text-white/30 uppercase tracking-[0.25em] backdrop-blur-sm border border-white/5 rounded-full py-1">منوی هوشمند داوطلب</span>
+                       </div>
                     </div>
+
                     {role && navigationItems[role].map((item) => {
                       const Icon = item.icon;
                       const isActive = view === item.id;
@@ -403,45 +418,57 @@ export default function App() {
                             setView(item.id);
                             setIsMenuOpen(false);
                           }}
-                          className={`w-full flex items-center justify-between gap-3 px-4 py-3.5 rounded-2xl transition-all duration-200 group ${
+                          className={`w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl transition-all duration-300 group relative overflow-hidden ${
                             isActive 
-                              ? "bg-blue-50 text-blue-900 border-r-4 border-blue-900" 
-                              : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
+                              ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20" 
+                              : "text-slate-400 hover:text-white hover:bg-white/5"
                           }`}
                         >
-                          <div className="flex items-center gap-3">
-                            <div className={`p-2 rounded-xl transition-colors ${isActive ? "bg-blue-100 text-blue-900" : "bg-slate-100 text-slate-400 group-hover:bg-white group-hover:text-slate-600"}`}>
-                              <Icon size={18} className={item.highlight ? "text-amber-500" : ""} />
+                          <div className="flex items-center gap-3 relative z-10">
+                            <div className={`p-2 rounded-xl transition-all duration-300 ${isActive ? "bg-white/20 text-white" : "bg-white/5 text-slate-500 group-hover:bg-indigo-500/20 group-hover:text-indigo-400"}`}>
+                              <Icon size={18} className={item.highlight ? "text-amber-400 animate-pulse" : ""} />
                             </div>
-                            <span className={`text-xs font-black ${isActive ? "text-blue-900" : "text-slate-700"}`}>{item.label}</span>
+                            <span className={`text-xs font-black transition-colors ${isActive ? "text-white" : "text-slate-300"}`}>{item.label}</span>
                           </div>
+                          
+                          {isActive && (
+                            <motion.div 
+                              layoutId="active-mobile-indicator"
+                              className="absolute left-0 top-0 bottom-0 w-1 bg-white"
+                            />
+                          )}
+                          
                           {isActive ? (
-                            <ChevronLeft size={16} className="text-blue-900" />
+                            <ChevronLeft size={16} className="text-white relative z-10" />
                           ) : (
-                            <div className="w-1.5 h-1.5 rounded-full bg-slate-200 group-hover:bg-slate-300" />
+                            <div className="w-1 h-1 rounded-full bg-slate-700 group-hover:bg-indigo-400 transition-colors relative z-10" />
                           )}
                         </button>
                       );
                     })}
                   </div>
 
-                  {/* Drawer Footer */}
-                  <div className="p-6 border-t border-slate-100 bg-slate-50 mt-auto">
-                    <div className="flex items-center gap-3 mb-4 text-right">
-                       <div className="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-slate-500 font-bold overflow-hidden border-2 border-white shadow-sm">
+                  {/* Drawer Footer with Personal Context */}
+                  <div className="p-6 bg-white/[0.02] mt-auto backdrop-blur-md relative">
+                    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent" />
+                    <div className="flex items-center gap-4 mb-5 text-right bg-black/40 p-4 rounded-3xl border border-white/5 shadow-inner">
+                       <div className="w-11 h-11 bg-gradient-to-b from-slate-700 to-slate-800 rounded-2xl flex items-center justify-center text-white font-black overflow-hidden border border-white/10 shadow-inner">
                          {student.name.charAt(0)}
                        </div>
                        <div className="flex flex-col">
-                         <span className="text-xs font-black text-slate-900 leading-none mb-1">{student.name}</span>
-                         <span className="text-[10px] text-slate-400 font-bold">{student.grade} - {student.school}</span>
+                         <span className="text-xs font-black text-white leading-none mb-1.5">{student.name}</span>
+                         <div className="flex items-center gap-2">
+                           <span className="text-[10px] text-indigo-400 font-bold bg-indigo-500/10 px-1.5 py-0.5 rounded-md border border-indigo-500/10">{student.grade}</span>
+                           <span className="text-[10px] text-slate-400 font-bold">{student.school}</span>
+                         </div>
                        </div>
                     </div>
                     <button
                       onClick={handleLogout}
-                      className="w-full flex items-center justify-center gap-2 py-3 bg-white border border-slate-200 rounded-xl text-[10px] font-black text-red-600 hover:bg-red-50 hover:border-red-100 transition shadow-sm"
+                      className="w-full flex items-center justify-center gap-2 py-3.5 bg-rose-500/10 border border-rose-500/20 rounded-2xl text-[10px] font-black text-rose-400 hover:bg-rose-500 hover:text-white transition-all duration-300 shadow-lg shadow-rose-500/5 active:scale-95"
                     >
-                      <LogOut size={14} />
-                      <span>خروج از پنل کاربری</span>
+                      <LogOut size={16} />
+                      <span>خروج امن از حساب کاربری</span>
                     </button>
                   </div>
                 </motion.div>
@@ -464,6 +491,8 @@ export default function App() {
             {view === "traps" && <TestTrapsView student={student} />}
             {view === "quiz" && <CustomQuizGenerator student={student} />}
             {view === "psychology" && <AssessmentView student={student} onNavigateChange={(target) => setView(target)} />}
+            {view === "metacognition" && <MetacognitionLabView student={student} />}
+            {view === "counseling" && <CounselingAdvisorView student={student} />}
           </>
         )}
 
@@ -473,6 +502,7 @@ export default function App() {
             {view === "manova" && <ManovaDashboard student={student} onNavigate={(target) => setView(target)} />}
             {view === "report" && <ReportCardView student={student} />}
             {view === "psychology" && <AssessmentView student={student} onNavigateChange={(target) => setView(target)} />}
+            {view === "counseling" && <CounselingAdvisorView student={student} />}
           </>
         )}
 

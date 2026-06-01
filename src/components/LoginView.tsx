@@ -128,24 +128,36 @@ export default function LoginView({ onLogin }: LoginViewProps) {
         {/* Roles Tabs */}
         <div className="flex border-b border-slate-100 bg-slate-50/50 p-2 gap-1" id="login-role-tabs">
           {(["student", "parent", "admin"] as const).map((tab) => (
-            <button
+            <motion.button
               key={tab}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.96 }}
               onClick={() => {
                 setActiveTab(tab);
                 setOtpSent(false);
                 setOtpCode("");
               }}
-              className={`flex-1 py-3 text-xs font-bold rounded-xl transition duration-200 cursor-pointer ${
+              className={`flex-1 py-3 text-[10px] sm:text-xs font-black rounded-xl transition-all duration-300 cursor-pointer relative overflow-hidden flex items-center justify-center ${
                 activeTab === tab
-                  ? "bg-white text-blue-950 shadow-sm border border-slate-100"
-                  : "text-slate-400 hover:text-slate-600 hover:bg-slate-100/50"
+                  ? "text-white shadow-lg shadow-indigo-600/20"
+                  : "text-slate-400 hover:text-slate-600 hover:bg-slate-100/30"
               }`}
               id={`tab-button-${tab}`}
             >
-              {tab === "student" && "🎓 داوطلب کنکور ترنم مهر"}
-              {tab === "parent" && "👥 سامانه نظارت آنلاین والدین"}
-              {tab === "admin" && "📐 سند معماری و نقشه راه SaaS"}
-            </button>
+              <span className="relative z-10">
+                {tab === "student" && "🎓 داوطلب"}
+                {tab === "parent" && "👥 والدین"}
+                {tab === "admin" && "📐 ادمین"}
+              </span>
+              {activeTab === tab && (
+                <motion.div 
+                  layoutId="active-login-tab"
+                  className="absolute inset-0 bg-gradient-to-tr from-indigo-600 via-indigo-500 to-blue-500"
+                  initial={false}
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+            </motion.button>
           ))}
         </div>
 

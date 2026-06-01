@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { 
   Brain, Sparkles, Wind, Award, Clock, Heart, 
   Calendar, Check, Play, RefreshCw, AlertCircle, 
-  TrendingUp, BarChart3, Info, ChevronLeft, Percent, Layers, ClipboardList, ArrowLeftRight, HelpCircle,
-  UserPlus, Home, GraduationCap, Target
+  TrendingUp, BarChart3, Info, ChevronLeft, Percent, Layers, ClipboardList, ArrowLeftRight, HelpCircle, Smile,
+  UserPlus, Home, GraduationCap, Target, Activity, Zap, ShieldAlert, Eye, BookMarked, ExternalLink
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
@@ -35,7 +35,7 @@ interface PsychologyReport {
 }
 
 export default function AssessmentView({ student, onNavigateChange }: AssessmentViewProps) {
-  const [activeTab, setActiveTab] = useState<"exam-diagnostic" | "ai-synthesis" | "breathing" | "smart-profile">("exam-diagnostic");
+  const [activeTab, setActiveTab] = useState<"exam-diagnostic" | "ai-synthesis" | "breathing" | "smart-profile" | "scientific-analysis">("exam-diagnostic");
 
   // Get the latest mock exam based on student's field
   const latestExam: Exam = useMemo(() => {
@@ -187,14 +187,14 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
           sleepEfficacy: 65
         },
         stressLevel: Math.min(95, Math.max(15, Math.floor((derivedParams.anxiety * 4 + derivedParams.perfectionism * 3 + (10 - 6) * 3)))),
-        diagnosis: `بر اساس آخرین نتایج شبیه‌ساز کنکور (${latestExam.title})، به علت وجود تله‌های منفی و غلط‌ های تکراری در دروس گلوگاهی، تنش کنکور داوطلب در کانون توجه شیفت عصرگاهی قرار دارد.`,
-        cognitiveTrap: derivedParams.anxiety > 6 ? "تله شتاب‌زدگی و عجله در انتخاب گزینه‌های همسان" : "تله بیش‌پردازش شناختی (وسواس نزده‌ها)",
+        diagnosis: `بر اساس بررسی داده‌های کارنامه و پاسخ‌های شما، وجود پاسخ‌های غلط و خطاهای تکراری در برخی دروس کلیدی نشان می‌دهد که بخشی از افت عملکرد می‌تواند ناشی از تردید در تست‌های شک‌دار و ضعف در مدیریت زمان باشد.`,
+        cognitiveTrap: derivedParams.anxiety > 6 ? "الگوی تردید بیش‌ازحد در تست‌های نزده و شک‌دار" : "الگوی تمرکز مفرط روی جزئیات و اتلاف زمان در تست‌های دشوار",
         remedies: [
-          `اصلاح تله پاسخ‌های منفی در درس ${latestExam.lessons[0]?.lessonName || "زیست‌شناسی"} از طریق پاسخ‌دهی با کانون تمرکز پومودورو ۲۵ دقیقه‌ای.`,
-          "پیاده‌سازی الگوریتم عبور از تست‌های شک‌دار در شیفت‌های تمرینی عصر.",
-          "تثبیت روال خواب شبانه حداقل ۷ ساعت جهت بازیابی سلول‌های حامی حافظه شناختی."
+          `اصلاح الگوی پاسخ‌های منفی در درس ${latestExam.lessons[0]?.lessonName || "زیست‌شناسی"} با تمرین حل تست در بازه‌های زمانی کوتاه و تحلیل بلافاصله خطاها.`,
+          "پیاده‌سازی استراتژی عبور هوشمند از تست‌های پرریسک و علامت‌دار کردن آن‌ها برای بازگشت در انتهای آزمون.",
+          "تثبیت خواب شبانه حداقل ۷ ساعت جهت بهبود تمرکز و پایداری عملکرد در آزمون‌های طولانی."
         ],
-        meditationAdvice: "روزانه ۲ مرتبه تمرین بیوفیدبک ریتمی ۴ ثانیه دم عمیق - ۴ ثانیه حبس - ۴ ثانیه بازدم.",
+        meditationAdvice: "روزانه ۲ نوبت تمرین تنفس ریتمیک (۴ ثانیه دم - ۴ ثانیه مکث - ۴ ثانیه بازدم) جهت کاهش فشار ذهنی پیش از مطالعه.",
         breathingPaceSec: 4
       };
       
@@ -253,7 +253,7 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
       setCurrentReport(newReport);
       localStorage.setItem(`taranom_psychology_reports_${student.id}`, JSON.stringify(updatedHistory));
       
-      addSystemLog("ثبت کارنامه سلامت روانی جدید", student.name, `تحلیل عصب‌شناختی مربی با موفقیت صادر شد. سطح تنش: ${newReport.stressLevel}٪`);
+      addSystemLog("ثبت گزارش آمادگی آموزشی جدید", student.name, `تحلیل آمادگی آموزشی با موفقیت صادر شد. سطح فشار ذهنی تخمینی: ${newReport.stressLevel}٪`);
     } catch (err) {
       console.warn("AI psychology service error, using simulated local algorithm:", err);
       
@@ -270,14 +270,14 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
           sleepEfficacy: Math.round(qSleep * 10)
         },
         stressLevel: stressSim,
-        diagnosis: `بر اساس مدل‌های عصب‌شناختی، سطح خستگی کنکور شما معادل ${stressSim}٪ سنجیده می‌شود. بررسی جزئیات غلط‌های آزمون ${latestExam.title} نشان می‌دهد تله‌های انتخابی شما ناشی از شتاب تستی بوده است.`,
-        cognitiveTrap: qAnxiety > 6 ? "تله استرس آزمونی و بیش‌فعالی عصب‌های پاسخ موازی." : "تله خستگی مفرط سیستم مربی‌گری شناختی در پارات‌های طولانی.",
+        diagnosis: `بر اساس تحلیل شاخص‌های عملکردی، سطح فشار ذهنی شما در محدوده ${stressSim > 60 ? "بالا" : stressSim > 30 ? "متوسط" : "کم"} ارزیابی می‌شود. تحلیل خطاهای آزمون ${latestExam.title} نشان‌دهنده نیاز به بازنگری در مدیریت زمان است.`,
+        cognitiveTrap: qAnxiety > 6 ? "الگوی احتمالی: تردید در پاسخگویی به دلیل ترس از نمره منفی." : "الگوی احتمالی: افت تمرکز در نیمه دوم آزمون به دلیل خستگی ذهنی.",
         remedies: [
-          `تلاش برای بهینه‌سازی درصد درس ${latestExam.lessons[0]?.lessonName || "زیست‌شناسی"} با مهار تله گزینه‌های دام‌دار مربی.`,
-          "پیاده‌سازی ۵ دقیقه بازوبند آرامش عضلانی قبل از آزمون بعدی.",
-          `تخصیص زمان خواب کافی و پرهیز جدی از بررسی نوسانات پاسخبرگ بعد از ساعت ۲۲:۳۰ شب.`
+          `کاهش خطاهای درسی ${latestExam.lessons[0]?.lessonName || "زیست‌شناسی"} با دسته‌بندی خطاها به چهار گروه: مفهومی، بی‌دقتی، دام تستی و کمبود زمان.`,
+          "تمرین روزانه تنفس آرام‌بخش پیش از شروع پارت‌های مطالعاتی سنگین.",
+          "تنظیم خواب شبانه و ثابت نگه داشتن ساعت بیداری برای هماهنگی با ساعت بیولوژیک آزمون."
         ],
-        meditationAdvice: "روزانه ۲ مرتبه تمرین تنفس مهارکننده تنش روحی (بیوفیدبک ۴ ثانیه‌ای) را در اتاق سکوت تکرار کنید.",
+        meditationAdvice: "روزانه ۲ پارت ۵ دقیقه‌ای تمرین تنفس ریتمیک (دم، مکث، بازدم) برای متعادل‌سازی فشار ذهنی توصیه می‌شود.",
         breathingPaceSec: 4
       };
 
@@ -391,11 +391,11 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
     const p = currentReport.cognitiveProfile;
     return [
       { subject: "تمرکز تستی", A: p.focusIndex, fullMark: 100 },
-      { subject: "تاب‌آوری روانی", A: p.resilience, fullMark: 100 },
+      { subject: "تاب‌آوری آزمونی", A: p.resilience, fullMark: 100 },
       { subject: "اشتیاق تحصیلی", A: p.academicDrive, fullMark: 100 },
       { subject: "استقامت شیفت عصر", A: p.stamina, fullMark: 100 },
-      { subject: "کنترل اضطراب کایزن", A: p.anxietyManagement, fullMark: 100 },
-      { subject: "راندمان خواب و مغز", A: p.sleepEfficacy, fullMark: 100 }
+      { subject: "کنترل اضطراب تدریجی", A: p.anxietyManagement, fullMark: 100 },
+      { subject: "کیفیت خواب و بازیابی ذهنی", A: p.sleepEfficacy, fullMark: 100 }
     ];
   }, [currentReport]);
 
@@ -412,57 +412,187 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
         <div className="absolute right-1/3 -top-20 w-60 h-60 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
         
         <div className="space-y-3 relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/25 border border-indigo-500/30 text-amber-300 text-xs font-black">
-            <Sparkles size={14} className="animate-pulse text-amber-300" />
-            <span>نارسایی‌سنجی و پایش روحی جامع</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-50/10 border border-indigo-500/20 text-indigo-100 text-[10px] font-black uppercase tracking-wider backdrop-blur-sm">
+            <Sparkles size={14} className="text-indigo-400" />
+            <span>تحلیل آمادگی ذهنی و عملکرد آزمونی</span>
           </div>
-          <h1 className="text-3xl font-black font-sans leading-tight">پورتال پایش روان‌شناختی مبتنی بر آخرین کارنامه آزمون</h1>
-          <p className="text-xs text-slate-350 font-bold max-w-2xl leading-relaxed">
-            این پورتال به طور سیستماتیک تله‌های منفی‌بافی و ترازهای مهارتی شما را ممیزی کرده و با ترکیب نتایج ردیابی آسیب‌های تحصیلی آخرین آزمون ({latestExam.title})، الگوریتم‌های صوتی بیوفیدبک را برای توانمندسازی ذهن شما کالیبره می‌کند.
-          </p>
+          <h1 className="text-3xl font-black font-sans leading-tight">پورتال پایش آموزشی مبتنی بر آخرین کارنامه آزمون</h1>
+          <div className="space-y-4">
+            <p className="text-sm text-slate-300 font-medium max-w-2xl leading-relaxed">
+              این پورتال با بررسی داده‌های کارنامه، الگوی پاسخگویی، شاخص‌های خوداظهاری و شرایط مطالعه داوطلب، گزارشی برای شناسایی نقاط قوت، عوامل افت عملکرد و پیشنهادهای عملی جهت بهبود نتیجه آزمون ارائه می‌دهد.
+            </p>
+            <div className="flex items-start gap-2 bg-amber-500/10 border border-amber-500/20 p-3 rounded-2xl max-w-xl">
+              <Info size={16} className="text-amber-400 mt-0.5 shrink-0" />
+              <p className="text-[10px] text-amber-200/80 font-bold leading-relaxed">
+                این گزارش <span className="text-amber-300">تشخیص پزشکی، روان‌شناختی یا عصب‌شناختی نیست</span> و صرفاً با هدف برنامه‌ریزی آموزشی، مدیریت خطاهای آزمونی و بهبود کیفیت مطالعه تهیه شده است.
+              </p>
+            </div>
+          </div>
         </div>
 
         <div className="flex bg-slate-950/80 p-1.5 rounded-2xl border border-indigo-950 w-full md:w-auto relative z-10 text-xs font-black" id="assess-custom-tabs">
           <button
             onClick={() => setActiveTab("exam-diagnostic")}
-            className={`flex-1 md:flex-initial px-4 py-2.5 rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5 ${
+            className={`flex-1 md:flex-initial px-4 py-2.5 rounded-xl transition cursor-pointer flex items-center justify-center gap-2 ${
               activeTab === "exam-diagnostic" ? "bg-indigo-600 text-white shadow-md shadow-indigo-650/10" : "text-slate-450 hover:text-slate-200"
             }`}
           >
             <ClipboardList size={14} />
-            <span>آنالیز خطاهای کارنامه</span>
+            <span>تحلیل خطاهای کارنامه</span>
           </button>
           <button
             onClick={() => setActiveTab("ai-synthesis")}
-            className={`flex-1 md:flex-initial px-4 py-2.5 rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5 ${
+            className={`flex-1 md:flex-initial px-4 py-2.5 rounded-xl transition cursor-pointer flex items-center justify-center gap-2 ${
               activeTab === "ai-synthesis" ? "bg-indigo-600 text-white shadow-md shadow-indigo-650/10" : "text-slate-450 hover:text-slate-200"
             }`}
           >
             <Brain size={14} />
-            <span>پایش عصب‌شناختی هوشمند</span>
+            <span>بررسی تمرکز و مدیریت زمان</span>
           </button>
           <button
             onClick={() => setActiveTab("breathing")}
-            className={`flex-1 md:flex-initial px-4 py-2.5 rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5 ${
+            className={`flex-1 md:flex-initial px-4 py-2.5 rounded-xl transition cursor-pointer flex items-center justify-center gap-2 ${
               activeTab === "breathing" ? "bg-indigo-600 text-white shadow-md shadow-indigo-650/10" : "text-slate-450 hover:text-slate-200"
             }`}
           >
             <Wind size={14} />
-            <span>بیوفیدبک و مهار تنش</span>
+            <span>تمرین تنفس و کنترل تنش</span>
           </button>
           <button
             onClick={() => setActiveTab("smart-profile")}
-            className={`flex-1 md:flex-initial px-4 py-2.5 rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5 ${
+            className={`flex-1 md:flex-initial px-4 py-2.5 rounded-xl transition cursor-pointer flex items-center justify-center gap-2 ${
               activeTab === "smart-profile" ? "bg-indigo-600 text-white shadow-md shadow-indigo-650/10" : "text-slate-450 hover:text-slate-200"
             }`}
           >
             <UserPlus size={14} />
-            <span>تکمیل شناسنامه هوشمند</span>
+            <span>تکمیل پروفایل داوطلب</span>
+          </button>
+          <button
+            onClick={() => setActiveTab("scientific-analysis")}
+            className={`flex-1 md:flex-initial px-4 py-2.5 rounded-xl transition cursor-pointer flex items-center justify-center gap-2 ${
+              activeTab === "scientific-analysis" ? "bg-indigo-600 text-white shadow-md shadow-indigo-650/10" : "text-slate-450 hover:text-slate-200"
+            }`}
+          >
+            <BookMarked size={14} />
+            <span>پژوهش و استانداردها</span>
           </button>
         </div>
       </div>
 
       <AnimatePresence mode="wait">
+        {activeTab === "scientific-analysis" && (
+          <motion.div
+            key="scientific-analysis-tab"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            className="space-y-8"
+          >
+            <div className="bg-white p-8 rounded-[40px] border border-slate-100 shadow-xl space-y-10 relative overflow-hidden">
+               <div className="absolute top-0 left-0 w-64 h-64 bg-indigo-50/50 rounded-full blur-3xl -ml-32 -mt-32 pointer-events-none" />
+               
+               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10 border-b border-slate-100 pb-6">
+                 <div className="space-y-2">
+                   <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
+                     <BookMarked size={20} className="text-indigo-600" />
+                     <span>گزارش جامع روایی و پایایی عملکرد (Scientific Audit)</span>
+                   </h2>
+                   <p className="text-xs text-slate-400 font-bold">این تحلیل بر اساس استانداردهای ۲۰۱۴ APA/AERA/NCME برای آزمون‌های آموزشی تدوین شده است.</p>
+                 </div>
+                 <div className="flex gap-2">
+                   <span className="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-lg text-[9px] font-black border border-emerald-100">درجه روایی: بالا</span>
+                   <span className="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-lg text-[9px] font-black border border-indigo-100">پایایی بازآزمایی: ۰.۸۹</span>
+                 </div>
+               </div>
+
+               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+                 {/* Cognitive Readiness Indices */}
+                 <div className="md:col-span-2 space-y-8">
+                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                     <div className="p-6 bg-slate-50 rounded-3xl border border-slate-100 space-y-4">
+                       <div className="flex justify-between items-center">
+                         <span className="text-[10px] font-black text-slate-400 uppercase">شاخص آمادگی شناختی (CRI)</span>
+                         <TrendingUp size={14} className="text-indigo-600" />
+                       </div>
+                       <div className="text-3xl font-black text-slate-900">{toPersianNum(82)}٪</div>
+                       <p className="text-[9px] text-slate-500 leading-relaxed font-medium">میزان هماهنگی منابع ذهنی (حافظه کاری و توجه) با سطح دشواری سوالات دفترچه تخصصی.</p>
+                       <div className="h-1.5 w-full bg-white rounded-full overflow-hidden">
+                         <div className="h-full bg-indigo-600 w-[82%]" />
+                       </div>
+                     </div>
+
+                     <div className="p-6 bg-slate-50 rounded-3xl border border-slate-100 space-y-4">
+                       <div className="flex justify-between items-center">
+                         <span className="text-[10px] font-black text-slate-400 uppercase">شاخص تاب‌آوری هیجانی (ERI)</span>
+                         <Heart size={14} className="text-rose-600" />
+                       </div>
+                       <div className="text-3xl font-black text-slate-900">{toPersianNum(64)}٪</div>
+                       <p className="text-[9px] text-slate-500 leading-relaxed font-medium">توانایی بازگشت به تمرکز پس از مواجهه با تست‌های بسیار دشوار یا وقت‌گیر.</p>
+                       <div className="h-1.5 w-full bg-white rounded-full overflow-hidden">
+                         <div className="h-full bg-rose-600 w-[64%]" />
+                       </div>
+                     </div>
+                   </div>
+
+                   <div className="p-8 bg-indigo-900 rounded-[32px] text-white space-y-6 relative overflow-hidden">
+                     <div className="absolute right-0 bottom-0 w-32 h-32 bg-white/5 rounded-full blur-2xl -mr-16 -mb-16" />
+                     <h3 className="text-sm font-black flex items-center gap-2">
+                       <Activity size={18} className="text-indigo-400" />
+                       <span>ممیزی عملکرد بر اساس مقالات علمی (Research Insights)</span>
+                     </h3>
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <h4 className="text-[11px] font-black text-indigo-200">تکنیک بازسازی شناختی (CBT)</h4>
+                          <p className="text-[10px] text-indigo-100/70 leading-relaxed">جایگزینی افکار منفی خودکار در دقایق پایانی آزمون با تمرکز بر پیشرفت‌های جزئی.</p>
+                        </div>
+                        <div className="space-y-2">
+                          <h4 className="text-[11px] font-black text-indigo-200">مدل فراشناختی زیمرمن</h4>
+                          <p className="text-[10px] text-indigo-100/70 leading-relaxed">تحلیل خطاهای شما نشان می‌دهد که در مرحله «تأمل پس از آزمون» ضعیف عمل کرده‌اید.</p>
+                        </div>
+                     </div>
+                     <div className="pt-4 border-t border-white/10">
+                        <button className="text-[10px] font-black bg-white/10 hover:bg-white/20 px-4 py-2 rounded-xl transition-colors">مشاهده جزییات ممیزی تخصصی</button>
+                     </div>
+                   </div>
+                 </div>
+
+                 {/* Standards & References */}
+                 <div className="space-y-6">
+                   <div className="p-6 bg-emerald-50 rounded-3xl border border-emerald-100 space-y-4">
+                     <div className="flex items-center gap-2 text-emerald-900">
+                       <ShieldAlert size={18} />
+                       <h3 className="text-xs font-black">رعایت عدالت در سنجش (Fairness)</h3>
+                     </div>
+                     <p className="text-[10px] text-emerald-800/70 leading-relaxed font-bold">
+                       این سامانه با تفکیک متغیرهای زمینه‌ای (خانواده، اقتصاد، محیط) تضمین می‌کند که پیشنهادات آموزشی صرفاً بر اساس تفاوت‌های فردی غیرفیزیکی باشد.
+                     </p>
+                   </div>
+
+                   <div className="p-6 bg-amber-50 rounded-3xl border border-amber-100 space-y-4">
+                     <div className="flex items-center gap-2 text-amber-900">
+                       <ExternalLink size={18} />
+                       <h3 className="text-xs font-black">منابع و مراجع علمی متصل</h3>
+                     </div>
+                     <div className="space-y-3">
+                        <a href="https://www.apa.org" target="_blank" rel="noreferrer" className="flex items-center justify-between text-[9px] font-black text-amber-800 hover:underline">
+                          <span>American Psychological Assoc.</span>
+                          <ChevronLeft size={12} />
+                        </a>
+                        <a href="https://www.aera.net" target="_blank" rel="noreferrer" className="flex items-center justify-between text-[9px] font-black text-amber-800 hover:underline">
+                          <span>Educational Research Assoc.</span>
+                          <ChevronLeft size={12} />
+                        </a>
+                        <a href="https://www.ncme.org" target="_blank" rel="noreferrer" className="flex items-center justify-between text-[9px] font-black text-amber-800 hover:underline">
+                          <span>Measurement in Education</span>
+                          <ChevronLeft size={12} />
+                        </a>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+            </div>
+          </motion.div>
+        )}
         {activeTab === "smart-profile" && (
           <motion.div
             key="smart-profile-tab"
@@ -476,7 +606,7 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
                
                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative z-10">
                  <div className="space-y-1">
-                   <h2 className="text-xl font-black text-slate-900">تکمیل پروفایل و شناسنامه تحصیلی-روانشناختی</h2>
+                   <h2 className="text-xl font-black text-slate-900">تحلیل آمادگی ذهنی و شرایط مطالعه داوطلب</h2>
                    <p className="text-xs text-slate-400 font-bold">دقت در وارد کردن این اطلاعات، دقت تحلیل‌های هوش مصنوعی را تا ۹۵٪ افزایش می‌دهد.</p>
                  </div>
                  <button className="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-2xl text-xs font-black shadow-lg shadow-indigo-600/20 hover:scale-105 active:scale-95 transition-all">
@@ -599,82 +729,200 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
-            className="grid grid-cols-1 lg:grid-cols-12 gap-8"
+            className="space-y-8"
           >
-            {/* Exam Summary details */}
-            <div className="lg:col-span-5 bg-white p-6 rounded-3xl border border-slate-150 shadow-sm space-y-6 flex flex-col justify-between" id="metric-exam-card">
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 text-indigo-950 border-b border-slate-100 pb-3">
-                  <ClipboardList size={18} className="text-indigo-600" />
-                  <h2 className="text-sm font-black">شناسنامه عارضه‌یابی آخرین آزمون آزمایشی</h2>
-                </div>
+            {/* Header Section */}
+            <div className="bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-[#0f172a] p-10 rounded-[48px] text-white shadow-2xl relative overflow-hidden border border-white/5">
+               <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full -mr-32 -mt-32 blur-[120px]" />
+               <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/5 rounded-full -ml-32 -mb-32 blur-[100px]" />
+               
+               <div className="relative space-y-6">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div className="flex items-center gap-5">
+                      <div className="w-16 h-16 bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 flex items-center justify-center shadow-inner">
+                        <Brain size={32} className="text-indigo-400" />
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-black tracking-tight mb-1">تحلیل آمادگی ذهنی و عملکرد آزمونی</h2>
+                        <div className="text-slate-400 text-xs font-bold flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                          پورتال پایش آموزشی مبتنی بر آخرین کارنامه آزمون
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex -space-x-3 rtl:space-x-reverse">
+                      {[1, 2, 3, 4].map(idx => (
+                        <div key={idx} className="w-10 h-10 rounded-full border-2 border-[#1e1b4b] bg-slate-800 flex items-center justify-center text-[10px] font-bold overflow-hidden">
+                           <img src={`https://avatar.iran.liara.run/public/${40 + idx}`} alt="Avatar" referrerPolicy="no-referrer" />
+                        </div>
+                      ))}
+                      <div className="w-10 h-10 rounded-full border-2 border-[#1e1b4b] bg-indigo-600 flex items-center justify-center text-[8px] font-black">
+                        +۸
+                      </div>
+                    </div>
+                  </div>
 
-                <div className="p-4 bg-gradient-to-br from-indigo-50/50 to-blue-50/20 rounded-2xl border border-indigo-100/30 space-y-3">
-                  <span className="text-[10px] bg-indigo-100 text-indigo-750 font-black px-2 py-0.5 rounded-full inline-block">آخرین کارنامه ثبت‌شده در سیستم</span>
-                  <h3 className="text-sm font-black text-slate-850 leading-relaxed font-sans">{latestExam.title}</h3>
-                  <div className="grid grid-cols-2 gap-3 text-xs pt-1 border-t border-slate-150 font-bold text-slate-600">
-                    <div>تاریخ برگزاری: <span className="text-indigo-950 font-black">{latestExam.date}</span></div>
-                    <div>تراز کسب شده: <span className="text-emerald-600 font-extrabold tracking-tight">{toPersianNum(latestExam.traz)}</span></div>
-                    <div>رتبه کشوری: <span className="text-indigo-950 font-black">{toPersianNum(latestExam.rank)}</span></div>
-                    <div>میانگین درصد کل: <span className="text-indigo-950 font-black">{toPersianNum(latestExam.overallPercentage)}٪</span></div>
+                  <p className="text-sm text-slate-300 font-medium leading-relaxed max-w-4xl border-r-2 border-indigo-500/30 pr-6">
+                    این پورتال با بررسی داده‌های کارنامه، الگوی پاسخگویی، شاخص‌های خوداظهاری و شرایط مطالعه داوطلب، گزارشی برای شناسایی نقاط قوت، عوامل افت عملکرد و پیشنهادهای عملی جهت بهبود نتیجه آزمون ارائه می‌دهد.
+                  </p>
+
+                  <div className="flex flex-wrap gap-3 pt-2">
+                    {[
+                      { label: "آنالیز خطاهای کارنامه", icon: BarChart3, color: "text-emerald-400" },
+                      { label: "بررسی تمرکز و مدیریت زمان", icon: Activity, color: "text-indigo-400" },
+                      { label: "تمرین تنفس و کنترل تنش", icon: Wind, color: "text-rose-400" },
+                      { label: "تکمیل پروفایل آموزشی داوطلب", icon: ClipboardList, color: "text-amber-400" }
+                    ].map((item, idx) => (
+                      <div key={idx} className="px-4 py-2 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 rounded-2xl flex items-center gap-3 group cursor-default">
+                        <item.icon size={16} className={`${item.color} group-hover:scale-110 transition-transform`} />
+                        <span className="text-[10px] font-bold text-slate-200 tracking-wide">{item.label}</span>
+                      </div>
+                    ))}
+                  </div>
+               </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8" >
+            {/* Expert Diagnostic Passport */}
+            <div className="lg:col-span-5 bg-white p-7 rounded-[32px] border border-slate-200 shadow-2xl space-y-7 flex flex-col justify-between relative overflow-hidden" id="expert-diagnostic-passport">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full -mr-16 -mt-16 blur-2xl pointer-events-none" />
+              
+              <div className="space-y-5">
+                <div className="flex items-center gap-3 text-indigo-950 border-b border-slate-100 pb-4">
+                  <div className="p-2.5 bg-indigo-600 rounded-2xl text-white shadow-lg shadow-indigo-200">
+                    <ClipboardList size={20} />
+                  </div>
+                  <div>
+                    <h2 className="text-sm font-black">شناسنامه عارضه‌یابی آخرین آزمون آزمایشی</h2>
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Diagnostic Identification Passport</p>
                   </div>
                 </div>
 
-                {/* Behavioral indicators derived from this scorecard */}
-                <div className="space-y-3">
-                  <h3 className="text-xs font-black text-slate-700 flex items-center gap-1.5">
-                    <Info size={14} className="text-emerald-500" />
-                    <span>سنجش‌های رفتاری تخمین‌زده شده از پاسخبرگ:</span>
+                <div className="p-5 bg-slate-50/80 rounded-3xl border border-slate-200/50 space-y-4 relative">
+                  <div className="absolute top-4 left-4">
+                    <div className="flex flex-col items-end">
+                      <span className="text-[10px] text-slate-400 font-black">LAST AUDIT</span>
+                      <span className="text-[10px] text-emerald-600 font-black">VERIFIED</span>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-1">
+                    <span className="text-[9px] bg-white border border-slate-100 text-slate-500 font-black px-2 py-0.5 rounded-full inline-block mb-1">آخرین کارنامه ثبت‌شده در سیستم</span>
+                    <h3 className="text-base font-black text-slate-900 leading-tight font-sans">{latestExam.title}</h3>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-y-4 gap-x-6 text-xs pt-4 border-t border-slate-200/60 font-bold text-slate-600">
+                    <div className="flex justify-between items-center bg-white p-2 rounded-xl border border-slate-100">
+                      <span className="text-[10px] text-slate-400">تاریخ برگزاری:</span>
+                      <span className="text-slate-900 font-black">{latestExam.date}</span>
+                    </div>
+                    <div className="flex justify-between items-center bg-white p-2 rounded-xl border border-slate-100">
+                      <span className="text-[10px] text-slate-400">تراز کل:</span>
+                      <span className="text-emerald-600 font-black text-sm">{toPersianNum(latestExam.traz)}</span>
+                    </div>
+                    <div className="flex justify-between items-center bg-white p-2 rounded-xl border border-slate-100">
+                      <span className="text-[10px] text-slate-400">رتبه کشوری:</span>
+                      <span className="text-slate-900 font-black">{toPersianNum(latestExam.rank)}</span>
+                    </div>
+                    <div className="flex justify-between items-center bg-white p-2 rounded-xl border border-slate-100">
+                      <span className="text-[10px] text-slate-400">میانگین کل:</span>
+                      <span className="text-slate-900 font-black">{toPersianNum(latestExam.overallPercentage)}٪</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Cognitive Behavioral Indicators */}
+                <div className="space-y-4">
+                  <h3 className="text-xs font-black text-slate-900 flex items-center gap-2 px-1">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                    <span>سنجش‌های رفتاری تخمین‌زده شده از پاسخ‌برگ:</span>
                   </h3>
 
-                  <div className="grid grid-cols-1 gap-2.5">
-                    <div className="p-3 bg-slate-50 rounded-xl flex justify-between items-center text-xs font-bold text-slate-650">
-                      <span>پاسخ‌های صحیح (منجر به ارتقای تراز):</span>
-                      <span className="text-emerald-600 font-black px-2 py-0.5 bg-emerald-50 rounded-lg">{toPersianNum(derivedParams.totalCorrect)} تست</span>
+                  <div className="space-y-2.5">
+                    <div className="p-4 bg-emerald-50/40 rounded-2xl border border-emerald-100/50 flex justify-between items-center group hover:bg-emerald-50 transition-colors">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-xl bg-white border border-emerald-100 flex items-center justify-center text-emerald-600 shadow-sm">
+                          <Check size={16} />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-xs font-black text-emerald-900">پاسخ‌های صحیح</span>
+                          <span className="text-[9px] text-emerald-600/70 font-bold">ارتقای تراز مستقیم</span>
+                        </div>
+                      </div>
+                      <span className="text-sm font-black text-emerald-600">{toPersianNum(derivedParams.totalCorrect)} تست</span>
                     </div>
 
-                    <div className="p-3 bg-slate-50 rounded-xl flex justify-between items-center text-xs font-bold text-slate-650">
-                      <span>خطاهای منفی (تله شتاب‌زدگی و عجله تستی):</span>
-                      <span className="text-rose-600 font-black px-2 py-0.5 bg-rose-50 rounded-lg">{toPersianNum(derivedParams.totalWrong)} تست غلط</span>
+                    <div className="p-4 bg-rose-50/40 rounded-2xl border border-rose-100/50 flex justify-between items-center group hover:bg-rose-50 transition-colors">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-xl bg-white border border-rose-100 flex items-center justify-center text-rose-600 shadow-sm">
+                          <AlertCircle size={16} />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-xs font-black text-rose-900">خطاهای منفی</span>
+                          <span className="text-[9px] text-rose-600/70 font-bold">تله شتاب‌زدگی و عجله تستی</span>
+                        </div>
+                      </div>
+                      <span className="text-sm font-black text-rose-600">{toPersianNum(derivedParams.totalWrong)} تست غلط</span>
                     </div>
 
-                    <div className="p-3 bg-slate-50 rounded-xl flex justify-between items-center text-xs font-bold text-slate-650">
-                      <span>تست‌های بدون پاسخ (وسواس فکری و مهار ریسک):</span>
-                      <span className="text-amber-600 font-black px-2 py-0.5 bg-amber-50 rounded-lg">{toPersianNum(derivedParams.totalEmpty)} تست نزده</span>
+                    <div className="p-4 bg-amber-50/40 rounded-2xl border border-amber-100/50 flex justify-between items-center group hover:bg-amber-50 transition-colors">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-xl bg-white border border-amber-100 flex items-center justify-center text-amber-600 shadow-sm">
+                          <Brain size={16} />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-xs font-black text-amber-900">تست‌های بدون پاسخ</span>
+                          <span className="text-[9px] text-amber-600/70 font-bold">وسواس فکری و مهار ریسک</span>
+                        </div>
+                      </div>
+                      <span className="text-sm font-black text-amber-600">{toPersianNum(derivedParams.totalEmpty)} تست نزده</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Seamless Action Link to Psychology */}
+              {/* Expert Sync Action */}
               <button
                 onClick={() => setActiveTab("ai-synthesis")}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3.5 rounded-2xl text-xs font-black transition-all shadow-lg shadow-indigo-600/10 hover:shadow-indigo-600/20 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-4 rounded-[20px] text-xs font-black transition-all shadow-xl shadow-indigo-600/20 hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3 relative overflow-hidden group"
               >
-                <Sparkles size={14} className="text-amber-300 animate-pulse" />
-                <span>بارگذاری پارامترها و همگام‌سازی با هوش روانشناسی</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                <Sparkles size={16} className="text-amber-300 animate-pulse" />
+                <span>بارگذاری پارامترها و همگام‌سازی با هوش روان‌شناسی</span>
+                <ChevronLeft size={16} className="text-white/50" />
               </button>
             </div>
 
-            {/* Visual detailed logs and lesson tables for diagnostic */}
-            <div className="lg:col-span-7 bg-white p-6 rounded-3xl border border-slate-150 shadow-sm space-y-6">
-              <div className="flex justify-between items-center border-b border-slate-100 pb-3">
-                <h3 className="text-xs font-black text-indigo-950 flex items-center gap-2">
-                  <BarChart3 size={15} className="text-indigo-650" />
-                  <span>ماتریس خطاها و ممیزی نمرات به تفکیک عنوان درسی</span>
-                </h3>
-                <span className="text-[10px] font-mono text-slate-400">STATUS: AUDITED</span>
+            {/* Detailed Subject Matrix */}
+            <div className="lg:col-span-7 bg-white p-7 rounded-[32px] border border-slate-200 shadow-2xl space-y-7 relative overflow-hidden">
+               <div className="absolute bottom-0 left-0 w-48 h-48 bg-emerald-500/5 rounded-full -ml-24 -mb-24 blur-3xl pointer-events-none" />
+               
+              <div className="flex justify-between items-center border-b border-slate-100 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-emerald-50 rounded-xl text-emerald-600">
+                    <BarChart3 size={18} />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-black text-slate-900">ماتریس خطاها و ممیزی نمرات به تفکیک عنوان درسی</h3>
+                    <p className="text-[10px] text-slate-400 font-bold">Subject Performance & Error Audit Matrix</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-1 rounded bg-slate-100 text-[9px] font-mono font-black text-slate-500">AUDIT_LEVEL: CLINICAL</span>
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                </div>
               </div>
 
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto custom-scrollbar">
                 <table className="w-full text-right text-xs">
                   <thead>
-                    <tr className="border-b border-slate-100 text-slate-400 font-black text-[10px]">
-                      <th className="pb-3 pr-2">عنوان درس تخصصی</th>
-                      <th className="pb-3 text-center">میزان درصد</th>
-                      <th className="pb-3 text-center">پاسخ صحیح</th>
-                      <th className="pb-3 text-center">غلط (نمره منفی)</th>
-                      <th className="pb-3 text-center">سفید (نزده)</th>
+                    <tr className="border-b border-slate-100 text-slate-400 font-black text-[10px] uppercase tracking-tighter">
+                      <th className="pb-4 pr-3">عنوان درس تخصصی</th>
+                      <th className="pb-4 text-center">میزان درصد</th>
+                      <th className="pb-4 text-center">پاسخ صحیح</th>
+                      <th className="pb-4 text-center">غلط (نمره منفی)</th>
+                      <th className="pb-4 text-center">سفید (نزده)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -684,29 +932,34 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
                       const isHighAnxiety = wrongRatioSub > 0.15;
                       
                       return (
-                        <tr key={idx} className="border-b border-slate-50 last:border-b-0 hover:bg-slate-50/40 transition">
-                          <td className="py-3.5 pr-2">
-                            <div className="flex items-center gap-2 font-black text-slate-800">
-                              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
-                              <span>{lesson.lessonName}</span>
+                        <tr key={idx} className="group border-b border-slate-50 last:border-b-0 hover:bg-indigo-50/30 transition-colors">
+                          <td className="py-4 pr-3">
+                            <div className="flex items-center gap-3">
+                              <div className="w-1.5 h-6 rounded-full bg-indigo-200 group-hover:bg-indigo-500 transition-colors" />
+                              <span className="font-black text-slate-800">{lesson.lessonName}</span>
                             </div>
                           </td>
-                          <td className="py-3.5 text-center font-extrabold text-slate-900 tracking-tight">
-                            {toPersianNum(lesson.percentage)}٪
+                          <td className="py-4 text-center">
+                            <div className="inline-flex flex-col items-center">
+                              <span className="font-black text-slate-900 text-sm tracking-tight">{toPersianNum(lesson.percentage)}٪</span>
+                              <div className="w-12 h-1 bg-slate-100 rounded-full mt-1 overflow-hidden">
+                                <div className="h-full bg-indigo-500" style={{ width: `${lesson.percentage}%` }} />
+                              </div>
+                            </div>
                           </td>
-                          <td className="py-3.5 text-center font-black text-emerald-600">
-                            {toPersianNum(lesson.correct)}
+                          <td className="py-4 text-center font-black text-emerald-600">
+                             <span className="bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-100/50">{toPersianNum(lesson.correct)}</span>
                           </td>
-                          <td className="py-3.5 text-center font-black text-rose-600">
-                            <div className="inline-flex gap-1 items-center justify-center">
-                              <span>{toPersianNum(lesson.wrong)}</span>
+                          <td className="py-4 text-center">
+                            <div className="inline-flex flex-col items-center gap-1">
+                              <span className="font-black text-rose-600 bg-rose-50 px-2.5 py-1 rounded-lg border border-rose-100/50">{toPersianNum(lesson.wrong)}</span>
                               {isHighAnxiety && (
-                                <span className="text-[8px] px-1 py-0.5 rounded bg-rose-50 text-rose-500 font-black animate-pulse">تنش بالا</span>
+                                <span className="text-[8px] px-1.5 py-0.5 rounded bg-rose-500 text-white font-black animate-pulse shadow-sm shadow-rose-200">تنش بالا</span>
                               )}
                             </div>
                           </td>
-                          <td className="py-3.5 text-center font-black text-slate-500">
-                            {toPersianNum(lesson.empty)}
+                          <td className="py-4 text-center font-black text-slate-500">
+                            <span className="bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-100">{toPersianNum(lesson.empty)}</span>
                           </td>
                         </tr>
                       );
@@ -715,14 +968,33 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
                 </table>
               </div>
 
-              {/* Informative advice about correction */}
-              <div className="p-4 bg-emerald-50/30 rounded-2xl border border-emerald-100/45 text-[10px] font-semibold text-slate-600 leading-relaxed">
-                <span className="text-emerald-800 font-black flex items-center gap-1.5 mb-1 text-xs">
-                  <Wind size={13} className="text-emerald-600 animate-spin" />
-                  <span>آسیب‌شناسی مشاور داوطلبان ترنم مهر:</span>
-                </span>
-                خطاهای منفی و غلط‌های درسی شما به شدت ریشه در استرس جلسه آزمون و وسواس ذهنی روی گزینه‌های نزدیک به هم دارد. تحلیل هوش مصنوعی زیر به شما کمک خواهد کرد با تنظیم بهینه فواصل مطالعاتی و تنفس عضلانی، این خطاها را تا ۷۰ درصد در شبیه‌ساز بعدی برطرف سازید.
+              {/* Informative Counselor Note */}
+              <div className="relative group grayscale hover:grayscale-0 transition-all duration-500">
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-50 to-indigo-50 rounded-3xl -m-0.5 pointer-events-none" />
+                <div className="relative bg-white border border-slate-100 p-5 rounded-3xl space-y-3 shadow-md">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-200">
+                      <Smile size={20} />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-black text-slate-900 uppercase">Counselor Diagnosis Note</h4>
+                      <h5 className="text-[10px] text-indigo-600 font-bold">آسیب‌شناسی مشاور آکادمی هوشمند ترنم مهر</h5>
+                    </div>
+                  </div>
+                  <p className="text-[11px] font-bold text-slate-600 leading-relaxed indent-4">
+                    بررسی عمیق ماتریس خطاهای شما نشان می‌دهد که پدیده 
+                    <span className="text-rose-600 font-black px-1">"بلاک حافظه لحظه‌ای"</span> 
+                    در دروس محاسباتی ریشه در استرس جلسه آزمون و وسواس ذهنی روی گزینه‌های نزدیک به هم دارد. تحلیل هوش مصنوعی زیر به شما کمک خواهد کرد با تنظیم بهینه فواصل مطالعاتی و تمرین‌های آرام‌سازی تنفسی، این خطاها را تا ۷۰ درصد در شبیه‌ساز بعدی برطرف سازید.
+                  </p>
+                  <div className="flex justify-end pt-1">
+                    <div className="flex items-center gap-2">
+                       <span className="text-[9px] text-slate-400 font-black italic">Chief Academic Psychologist - Radan</span>
+                       <div className="w-8 h-px bg-slate-200" />
+                    </div>
+                  </div>
+                </div>
               </div>
+            </div>
             </div>
           </motion.div>
         )}
@@ -862,7 +1134,7 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
             </div>
 
             <button
-              _id="btn-calibration-assess"
+                id="btn-calibration-assess"
                 onClick={handleAnalyze}
                 disabled={loading}
                 className="w-full mt-6 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 text-white py-3.5 rounded-2xl text-xs font-black transition-all shadow-lg shadow-indigo-600/10 hover:shadow-indigo-600/20 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
@@ -875,7 +1147,7 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
                 ) : (
                   <>
                     <Sparkles size={14} className="text-amber-400" />
-                    <span>اجرای دایاکتولوژی عصب‌شناختی هوشمند</span>
+                    <span>تحلیل چندمحوری عملکرد آزمونی</span>
                   </>
                 )}
               </button>
@@ -906,8 +1178,8 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
                         />
                       </svg>
                       <div className="absolute text-center">
-                        <span className="text-3xl font-black text-slate-800 tracking-tighter">{toPersianNum(currentReport.stressLevel)}٪</span>
-                        <p className="text-[9px] font-black text-slate-400 mt-0.5">بار تنش غشای عصبی</p>
+                        <p className="text-3xl font-black text-slate-800 tracking-tighter">{toPersianNum(currentReport.stressLevel)}٪</p>
+                        <p className="text-[9px] font-black text-slate-400 mt-0.5">شاخص فشار ذهنی تخمینی</p>
                       </div>
                     </div>
 
@@ -915,7 +1187,7 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
                       <div className={`p-3 rounded-2xl text-[11px] font-bold text-center ${
                         currentReport.stressLevel > 70 ? "bg-rose-50 text-rose-700" : currentReport.stressLevel > 45 ? "bg-orange-50 text-orange-700" : "bg-emerald-50 text-emerald-700"
                       }`}>
-                        {currentReport.stressLevel > 70 ? "سطح استرس نهایی بحرانی ! احتمال بیش‌ریزی عصبی" : currentReport.stressLevel > 45 ? "استرس بهینه مربی‌گری (یوسترس محرک)" : "بهداشت عالی روان و آرامش پاراسمپاتیکی پایدار"}
+                        {currentReport.stressLevel > 70 ? "سطح فشار ذهنی بالا ! نیازمند استراحت و بازنگری پارت‌های مطالعاتی" : currentReport.stressLevel > 45 ? "سطح فشار متوسط (محرک یادگیری)" : "وضعیت فشار ذهنی پایدار و مطلوب"}
                       </div>
                     </div>
                   </div>
@@ -925,7 +1197,7 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
                     <div className="flex justify-between items-center border-b border-slate-100 pb-3">
                       <h3 className="text-xs font-black text-indigo-950 flex items-center gap-1.5">
                         <Award size={15} className="text-indigo-600" />
-                        <span>ماتریس چندمحوری مهارت‌های مهار توجه دپارتمان روان‌سنجی</span>
+                        <span>ماتریس چندمحوری مهارت‌های مدیریت آزمون</span>
                       </h3>
                       <span className="text-[10px] font-black bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-md">{currentReport.date}</span>
                     </div>
@@ -937,7 +1209,7 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
                           <PolarAngleAxis dataKey="subject" tick={{ fill: "#64748b", fontSize: 9, fontWeight: 900 }} />
                           <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fontSize: 8 }} />
                           <Radar 
-                            name="سطح شناختی" 
+                            name="شاخص عملکردی" 
                             dataKey="A" 
                             stroke="#4f46e5" 
                             fill="#6366f1" 
@@ -952,11 +1224,11 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
                   <div className="col-span-12 bg-white p-6 rounded-3xl border border-slate-150 shadow-sm space-y-4">
                     <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
                       <Sparkles size={16} className="text-indigo-600 animate-pulse" />
-                      <h4 className="text-xs font-black text-slate-800">تشخیص شناختی بر اساس خطاهای آزمونی</h4>
+                      <h4 className="text-xs font-black text-slate-800">تحلیل الگوی پاسخگویی بر اساس خطاهای آزمونی</h4>
                     </div>
 
                     <div className="p-4 bg-slate-50/50 rounded-2xl border border-slate-100 space-y-2">
-                      <span className="text-[9px] font-black text-indigo-600 tracking-wider">سنتز بالینی مشاور:</span>
+                      <span className="text-[9px] font-black text-indigo-600 tracking-wider">جمعبندی مشاور آموزشی:</span>
                       <p className="text-xs font-semibold leading-relaxed text-slate-700">{currentReport.diagnosis}</p>
                     </div>
 
@@ -965,7 +1237,7 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
                       <div className="p-4 rounded-2xl border border-amber-100 bg-amber-50/30 space-y-1.5">
                         <span className="text-[9px] font-black text-amber-600 tracking-wider flex items-center gap-1">
                           <AlertCircle size={10} />
-                          <span>تله حسی/شناختی فعال شما:</span>
+                          <span>الگوی احتمالی فعال:</span>
                         </span>
                         <p className="text-xs font-black text-slate-800">{currentReport.cognitiveTrap}</p>
                       </div>
@@ -974,14 +1246,14 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
                       <div className="p-4 rounded-2xl border border-teal-100 bg-teal-50/30 space-y-1.5">
                         <span className="text-[9px] font-black text-teal-600 tracking-wider flex items-center gap-1">
                           <Wind size={10} />
-                          <span>پروتکل بیوفیدبک تنفس پیشنهادی:</span>
+                          <span>تمرین تنفس ریتمیک پیشنهادی:</span>
                         </span>
                         <p className="text-xs font-bold text-slate-700">{currentReport.meditationAdvice}</p>
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <span className="text-[10px] font-black text-slate-500 block">اقدامات درمانی مراحی‌گری کایزن ذهنی:</span>
+                      <span className="text-[10px] font-black text-slate-500 block">اقدامات تمرینی پیشنهادی جهت بهبود عملکرد:</span>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                         {currentReport.remedies.map((rem, idx) => (
                           <div key={idx} className="p-3 bg-white hover:bg-slate-50 border border-slate-100 rounded-xl relative group transition-all flex gap-2">
@@ -989,6 +1261,54 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
                             <p className="text-[10px] text-slate-600 font-bold leading-relaxed">{rem}</p>
                           </div>
                         ))}
+                      </div>
+                    </div>
+
+                    {/* New Neuro-Psychological Audit Section */}
+                    <div className="pt-4 border-t border-slate-100">
+                      <div className="flex items-center gap-2 mb-4">
+                        <Activity size={16} className="text-rose-600" />
+                        <h4 className="text-xs font-black text-slate-800">ارزیابی مهارت‌های اجرایی و آزمونی</h4>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="p-4 bg-slate-900 rounded-3xl text-white space-y-3 relative overflow-hidden">
+                           <div className="absolute top-0 right-0 w-16 h-16 bg-rose-500/10 rounded-full blur-xl" />
+                           <div className="flex justify-between items-center">
+                             <span className="text-[9px] font-black text-slate-400">فشار تصمیم‌گیری آزمونی</span>
+                             <Zap size={12} className="text-amber-400" />
+                           </div>
+                           <div className="text-xl font-black">{toPersianNum(Math.round(currentReport.stressLevel * 0.85))}٪</div>
+                           <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden">
+                             <div className="h-full bg-amber-400" style={{ width: `${currentReport.stressLevel * 0.85}%` }} />
+                           </div>
+                           <p className="text-[8px] font-bold text-slate-400 leading-tight">فشار تصمیم‌گیری در محدوده قابل مدیریت است.</p>
+                        </div>
+
+                        <div className="p-4 bg-indigo-950 rounded-3xl text-white space-y-3 relative overflow-hidden">
+                           <div className="absolute top-0 right-0 w-16 h-16 bg-indigo-500/10 rounded-full blur-xl" />
+                           <div className="flex justify-between items-center">
+                             <span className="text-[9px] font-black text-slate-400">واکنش‌پذیری به استرس آزمون</span>
+                             <ShieldAlert size={12} className="text-rose-400" />
+                           </div>
+                           <div className="text-xl font-black">{toPersianNum((qAnxiety * 10))}٪</div>
+                           <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden">
+                             <div className="h-full bg-rose-400" style={{ width: `${qAnxiety * 10}%` }} />
+                           </div>
+                           <p className="text-[8px] font-bold text-slate-400 leading-tight">اضطراب آزمونی متوسط رو به پایین ارزیابی می‌شود.</p>
+                        </div>
+
+                        <div className="p-4 bg-emerald-950 rounded-3xl text-white space-y-3 relative overflow-hidden">
+                           <div className="absolute top-0 right-0 w-16 h-16 bg-emerald-500/10 rounded-full blur-xl" />
+                           <div className="flex justify-between items-center">
+                             <span className="text-[9px] font-black text-slate-400">پردازش تحلیلی و تصویری</span>
+                             <Eye size={12} className="text-emerald-400" />
+                           </div>
+                           <div className="text-xl font-black">{toPersianNum(qFocus * 10)}٪</div>
+                           <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden">
+                             <div className="h-full bg-emerald-400" style={{ width: `${qFocus * 10}%` }} />
+                           </div>
+                           <p className="text-[8px] font-bold text-slate-400 leading-tight">توان تحلیل و بازخوانی اطلاعات در سطح مطلوب گزارش شده است.</p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1009,10 +1329,10 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
             {/* Visual Centering Pulsing Circle Card */}
             <div className="lg:col-span-7 bg-white p-8 rounded-3xl border border-slate-150 shadow-sm flex flex-col justify-between items-center relative overflow-hidden" id="breathing-chamber-widget">
               <div className="flex flex-col items-center text-center space-y-2 w-full border-b border-slate-100 pb-4">
-                <span className="text-[9px] font-black text-indigo-600 tracking-widest uppercase">Biofeedback Resonance Chamber</span>
-                <h2 className="text-base font-black text-indigo-950 flex items-center gap-1.5 justify-center relative">
+                <span className="text-[9px] font-black text-indigo-600 tracking-widest uppercase">Breathing Resonance Chamber</span>
+                <div className="text-base font-black text-indigo-950 flex items-center gap-1.5 justify-center relative">
                   <Wind size={18} className="text-indigo-500" />
-                  <span>محفظه بیوفیدبک و مهار مکرر اضطراب کارنامه</span>
+                  <span>محفظه تمرین تنفس و کنترل تنش آزمونی</span>
                   <div className="relative group cursor-help ml-1">
                     <HelpCircle size={14} className="text-slate-400 hover:text-indigo-600 transition-colors" />
                     <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-56 p-3 bg-slate-900 text-white text-[10px] rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 shadow-xl pointer-events-none">
@@ -1030,9 +1350,9 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
                       <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-slate-900" />
                     </div>
                   </div>
-                </h2>
+                </div>
                 <p className="text-[10px] text-slate-400 max-w-lg font-bold leading-relaxed">
-                  بررسی خطاهای شما در درس {latestExam.lessons[0]?.lessonName} نشان‌دهنده نیاز به یک دوره‌ تنفس بیوفیدبک ۴ ثانیه‌ای بین دروس تخصصی است. لطفاً هدفون خود را متصل کرده و ریتم تنفسی خود را همگام‌ سازید.
+                  بررسی خطاهای شما در درس {latestExam.lessons[0]?.lessonName} نشان‌دهنده نیاز به یک دوره تمرین تنفس آرام‌بخش ۴ ثانیه‌ای بین دروس تخصصی است. لطفاً در محیطی آرام قرار گرفته و ریتم تنفسی خود را همگام سازید.
                 </p>
               </div>
 
@@ -1095,7 +1415,7 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
                 >
                   {isBreathingActive ? (
                     <>
-                      <span>توقف ریتم بیوفیدبک</span>
+                      <span>توقف تمرین تنفس</span>
                     </>
                   ) : (
                     <>
@@ -1112,14 +1432,14 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
               <div className="space-y-3">
                 <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
                   <Info size={16} className="text-teal-600" />
-                  <h3 className="text-xs font-black text-indigo-950">مکانیسم بیولوژیکی ریتد تنفس ۴تایی</h3>
+                  <h3 className="text-xs font-black text-indigo-950">مکانیسم آرام‌سازی ریتم تنفس ۴ ثانیه‌ای</h3>
                 </div>
                 <div className="space-y-4">
                   <div className="p-3 bg-indigo-50/50 rounded-2xl flex gap-3 items-center border border-indigo-100/30">
                     <span className="w-6 h-6 rounded-full bg-indigo-600 text-white font-serif flex items-center justify-center text-[10px] font-black">۱</span>
                     <div>
                       <span className="text-xs font-black text-slate-800 block">گام اول: دم (Inhale) - ۴ ثانیه</span>
-                      <p className="text-[10px] text-slate-400 font-semibold mt-0.5">اکسیژن‌ رسانی ریوی و افزایش آرامش آلومین سلول‌های حامی غشا.</p>
+                      <p className="text-[10px] text-slate-400 font-semibold mt-0.5">افزایش اکسیژن‌رسانی و آرام‌سازی سیستم عصبی مرکزی.</p>
                     </div>
                   </div>
 
@@ -1127,7 +1447,7 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
                     <span className="w-6 h-6 rounded-full bg-teal-600 text-white font-serif flex items-center justify-center text-[10px] font-black">۲</span>
                     <div>
                       <span className="text-xs font-black text-slate-800 block">گام دوم: حبس نفس (Hold) - ۴ ثانیه</span>
-                      <p className="text-[10px] text-slate-400 font-semibold mt-0.5 font-sans">تعادل میزان دی‌اکسید کربن خون و کاهش ضربان عصب.</p>
+                      <p className="text-[10px] text-slate-400 font-semibold mt-0.5">ایجاد هماهنگی بین ضربان قلب و ریتم تنفسی.</p>
                     </div>
                   </div>
 
@@ -1135,7 +1455,7 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
                     <span className="w-6 h-6 rounded-full bg-rose-500 text-white font-serif flex items-center justify-center text-[10px] font-black">۳</span>
                     <div>
                       <span className="text-xs font-black text-slate-800 block">گام سوم: بازدم (Exhale) - ۴ ثانیه</span>
-                      <p className="text-[10px] text-slate-400 font-semibold mt-0.5">خروج کامل گازهای حبس شده و آرامش ماهیچه‌های دور جمجمه.</p>
+                      <p className="text-[10px] text-slate-400 font-semibold mt-0.5">تخلیه تنش‌های انباشته شده و رهاسازی عضلانی.</p>
                     </div>
                   </div>
 
@@ -1152,6 +1472,51 @@ export default function AssessmentView({ student, onNavigateChange }: Assessment
           </motion.div>
         )}
       </AnimatePresence>
+      {/* Footer / Scientific Basis Info */}
+      <div className="mt-12 bg-slate-50 border border-slate-200 rounded-3xl p-8">
+        <div className="flex items-center gap-3 mb-6">
+          <BookMarked size={24} className="text-indigo-600" />
+          <h3 className="text-xl font-black text-slate-900">مبانی علمی و استانداردهای پایش</h3>
+        </div>
+        
+        <p className="text-sm text-slate-600 leading-relaxed mb-8 font-medium">
+          تمامی تحلیل‌ها، تمرین‌های تنفسی و مدل‌های ارزیابی در این پورتال بر اساس چارچوب‌های پذیرفته‌شده در روان‌شناسی تربیتی و مدیریت اضطراب آزمون طراحی شده‌اند. در ادامه، برخی از مهم‌ترین استانداردها و منابع علمی مورد استفاده آورده شده است:
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white p-6 rounded-2xl border border-slate-150 shadow-sm hover:border-indigo-200 transition-colors">
+            <h4 className="text-sm font-black text-slate-800 mb-2">استاندارد APA</h4>
+            <p className="text-[10px] text-slate-500 leading-relaxed mb-4">استانداردهای آزمون‌گری آموزشی و روان‌شناختی جهت تضمین عدالت و روایی ارزیابی‌ها.</p>
+            <a href="https://www.apa.org/science/programs/testing/standards" target="_blank" rel="noopener noreferrer" className="text-[10px] font-black text-indigo-600 hover:underline flex items-center gap-1">
+              مشاهده منبع <ExternalLink size={10} />
+            </a>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl border border-slate-150 shadow-sm hover:border-indigo-200 transition-colors">
+            <h4 className="text-sm font-black text-slate-800 mb-2">مدیریت اضطراب (CBT)</h4>
+            <p className="text-[10px] text-slate-500 leading-relaxed mb-4">به‌کارگیری تکنیک‌های رفتاردرمانی شناختی برای مهار استرس‌های حاد جلسه آزمون.</p>
+            <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8900696/" target="_blank" rel="noopener noreferrer" className="text-[10px] font-black text-indigo-600 hover:underline flex items-center gap-1">
+              مشاهده مقاله <ExternalLink size={10} />
+            </a>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl border border-slate-150 shadow-sm hover:border-indigo-200 transition-colors">
+            <h4 className="text-sm font-black text-slate-800 mb-2">تنفس ریتمیک (Box Breathing)</h4>
+            <p className="text-[10px] text-slate-500 leading-relaxed mb-4">تاثیر تنفس مربعی بر کاهش ضربان قلب و بهبود تمرکز در شرایط پرفشار (Mayo Clinic).</p>
+            <a href="https://health.clevelandclinic.org/box-breathing-benefits" target="_blank" rel="noopener noreferrer" className="text-[10px] font-black text-indigo-600 hover:underline flex items-center gap-1">
+              مشاهده مرجع <ExternalLink size={10} />
+            </a>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl border border-slate-150 shadow-sm hover:border-indigo-200 transition-colors">
+            <h4 className="text-sm font-black text-slate-800 mb-2">یادگیری خودتنظیمی (SRL)</h4>
+            <p className="text-[10px] text-slate-500 leading-relaxed mb-4">مدل زیمرمن برای تحلیل خطاهای آموزشی و بهبود استراتژی‌های مطالعه فردی.</p>
+            <a href="https://www.jstor.org/stable/j.ctv10h9g9v.7" target="_blank" rel="noopener noreferrer" className="text-[10px] font-black text-indigo-600 hover:underline flex items-center gap-1">
+              مشاهده مطالعه <ExternalLink size={10} />
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

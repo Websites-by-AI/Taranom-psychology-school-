@@ -24,7 +24,8 @@ function getAI() {
     }
     
     if (!aiClient) {
-      aiClient = new GoogleGenAI({
+      console.log("Initializing GoogleGenAI with provided API key...");
+      aiClient = new GoogleGenAI({ 
         apiKey: key,
         httpOptions: {
           headers: {
@@ -271,6 +272,7 @@ function getOfflinePsychologyAnalysis(qAnxiety: number, qFocus: number, qPerfect
 
 // Endpoint for motivational messages / business quotes
 app.get("/api/motivational", async (req, res) => {
+  console.log("GET /api/motivational called");
   const quotes = [
     "اعتبار ترنم مهر در طول سالیان، حاصل ممارست فرزندان شایسته‌ای است که امروز رتبه‌های برتر دانشگاه‌های تهران، شریف و بهشتی کشور هستند. به پالس‌های تلاش روزانه خود وفادار بمانید!",
     "تلاش متعهدانه ثمر خواهد داد. خواندن خط‌به‌خط تصویر زیست یا دست‌ورزی مسئله فیزیک، پله‌ای برای پزشک، مهندس یا رتبه برتر شدن است.",
@@ -281,14 +283,14 @@ app.get("/api/motivational", async (req, res) => {
 
   try {
     const ai = getAI();
-    if (!ai || !ai.models || typeof ai.models.generateContent !== "function") {
+    if (!ai) {
       const randomIndex = Math.floor(Math.random() * quotes.length);
       return res.json({ quote: quotes[randomIndex] });
     }
 
     const response = await ai.models.generateContent({
       model: "gemini-3.5-flash",
-      contents: "یک جمله انگیزشی مقتدر، خلاقانه، عاطفی، علمی و روان‌شناختی مناسب داوطلبان کنکور سراسری ایران (تجربی، ریاضی، انسانی) برای نصب در بالای پرتال آموزشی 'ترنم مهر' بنویس. شیوه کایزن، تعهد بالا و رتبه‌های برتر شریف و تهران را تداعی کند. لحن صمیمی و عمیق فارسی داشته باشد، بدون پیشوند و پسوند.",
+      contents: [{ role: "user", parts: [{ text: "یک جمله انگیزشی مقتدر، خلاقانه، عاطفی، علمی و روان‌شناختی مناسب داوطلبان کنکور سراسری ایران (تجربی، ریاضی، انسانی) برای نصب در بالای پرتال آموزشی 'ترنم مهر' بنویس. شیوه کایزن، تعهد بالا و رتبه‌های برتر شریف و تهران را تداعی کند. لحن صمیمی و عمیق فارسی داشته باشد، بدون پیشوند و پسوند." }] }],
     });
     return res.json({ quote: response.text?.trim() || quotes[Math.floor(Math.random() * quotes.length)] });
   } catch (error: any) {
@@ -306,10 +308,15 @@ app.get("/api/motivational", async (req, res) => {
 
 // Endpoint for AI business & technical consulting chat
 app.post("/api/chat", async (req, res) => {
+  console.log("POST /api/chat called with message:", req.body?.message);
   const { message, history } = req.body;
+  if (!message) {
+    return res.status(400).json({ error: "MESSAGE_REQUIRED", reply: "پیامی دریافت نشد." });
+  }
   try {
     const ai = getAI();
     if (!ai) {
+      console.warn("AI Client not available for /api/chat");
       return res.status(503).json({ 
         error: "AI_SERVICE_UNAVAILABLE",
         reply: "متأسفانه در حال حاضر اتصال به سرور هوش مصنوعی برقرار نیست. لطفاً دقایقی دیگر تلاش کنید یا از بخش مصوبات دستی استفاده نمایید." 
@@ -333,18 +340,16 @@ app.post("/api/chat", async (req, res) => {
 ۴. حداکثر در ۳ پاراگراف پاسخ دهید.
 ۵. از ایموجی‌های مناسب (📚, 🎯, 🚀, 💡) استفاده کنید.`;
 
-    const contents = [
-      { role: "user", parts: [{ text: `System Instruction: ${systemInstruction}` }] },
-      ...formattedHistory,
-      { role: "user", parts: [{ text: message }] }
-    ];
-
-    const response = await ai.models.generateContent({
+    const chat = ai.chats.create({ 
       model: "gemini-3.5-flash",
-      contents: contents,
+      config: {
+        systemInstruction: systemInstruction
+      }
     });
 
-    const reply = response.text?.trim();
+    const result = await chat.sendMessage({ message });
+    const reply = result.text?.trim();
+    
     if (!reply) throw new Error("Empty reply from Gemini");
 
     return res.json({ reply });
@@ -373,7 +378,7 @@ app.post("/api/goal-insight", async (req, res) => {
     const targetPercentage = (currentPercentage || 59) + (targetGrowth || 10);
 
     const ai = getAI();
-    if (!ai || !ai.models || typeof ai.models.generateContent !== "function") {
+    if (!ai) {
       return res.json(getOfflineGoalInsight(student, currentTraz, currentPercentage, targetTraz, targetGrowth, latestQuizScore));
     }
 
@@ -409,28 +414,9 @@ app.post("/api/goal-insight", async (req, res) => {
 
     const response = await ai.models.generateContent({
       model: "gemini-3.5-flash",
-      contents: prompt,
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
       config: {
         responseMimeType: "application/json",
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            likelihood: {
-              type: Type.INTEGER,
-              description: "The calculated percentage chance of hitting the educational goals, integer 10 to 98."
-            },
-            text: {
-              type: Type.STRING,
-              description: "Warm, motivational and technical evaluation paragraph in Persian."
-            },
-            recommendations: {
-              type: Type.ARRAY,
-              items: { type: Type.STRING },
-              description: "Exactly 3 expert advice points in Persian."
-            }
-          },
-          required: ["likelihood", "text", "recommendations"]
-        }
       }
     });
 
@@ -457,7 +443,7 @@ app.post("/api/analyze-exam", async (req, res) => {
   
   try {
     const ai = getAI();
-    if (!ai || !ai.models || typeof ai.models.generateContent !== "function") {
+    if (!ai) {
       return res.json(getOfflineExamAnalysis(lessons, field));
     }
 
@@ -507,7 +493,7 @@ ${JSON.stringify(lessons, null, 2)}${priorityInfo}
 
     const response = await ai.models.generateContent({
       model: "gemini-3.5-flash",
-      contents: prompt,
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
       config: {
         responseMimeType: "application/json",
       }
@@ -535,7 +521,7 @@ app.post("/api/psychology-analysis", async (req, res) => {
 
   try {
     const ai = getAI();
-    if (!ai || !ai.models || typeof ai.models.generateContent !== "function") {
+    if (!ai) {
       return res.json(getOfflinePsychologyAnalysis(qAnxiety, qFocus, qPerfectionism, qSleep, qStamina, student));
     }
 
@@ -576,7 +562,7 @@ JSON schema:
 
     const response = await ai.models.generateContent({
       model: "gemini-3.5-flash",
-      contents: prompt,
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
       config: {
         responseMimeType: "application/json",
       }
